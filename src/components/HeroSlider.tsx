@@ -19,7 +19,7 @@ export default function DealSlider({ className }: { className?: string }) {
         loop={true}
         pagination={{
           clickable: true,
-          renderBullet: function (index, className) {
+          renderBullet: function (_index, className) {
             return '<span class="' + className + ' custom-bullet"></span>';
           },
         }}
