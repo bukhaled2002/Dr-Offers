@@ -1,3 +1,7 @@
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { IoSearchOutline } from "react-icons/io5";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
@@ -5,12 +9,6 @@ import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
 import { Heart } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
-
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
 
 const categories = [
   {
