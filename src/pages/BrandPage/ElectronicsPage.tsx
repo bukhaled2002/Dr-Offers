@@ -9,26 +9,13 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
 import { MdLocationOn, MdPhone, MdEmail } from "react-icons/md";
+import type { BrandData } from "@/types/api";
 
-const features = [
-  {
-    id: 1,
-    title: "Category 1",
-    image: "/imgs/electronics-1.jpg",
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    image: "/imgs/electronics-2.jpg",
-  },
-  {
-    id: 3,
-    title: "Category 3",
-    image: "/imgs/electronics-3.jpg",
-  },
-];
+interface ElectronicsPageProps {
+  brandData?: BrandData;
+}
 
-function Navbar() {
+function Navbar({ brandData }: { brandData?: BrandData }) {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -57,7 +44,7 @@ function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between py-6">
-        <div className="text-xl font-bold">Logo</div>
+        <div className="text-xl font-bold">{brandData?.name || "Logo"}</div>
         <ul className="flex gap-6">
           {navItems.map((item) => (
             <li key={item.title}>
@@ -76,10 +63,10 @@ function Navbar() {
   );
 }
 
-export default function ElectronicsPage() {
+export default function ElectronicsPage({ brandData }: ElectronicsPageProps) {
   return (
     <>
-      <Navbar />
+      <Navbar brandData={brandData} />
 
       {/* Hero Section */}
       <section
@@ -88,19 +75,28 @@ export default function ElectronicsPage() {
       >
         <div className="text-left max-w-xl self-start ">
           <h1 className="text-5xl md:text-5xl mt-16 font-bold mb-4 leading-16">
-            Main Title to be <br /> Added Here
+            {brandData?.section1_title || "Main Title to be"} <br /> Added Here
           </h1>
           <p className="mb-6 text-gray-600 mt-15">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut elit
-            tellus, luctus nec ullamcorper mattis.
+            {brandData?.section1_description ||
+              "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut elit tellus, luctus nec ullamcorper mattis."}
           </p>
-          <Button className="rounded-sm px-6 py-3">CTA1</Button>
+          <Button
+            className="rounded-sm px-6 py-3"
+            onClick={() => window.open(brandData?.section1_cta_link, "_blank")}
+          >
+            {brandData?.section1_cta_text || "CTA1"}
+          </Button>
         </div>
         <div className="hidden md:block mr-20 h-full">
           <img
-            src="/imgs/watch-hero.png"
+            src={brandData?.section1_media_url || "/imgs/watch-hero.png"}
             alt="Hero product"
             className="w-full h-auto object-contain"
+            onError={(e) => {
+              e.currentTarget.src =
+                "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
+            }}
           />
         </div>
       </section>
@@ -110,24 +106,30 @@ export default function ElectronicsPage() {
         id="shop"
         className="py-20 text-center bg-white px-4 max-w-6xl mx-auto"
       >
-        <h2 className="text-3xl font-bold mb-3">Browse The Categories</h2>
+        <h2 className="text-3xl font-bold mb-3">
+          {brandData?.section_header || "Browse The Categories"}
+        </h2>
         <p className="text-gray-500 mb-10">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut elit
-          tellus, luctus nec ullamcorper.
+          {brandData?.section_subheader ||
+            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut elit tellus, luctus nec ullamcorper."}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-          {features.map((feature) => (
+          {brandData?.section2_items?.map((item, index) => (
             <div
-              key={feature.id}
+              key={index}
               className="items-center relative h-[360px] rounded-lg overflow-hidden"
             >
               <img
-                src={feature.image}
-                alt={feature.title}
+                src={item.media_url || `/imgs/electronics-${index + 1}.jpg`}
+                alt={item.title}
                 className="w-full object-cover absolute top-0 left-0 h-full z-0"
+                onError={(e) => {
+                  e.currentTarget.src =
+                    "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
+                }}
               />
-              <div className="font-semibold mt-2 z-2 absolute bottom-0 left-0 bg-black/40 w-full h-15 flex  items-center p-5">
-                <span className="text-white"> {feature.title}</span>
+              <div className="font-semibold mt-2 z-2 absolute bottom-0 left-0 bg-black/40 w-full h-15 flex items-center p-5">
+                <span className="text-white">{item.title}</span>
               </div>
             </div>
           ))}
@@ -142,25 +144,34 @@ export default function ElectronicsPage() {
       >
         <div className="flex-1 flex items-center justify-center px-6">
           <div>
-            <h2 className="text-3xl font-bold">Second title Here</h2>
+            <h2 className="text-3xl font-bold">
+              {brandData?.section3_title || "Second title Here"}
+            </h2>
             <p className="mt-5 text-gray-600">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Recusandae fugiat iure officiis in, nihil necessitatibus.
+              {brandData?.section3_description ||
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae fugiat iure officiis in, nihil necessitatibus."}
             </p>
-            <Button className="w-28 mt-4">CTA2</Button>
+            <Button
+              className="w-28 mt-4"
+              onClick={() =>
+                window.open(brandData?.section3_cta_link, "_blank")
+              }
+            >
+              {brandData?.section3_cta_text || "CTA2"}
+            </Button>
           </div>
         </div>
         <div className="hidden md:block mr-20 h-full">
           <img
-            src="/imgs/Headphone.png"
+            src={brandData?.section3_media_url || "/imgs/Headphone.png"}
             alt="Hero product"
             className="w-full h-auto object-contain"
+            onError={(e) => {
+              e.currentTarget.src =
+                "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
+            }}
           />
         </div>
-
-        {/* <div className="flex-1">
-          <div className="w-full md:w-[500px] h-[300px] md:h-[500px]"></div>
-        </div> */}
       </section>
 
       {/* Footer */}
@@ -172,7 +183,10 @@ export default function ElectronicsPage() {
             <ul className="space-y-2 text-sm">
               <li className="flex items-start gap-2">
                 <MdLocationOn className="text-lg mt-1" />
-                <span>Naya Gaun, Pokhara-15, PKR 33700</span>
+                <span>
+                  {brandData?.owner?.email ||
+                    "Naya Gaun, Pokhara-15, PKR 33700"}
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <MdPhone className="text-lg" />
@@ -180,7 +194,9 @@ export default function ElectronicsPage() {
               </li>
               <li className="flex items-center gap-2">
                 <MdEmail className="text-lg" />
-                <span>bazaartgadget2234@gmail.com</span>
+                <span>
+                  {brandData?.owner?.email || "bazaartgadget2234@gmail.com"}
+                </span>
               </li>
             </ul>
           </div>

@@ -11,13 +11,13 @@ export const useOffers = () => {
   const brandIds = searchParams.getAll("brand_id");
   const page = searchParams.get("page") || 1;
   const maxPrice = searchParams.get("maxPrice");
-
+  console.log({ categories, brandIds, page, maxPrice });
   const { data, isLoading, error } = useQuery<DealsResponse>({
     queryKey: ["products", { categories, brandIds, page, maxPrice }],
     queryFn: async () => {
       const res = await instance.get("/offers?perPage=20", {
         params: {
-          category: categories,
+          categories,
           brand_id: brandIds,
           page,
           max_price: maxPrice,

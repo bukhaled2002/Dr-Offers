@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AuthPageLayout } from "./AuthPageLayout";
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { registerSchema, type RegisterSchema } from "@/schemas/register.schema";
 import { toast } from "react-toastify";
@@ -21,16 +21,16 @@ export function RegisterPage() {
 
   const onSubmit = async ({ email, name, password }: RegisterSchema) => {
     try {
-      const response = await instance.post("/auth/signup", {
+      const res = await instance.post("/auth/signup", {
         email,
         name,
         password,
         role: "visitor",
-        phone_number: "+201210102109",
+        phone_number: "+201210102429",
       });
-      console.log(response.data.data.access_token);
-      console.log(response?.data?.data);
-      login(response?.data?.data?.access_token);
+      const responseData = res.data?.data || res.data;
+      const { access_token, refresh_token } = responseData;
+      login(access_token, refresh_token);
       navigate(`/auth/verify-otp?email=${email}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

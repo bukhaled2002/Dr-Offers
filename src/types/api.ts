@@ -79,3 +79,34 @@ export type User = {
   country: string;
   gender: string;
 };
+
+export interface BrandData {
+  type: string;
+  id: number;
+  name: string;
+  description: string;
+  section1_title: string;
+  section1_description: string;
+  section1_cta_text: string;
+  section1_cta_link: string;
+  section1_media_url: string;
+  section2_items: Array<{
+    title: string;
+    description: string;
+    media_url?: string;
+  }>;
+  section3_title: string;
+  section3_description: string;
+  section3_cta_text: string;
+  section3_cta_link: string;
+  section3_media_url: string;
+  section_header: string;
+  section_subheader: string;
+  owner: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  created_at: string;
+  updated_at: string;
+}

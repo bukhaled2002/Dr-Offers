@@ -1,60 +1,56 @@
 import { Heart } from "lucide-react"; // Or use any heart icon
 import clsx from "clsx"; // Optional, for conditional classes
 
-const categories = [
-  {
-    id: 1,
-    title: "Category 1",
-    description: "lorem ipsum",
-    image: "/imgs/category-1.png",
-    favorite: true,
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    description: "lorem ipsum",
-    image: "/imgs/category-2.png",
-    favorite: false,
-  },
-  {
-    id: 3,
-    title: "Category 3",
-    description: "lorem ipsum",
-    image: "/imgs/category-3.png",
-    favorite: false,
-  },
-  {
-    id: 4,
-    title: "Category 4",
-    description: "lorem ipsum",
-    image: "/imgs/category-4.png",
-    favorite: false,
-  },
-];
+interface CategoryItem {
+  id?: number;
+  title: string;
+  description: string;
+  media_url?: string;
+  image?: string;
+  favorite?: boolean;
+}
 
-export default function CategoryGrid() {
+interface CategoryGridProps {
+  items?: CategoryItem[];
+  fallbackImage?: string;
+}
+
+export default function CategoryGrid({
+  items,
+  fallbackImage,
+}: CategoryGridProps) {
+  const defaultFallback =
+    "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
+
+  // إذا لم تكن هناك بيانات من API، لا تعرض شيئاً
+  if (!items || items.length === 0) {
+    return null;
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-10">
-      {categories.map((cat) => (
+      {items.map((cat, index) => (
         <div
-          key={cat.id}
+          key={cat.id || index}
           className="bg-[#F1F1F1] rounded-xl shadow-md overflow-hidden flex flex-col items-center h-82 relative"
         >
           <img
-            src={cat.image}
+            src={cat.media_url || defaultFallback}
             alt={cat.title}
-            className="object-cover flex-1 h-24"
+            className="object-cover flex-1 h-full"
+            onError={(e) => {
+              e.currentTarget.src = fallbackImage || defaultFallback;
+            }}
           />
-          <div className="p-4 text-center bg-white rounded-t-[200px] w-[120%]">
+          <div className="px-10 pt-5 pb-4 text-center bg-white rounded-t-[200px] w-full absolute bottom-0">
             <h2 className="font-semibold text-lg">{cat.title}</h2>
             <p className="text-sm text-gray-500">{cat.description}</p>
             <Heart
-              size={18}
+              size={16}
               className={clsx(
-                "mt-4 absolute bottom-5 right-5",
-                cat.favorite ? "text-red-600" : "text-gray-400"
+                "transition-colors duration-200",
+                cat.favorite ? "text-red-600 fill-current" : "text-gray-600"
               )}
-              fill={cat.favorite ? "currentColor" : "none"}
             />
           </div>
         </div>

@@ -7,36 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
 import { Heart } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import type { BrandData } from "@/types/api";
 
-const categories = [
-  {
-    id: 1,
-    title: "Category 1",
-    image: "/imgs/category-4.jpg",
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    image: "/imgs/category-5.jpg",
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    image: "/imgs/category-5.jpg",
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    image: "/imgs/category-5.jpg",
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    image: "/imgs/category-5.jpg",
-  },
-];
+interface FashionBrandPageProps {
+  brandData?: BrandData;
+}
 
 function Navbar() {
   const [showNavbar, setShowNavbar] = useState(true);
@@ -86,28 +61,7 @@ function Navbar() {
   );
 }
 
-const features = [
-  {
-    id: 1,
-    title: "Category 1",
-    subtitle: "You only order through the app",
-    image: "/imgs/category-4.jpg",
-  },
-  {
-    id: 2,
-    title: "Category 2",
-    subtitle: "Delivery will be on time",
-    image: "/imgs/category-5.jpg",
-  },
-  {
-    id: 3,
-    title: "Category 3",
-    subtitle: "The best quality of food for you",
-    image: "/imgs/category-6.jpg",
-  },
-];
-
-export default function FashionBrandPage() {
+export default function FashionBrandPage({ brandData }: FashionBrandPageProps) {
   return (
     <>
       <Navbar />
@@ -117,45 +71,65 @@ export default function FashionBrandPage() {
           className="flex overflow-hidden bg-cover bg-fixed justify-end p-20 pt-28 "
           style={{
             height: "calc(100vh - 84px)",
-            backgroundImage: "url('/imgs/hero-2.jpg')",
+            backgroundImage: `url('${
+              brandData?.section1_media_url || "/imgs/hero-2.jpg"
+            }')`,
             backgroundPosition: "center 70%",
           }}
         >
           <div className="bg-[#FFF3E3B2] w-[65vw] lg:w-[40vw] mx-auto lg:mx-0 rounded-md p-8 pt-32 h-fit">
             <h2 className="text-5xl font-bold text-primary max-w-[80%]">
-              Main title to be Added here
+              {brandData?.section1_title || "Main title to be Added here"}
             </h2>
             <p className="font-semibold mt-4">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquam
-              laboriosam, atque facere libero explicabo provident.
+              {brandData?.section1_description ||
+                "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquam laboriosam, atque facere libero explicabo provident."}
             </p>
-            <Button className="mt-4 p-6 px-10 rounded-none">CTA1</Button>
+            <Button
+              className="mt-4 p-6 px-10 rounded-none"
+              onClick={() =>
+                window.open(brandData?.section1_cta_link, "_blank")
+              }
+            >
+              {brandData?.section1_cta_text || "CTA1"}
+            </Button>
           </div>
         </section>
 
         <section
           id="shop"
-          className="section-container text-center min-h-screen pt-16 pb-8"
+          className="section-container text-center min-h-screen pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8"
         >
-          <h2 className="font-bold text-4xl mt-6">Browse The Categories</h2>
-          <p className="text-gray-500 mt-6 font-semibold">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto,
-            adipisci.
+          <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-4 sm:mt-6 leading-tight">
+            {brandData?.section_header || "Browse The Categories"}
+          </h2>
+          <p className="text-gray-500 mt-4 sm:mt-6 font-semibold text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
+            {brandData?.section_subheader ||
+              "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, adipisci."}
           </p>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-10 mt-10 text-center max-w-4xl mx-auto">
-            {features.map((feature) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 mt-8 sm:mt-10 lg:mt-12 max-w-7xl mx-auto">
+            {brandData?.section2_items?.map((item, index) => (
               <div
-                key={feature.id}
-                className="flex flex-col items-center gap-2"
+                key={index}
+                className="flex flex-col items-center gap-3 sm:gap-4 group"
               >
-                <div className="bg-red-500 h-96 w-72 overflow-hidden rounded-md">
+                <div className="relative bg-red-500 h-48 sm:h-64 md:h-72 lg:h-80 w-full max-w-xs overflow-hidden rounded-lg shadow-lg transition-transform duration-300 group-hover:scale-105">
                   <img
-                    src={feature.image}
-                    alt={feature.title}
-                    className="object-cover h-full w-full"
+                    src={item.media_url || `/imgs/category-${index + 4}.jpg`}
+                    alt={item.title}
+                    className="object-cover h-full w-full transition-transform duration-300 group-hover:scale-110"
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
+                    }}
                   />
                 </div>
-                <h3 className="font-bold text-2xl mt-2">{feature.title}</h3>
+                <h3 className="font-bold text-lg sm:text-xl md:text-2xl mt-2 sm:mt-3 text-center leading-tight">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base text-center max-w-xs leading-relaxed">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
@@ -167,48 +141,34 @@ export default function FashionBrandPage() {
         >
           <div className="flex-1 flex items-center justify-center px-6 md:px-20 my-auto">
             <div className="h-full">
-              <h2 className="font-bold text-3xl">Second Title Here</h2>
+              <h2 className="font-bold text-3xl">
+                {brandData?.section3_title || "Second Title Here"}
+              </h2>
               <p className="mt-5">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Recusandae fugiat iure officiis in, nihil necessitatibus.
+                {brandData?.section3_description ||
+                  "Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae fugiat iure officiis in, nihil necessitatibus."}
               </p>
-              <Button className="w-28 mt-4">CTA2</Button>
+              <Button
+                className="w-28 mt-4"
+                onClick={() =>
+                  window.open(brandData?.section3_cta_link, "_blank")
+                }
+              >
+                {brandData?.section3_cta_text || "CTA2"}
+              </Button>
             </div>
           </div>
 
           <div className="flex-1">
-            <Swiper
-              modules={[Navigation, Pagination]}
-              navigation
-              // pagination={{ clickable: true }}
-              spaceBetween={30}
-              slidesPerView={1}
-              breakpoints={{
-                768: { slidesPerView: 2 },
+            <img
+              src={brandData?.section3_media_url || "/imgs/category-4.jpg"}
+              alt="Section 3"
+              className="w-full md:w-[500px] h-[300px] md:h-[500px] object-cover rounded-lg"
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
               }}
-              className="w-full md:w-[500px] h-[300px] md:h-[500px] "
-            >
-              {categories.map((cat, index) => (
-                <SwiperSlide key={cat.id}>
-                  <div
-                    className="relative h-full bg-cover bg-center rounded-lg"
-                    style={{ backgroundImage: `url(${cat.image})` }}
-                  >
-                    <div className="absolute  bottom-3 left-3 flex items-end gap-2">
-                      <div className="bg-white/65 p-4">
-                        <p className="text-xs text-gray-500 ">0{index + 1} —</p>
-                        <h3 className="text-lg font-semibold capitalize ">
-                          {cat.title}
-                        </h3>
-                      </div>
-                      <div className="bg-[#782d19] text-white w-8 h-8 flex items-center justify-center cursor-pointer">
-                        <span className="text-lg">→</span>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            />
           </div>
         </section>
 
@@ -216,7 +176,9 @@ export default function FashionBrandPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10">
             {/* Logo + Social */}
             <div>
-              <div className="text-lg font-bold mb-4">Logo</div>
+              <div className="text-lg font-bold mb-4">
+                {brandData?.name || "Logo"}
+              </div>
               <div className="flex gap-4 mb-6">
                 <FaInstagram className="text-[#944B28] hover:text-black cursor-pointer" />
                 <FaFacebookF className="text-[#944B28] hover:text-black cursor-pointer" />

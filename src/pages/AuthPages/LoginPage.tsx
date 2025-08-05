@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { AuthPageLayout } from "./AuthPageLayout";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { loginSchema, type LoginSchema } from "@/schemas/login.schema copy";
+import { loginSchema, type LoginSchema } from "@/schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import instance from "@/api/axiosInstance"; // assumed API instance
 import { useNavigate } from "react-router-dom";
@@ -25,14 +25,15 @@ export function LoginPage() {
   const onSubmit = async (data: LoginSchema) => {
     try {
       const res = await instance.post("/auth/login", data);
-      const { access_token } = res.data.data;
+      const responseData = res.data?.data || res.data;
+      const { access_token, refresh_token } = responseData;
       setAuthError(null);
-      login(access_token);
+      login(access_token, refresh_token);
       navigate("/");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(err);
-      setAuthError("Invalid email or password"); // ✅ secure and generic
+      setAuthError(err?.response?.data?.message || "Invalid email or password");
     }
   };
 
