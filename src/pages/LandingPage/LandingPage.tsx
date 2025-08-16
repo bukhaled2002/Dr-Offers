@@ -9,9 +9,10 @@ import { useTopBrands } from "@/hooks/useTopBrands";
 import BrandOwnerJoin from "@/components/BrandOwnerJoin";
 
 export default function LandingPage() {
-  const { data: deals, isLoading: dealsLoading } = useBestDeals();
+  const { data: deals, isLoading: dealsLoading, error } = useBestDeals();
   const { data: topBrands } = useTopBrands();
-  console.log(deals);
+
+  console.log(error);
   return (
     <main className="bg-white text-black">
       <section className="pt-12 ">

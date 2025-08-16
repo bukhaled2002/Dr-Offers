@@ -8,6 +8,7 @@ export const useBestDeals = () =>
     queryKey: ["deals"],
     queryFn: async () => {
       const res = await instance.get("/offers/best?limit=5");
+      console.log(res);
       return res.data;
     },
   });
