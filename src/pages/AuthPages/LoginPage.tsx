@@ -13,9 +13,8 @@ import { useAuth } from "@/context/useAuth";
 export function LoginPage() {
   const [authError, setAuthError] = useState<string | null>(null);
 
-  const { login } = useAuth();
+  const { login, role } = useAuth();
   const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -27,9 +26,10 @@ export function LoginPage() {
       const res = await instance.post("/auth/login", data);
       const responseData = res.data?.data || res.data;
       const { access_token, refresh_token } = responseData;
+
       setAuthError(null);
       login(access_token, refresh_token);
-      navigate("/");
+      navigate(role === "owner" ? "/setting/dashboard" : "/");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(err);

@@ -1,5 +1,5 @@
 import instance from "@/api/axiosInstance";
-import type { User } from "@/types/api";
+import type { User, Brand } from "@/types/api"; // ⬅️ using your Brand type
 import {
   createContext,
   useContext,
@@ -10,21 +10,26 @@ import {
 
 type AuthContextType = {
   user: User | null;
+  brands: Brand[];
   token: string | null;
   isAuthenticated: boolean;
   isLoadingUser: boolean;
   login: (access: string, refresh: string) => void;
   logout: () => void;
   refreshToken: () => Promise<boolean>;
+  role: "visitor" | "owner" | null;
+  verifyEmail: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("accessToken")
   );
+  const [role, setRole] = useState<"visitor" | "owner" | null>(null);
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(!!token);
 
   const isAuthenticated = !!token && !!user;
@@ -41,10 +46,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("refreshToken");
     setToken(null);
     setUser(null);
+    setBrands([]);
     delete instance.defaults.headers.common["Authorization"];
   };
 
-  // Refresh token function to call manually or from interceptor
   const refreshToken = useCallback(async (): Promise<boolean> => {
     const refresh = localStorage.getItem("refreshToken");
     if (!refresh) {
@@ -55,9 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await instance.post("/auth/refresh", {
         refreshToken: refresh,
       });
-      // NOTE: Check your backend response shape here; adjust if needed
       const data = res.data?.data || res.data;
-
       const newAccessToken = data.access_token || data.accessToken;
       const newRefreshToken = data.refresh_token || data.refreshToken;
 
@@ -70,7 +73,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         ] = `Bearer ${newAccessToken}`;
         return true;
       }
-
       logout();
       return false;
     } catch (err) {
@@ -79,15 +81,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return false;
     }
   }, []);
-
-  // On mount, if no token, try refresh (optional)
+  const verifyEmail = () => {
+    if (!user) return;
+    setUser({ ...user, is_email_verified: true });
+  };
   useEffect(() => {
     if (!token) {
       refreshToken();
     }
   }, [token, refreshToken]);
 
-  // Fetch user when token changes
   useEffect(() => {
     const fetchUser = async () => {
       if (!token) return;
@@ -95,9 +98,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         setIsLoadingUser(true);
         const res = await instance.get("/users/me");
-        console.log(res.data.data);
-        setUser(res.data?.data || res.data || null);
-        console.log(user, "User fetched successfully");
+        const data = res.data?.data || res.data || null;
+        console.log(data);
+        setUser(data);
+        setRole(data?.role || null);
+        setBrands(data?.brands || []); // ⬅️ store separately
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         if (error?.response?.status === 401) {
@@ -105,7 +110,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (refreshed) {
             try {
               const retryRes = await instance.get("/users/me");
-              setUser(retryRes.data?.data || retryRes.data || null);
+              const retryData = retryRes.data?.data || retryRes.data || null;
+
+              setUser(retryData);
+              setRole(retryData?.role || null);
+              setBrands(retryData?.brands || []);
             } catch {
               logout();
             }
@@ -127,12 +136,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        brands,
         token,
         isAuthenticated,
         isLoadingUser,
+        role,
         login,
         logout,
         refreshToken,
+        verifyEmail,
       }}
     >
       {children}

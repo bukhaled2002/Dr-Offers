@@ -9,7 +9,7 @@ export type Deal = {
   coupon: string;
   image?: string;
   name?: string;
-  category_type?: string;
+  category_type?: "electronics" | "fashion" | "food";
   status?: string;
   created_at?: string;
   updated_at?: string;
@@ -19,12 +19,15 @@ export type Deal = {
 
 export type Brand = {
   id: number;
-  brand_name: string;
+  email?: string;
+  phone_number?: string;
+  brand_name?: string;
   status?: string;
   business_docs?: string;
   clicks?: number;
+  city?: string;
   category_type?: string;
-  subscription_plan?: string;
+  subscription_plan?: "free" | "custom" | "pro" | undefined;
   visitors?: number;
   views?: number;
   created_at?: string;
@@ -90,6 +93,8 @@ export interface BrandData {
   section1_cta_text: string;
   section1_cta_link: string;
   section1_media_url: string;
+  section2_header: string;
+  section2_subheader: string;
   section2_items: Array<{
     title: string;
     description: string;
@@ -100,8 +105,6 @@ export interface BrandData {
   section3_cta_text: string;
   section3_cta_link: string;
   section3_media_url: string;
-  section_header: string;
-  section_subheader: string;
   owner: {
     id: number;
     name: string;

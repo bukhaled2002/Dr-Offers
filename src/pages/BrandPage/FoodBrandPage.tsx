@@ -13,7 +13,7 @@ function Navbar({ brandData }: { brandData?: BrandData }) {
   const [scrolled, setScrolled] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-
+  console.log(brandData);
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -108,10 +108,10 @@ export default function FoodBrandPage({ brandData }: FoodBrandPageProps) {
           className="section-container text-center min-h-screen pt-16"
         >
           <h2 className="font-bold text-4xl mt-6">
-            {brandData?.section_header || "Second Title Here"}
+            {brandData?.section2_header || "Second Title Here"}
           </h2>
           <p className="text-gray-500 mt-6 font-semibold">
-            {brandData?.section_subheader ||
+            {brandData?.section2_subheader ||
               "Product Quality Is Our Priority, And Always Guarantees Halal And Safety Until It Is In Your Hands."}
           </p>
           <CategoryGrid

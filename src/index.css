@@ -152,6 +152,12 @@ html {
 .section-container {
   @apply max-w-7xl mx-auto px-6 sm:px-8 lg:px-12;
 }
+.form-header {
+  @apply font-semibold mb-4 text-primary border-b-3 border-primary w-fit pb-1;
+}
+.brand-landing-heading {
+  @apply flex items-center gap-2 bg-[#F2F2F2] p-1 w-40 justify-center text-primary font-semibold rounded-md py-3;
+}
 
 .custom-slider .swiper-pagination {
   bottom: 20px !important;

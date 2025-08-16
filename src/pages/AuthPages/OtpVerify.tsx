@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 export function OtpVerify() {
   const [searchParams] = useSearchParams();
-  const { user } = useAuth();
+  const { user, verifyEmail } = useAuth();
   const navigate = useNavigate();
   const email = searchParams.get("email") || user?.email;
 
@@ -62,7 +62,8 @@ export function OtpVerify() {
       const res = await instance.post("/auth/email-verify", { otp });
       console.log(res);
       toast.success("OTP verified successfully");
-      navigate(`/`);
+      verifyEmail();
+      navigate(user?.role === "owner" ? "/brands/add" : `/`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error(err);
@@ -75,7 +76,8 @@ export function OtpVerify() {
   const handleResend = async () => {
     if (!email) return toast.error("Missing email address");
     try {
-      await instance.get("/auth/email-resend");
+      const res = await instance.get("/auth/email-resend");
+      console.log(res);
       toast.success("OTP resent successfully");
       setResendCooldown(30); // Reset cooldown
     } catch (error) {
@@ -103,7 +105,7 @@ export function OtpVerify() {
                 <InputOTPSlot
                   key={idx}
                   index={idx}
-                  className="rounded-md h-14 w-10"
+                  className="rounded-md h-14 w-10 font-semibold"
                 />
               ))}
             </InputOTPGroup>
@@ -111,7 +113,7 @@ export function OtpVerify() {
 
           <Button
             onClick={handleVerify}
-            className="w-full bg-[#8B2F1D] hover:bg-[#7A2818] text-white"
+            className="w-full bg-primary hover:bg-[#7A2818] text-white"
             disabled={isLoading}
           >
             {isLoading ? "Verifying..." : "Verify"}

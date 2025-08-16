@@ -1,3 +1,4 @@
+import instance from "@/api/axiosInstance";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -50,3 +51,37 @@ export const getCroppedImg = async (
 
   return canvas.toDataURL("image/jpeg");
 };
+
+/**
+ * Uploads a file to a signed URL and returns the public file URL.
+ */
+export async function uploadToSignedUrl(file: File): Promise<string> {
+  // 1️⃣ Request signed URL from your backend
+  const signedRes = await instance.post("/users/signed-urls", {
+    original_name: file.name,
+    size: file.size,
+    mime_type: file.type,
+  });
+  console.log(signedRes);
+  const signedUrl = signedRes.data?.data || signedRes.data;
+  if (!signedUrl) {
+    throw new Error("Failed to get signed URL from server");
+  }
+
+  // 2️⃣ Upload file to signed URL via PUT
+  const uploadRes = await fetch(signedUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": file.type,
+    },
+    body: file,
+  });
+  console.log(uploadRes);
+
+  if (!uploadRes.ok) {
+    throw new Error(`Upload failed with status ${uploadRes.status}`);
+  }
+
+  // 3️⃣ Return the public file URL (without query params)
+  return signedUrl.split("?")[0];
+}

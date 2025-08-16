@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import HeroSlider from "../../components/HeroSlider";
 import CategoryCards from "@/components/CategoriesCards";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -7,10 +6,12 @@ import TopBrandsGrid from "@/components/TopBrandsGrid";
 import { stats, brands, categories } from "@/constants";
 import { useBestDeals } from "@/hooks/useBestDeals";
 import { useTopBrands } from "@/hooks/useTopBrands";
+import BrandOwnerJoin from "@/components/BrandOwnerJoin";
+
 export default function LandingPage() {
   const { data: deals, isLoading: dealsLoading } = useBestDeals();
   const { data: topBrands } = useTopBrands();
-
+  console.log(deals);
   return (
     <main className="bg-white text-black">
       <section className="pt-12 ">
@@ -55,15 +56,7 @@ export default function LandingPage() {
         </div>
 
         <div className="section-container ">
-          <div className="bg-primary text-white p-10 text-center mt-12 rounded-xl h-70">
-            <h2 className="text-3xl font-bold mt-6">
-              JOIN AS BRAND OWNER ON <br /> DR OFFERS PLATFORM
-            </h2>
-            <p className="mt-4">
-              Join Us and Explore below and be one of the business owners
-            </p>
-            <Button className="bg-black/40 text-white mt-4">Explore</Button>
-          </div>
+          <BrandOwnerJoin targetPage="brandLanding" />
         </div>
       </section>
     </main>

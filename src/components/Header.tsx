@@ -1,16 +1,21 @@
 import { useAuth } from "@/context/useAuth";
 import { Globe, Search, User, LogOut, Settings } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Header() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout, brands } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const isBrandPending = brands[0]?.status === "pending";
+  const redirectTo =
+    useLocation().pathname === "/brand-landing"
+      ? "/auth/register?role=owner"
+      : "/auth/login?role=visitor";
+  console.log(redirectTo);
   return (
-    <header className="border-b text-sm">
+    <header className="text-sm bg-[#FAFAFA]">
       {/* Top Bar */}
-      <div className="bg-gray-50 px-8 py-3 flex justify-between items-center text-gray-600">
+      <div className=" bg-[#D9D9D9]/30 px-8 py-3 flex justify-between items-center text-gray-600">
         <div>
           <p>Welcome {user?.name || ""} to Dr Offers!</p>
         </div>
@@ -26,9 +31,15 @@ function Header() {
       {isAuthenticated && user && !user.is_email_verified && (
         <div className=" px-8 py-3 flex justify-between items-center  text-red-700 text-xs font-medium bg-yellow-100/50">
           ⚠️ Your email is not verified.{" "}
-          <Link to="/verify-email" className="underline">
+          <Link to="/auth/verify-otp" className="underline">
             Verify now
           </Link>
+        </div>
+      )}
+      {isAuthenticated && user && user?.role === "owner" && isBrandPending && (
+        <div className=" px-8 py-3 flex justify-between items-center  text-xs font-medium bg-yellow-300">
+          Your brand is pending approval. Please wait for the admin to review
+          it, Mostly Takes 3:5 days
         </div>
       )}
       {/* Main Header */}
@@ -81,7 +92,7 @@ function Header() {
               )}
             </div>
           ) : (
-            <Link to="/auth/login" className="flex items-center gap-1">
+            <Link to={redirectTo} className="flex items-center gap-1">
               <User className="w-4 h-4" /> Sign Up / Sign In
             </Link>
           )}
