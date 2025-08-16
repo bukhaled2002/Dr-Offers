@@ -17,6 +17,7 @@ export const useOffers = (options?: UseOffersOptions) => {
   const brandIds = searchParams.getAll("brand_id");
   const page = searchParams.get("page") || 1;
   const maxPrice = searchParams.get("maxPrice");
+  const minPrice = searchParams.get("minPrice");
 
   // Endpoint changes based on options
   const endpoint = myOffers ? "/offers/my-offers" : "/offers";
@@ -24,7 +25,7 @@ export const useOffers = (options?: UseOffersOptions) => {
   const { data, isLoading, error } = useQuery<DealsResponse>({
     queryKey: [
       "products",
-      { categories, brandIds, page, maxPrice, endpoint, perPage },
+      { categories, brandIds, page, maxPrice, endpoint, perPage, minPrice },
     ],
     queryFn: async () => {
       const res = await instance.get(`${endpoint}?perPage=${perPage}`, {
@@ -33,6 +34,7 @@ export const useOffers = (options?: UseOffersOptions) => {
           brand_id: brandIds,
           page,
           max_price: maxPrice,
+          min_price: minPrice,
         },
       });
       return res.data.data;

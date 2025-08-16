@@ -63,8 +63,8 @@ const FilterSidebar = ({
 
   const selectedBrands = searchParams.getAll("brand_id");
   const selectedCategories = searchParams.getAll("category");
-  const priceMin = Number(searchParams.get("minPrice")) || 120;
-  const priceMax = Number(searchParams.get("maxPrice")) || 600;
+  const priceMin = Number(searchParams.get("minPrice")) || 0;
+  const priceMax = Number(searchParams.get("maxPrice")) || 10000;
 
   const toggleParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -89,7 +89,7 @@ const FilterSidebar = ({
   return (
     <div className="p-6 md:h-full w-full md:w-64">
       <div className="mb-6">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 w-60">
           Showing {start} - {end} out of {totalItems} Products
         </p>
       </div>
@@ -106,8 +106,8 @@ const FilterSidebar = ({
           <Slider
             value={[priceMin, priceMax]}
             onValueChange={updatePriceRange}
-            max={600}
-            min={120}
+            max={1000}
+            min={0}
             step={1}
             className="w-full"
           />

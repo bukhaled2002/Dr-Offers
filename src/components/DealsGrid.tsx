@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import CouponModal from "./CouponModal";
 import type { Deal } from "@/types/api";
-import { useAuth } from "@/context/useAuth";
+// import { useAuth } from "@/context/useAuth";
 
 type DealsGridProps = {
   deals: Deal[];
@@ -15,13 +15,13 @@ const skeletonArray = Array.from({ length: 5 });
 const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  // const { isAuthenticated } = useAuth();
 
   const handleCardClick = (deal: Deal) => {
-    if (!isAuthenticated) {
-      alert("You need to be logged in to view this offer.");
-      return;
-    }
+    // if (!isAuthenticated) {
+    //   alert("You need to be logged in to view this offer.");
+    //   return;
+    // }
     setSelectedDeal(deal);
     setIsModalOpen(true);
   };

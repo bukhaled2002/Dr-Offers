@@ -7,6 +7,7 @@ import { stats, brands, categories } from "@/constants";
 import { useBestDeals } from "@/hooks/useBestDeals";
 import { useTopBrands } from "@/hooks/useTopBrands";
 import BrandOwnerJoin from "@/components/BrandOwnerJoin";
+import { Link } from "react-router";
 
 export default function LandingPage() {
   const { data: deals, isLoading: dealsLoading, error } = useBestDeals();
@@ -34,11 +35,18 @@ export default function LandingPage() {
         </div>
         {/* best deals */}
         <div className="section-container">
-          <SectionHeader
-            text="Today’s best deals on "
-            primaryText="Dr Offers"
-          />
-
+          <div className="flex items-center justify-between">
+            <SectionHeader
+              text="Today’s best deals on "
+              primaryText="Dr Offers"
+            />
+            <Link
+              to={"/products"}
+              className="text-muted-foreground underline cursor-pointer"
+            >
+              View all products
+            </Link>
+          </div>
           <DealsGrid deals={deals?.data || []} loading={dealsLoading} />
         </div>
 
