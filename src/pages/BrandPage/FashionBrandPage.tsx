@@ -101,10 +101,10 @@ export default function FashionBrandPage({ brandData }: FashionBrandPageProps) {
           className="section-container text-center min-h-screen pt-8 sm:pt-12 md:pt-16 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8"
         >
           <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-4 sm:mt-6 leading-tight">
-            {brandData?.section_header || "Browse The Categories"}
+            {brandData?.section2_header || "Browse The Categories"}
           </h2>
           <p className="text-gray-500 mt-4 sm:mt-6 font-semibold text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
-            {brandData?.section_subheader ||
+            {brandData?.section2_subheader ||
               "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, adipisci."}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 mt-8 sm:mt-10 lg:mt-12 max-w-7xl mx-auto">

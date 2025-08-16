@@ -107,10 +107,10 @@ export default function ElectronicsPage({ brandData }: ElectronicsPageProps) {
         className="py-20 text-center bg-white px-4 max-w-6xl mx-auto"
       >
         <h2 className="text-3xl font-bold mb-3">
-          {brandData?.section_header || "Browse The Categories"}
+          {brandData?.section2_header || "Browse The Categories"}
         </h2>
         <p className="text-gray-500 mb-10">
-          {brandData?.section_subheader ||
+          {brandData?.section2_subheader ||
             "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut elit tellus, luctus nec ullamcorper."}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
