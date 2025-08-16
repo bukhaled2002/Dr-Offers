@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import type { FieldType } from "@/types/types";
 import {
   type FieldErrors,
@@ -29,6 +30,7 @@ interface FormFieldProps<T extends Record<string, any>> {
   setValue: UseFormSetValue<T>;
   value?: string | number | null | undefined;
   /** Optional: For select fields, define options */
+  className?: string;
   selectOptions?: { label: string; value: string }[];
 }
 
@@ -43,10 +45,11 @@ export function FormField<T extends Record<string, any>>({
   trigger,
   setValue,
   value,
+  className,
   selectOptions = [],
 }: FormFieldProps<T>) {
   return (
-    <div className="space-y-2">
+    <div className={cn("space-y-2", className)}>
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
 
       {type === "image" ? (

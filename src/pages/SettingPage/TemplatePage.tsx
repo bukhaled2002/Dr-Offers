@@ -220,14 +220,16 @@ export default function TemplateEditor() {
   }, [existingTemplate, reset]);
 
   const saveTemplate = useSaveTemplate({
-    onSuccess: () =>
-      setMessage({ type: "success", text: "Template saved successfully!" }),
+    onSuccess: () => {
+      setMessage({ type: "success", text: "Template saved successfully!" });
+      // scroll to top here
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
     onError: () =>
       setMessage({ type: "error", text: "Failed to save template." }),
   });
 
   const onSubmit = (data: TemplateFormValues) => {
-    console.log(data);
     saveTemplate.mutate({
       existingTemplateId,
       data: { ...data, brand_id: brandId },
@@ -281,9 +283,10 @@ export default function TemplateEditor() {
                   {fields.map((item, index) => (
                     <div
                       key={item.id}
-                      className="flex gap-3 items-end justify-center"
+                      className="flex flex-col md:flex-row w-full gap-3 md:items-end justify-center"
                     >
                       <FormField
+                        className="flex-1"
                         name={
                           `section2_items.${index}.media_url` as keyof TemplateFormValues
                         }
@@ -296,6 +299,7 @@ export default function TemplateEditor() {
                         value={watchedSection2Items[index]?.media_url}
                       />
                       <FormField
+                        className="flex-1"
                         name={
                           `section2_items.${index}.title` as keyof TemplateFormValues
                         }
@@ -308,6 +312,7 @@ export default function TemplateEditor() {
                         setValue={setValue}
                       />
                       <FormField
+                        className="flex-1"
                         name={
                           `section2_items.${index}.description` as keyof TemplateFormValues
                         }

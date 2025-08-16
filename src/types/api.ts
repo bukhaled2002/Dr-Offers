@@ -26,7 +26,7 @@ export type Brand = {
   business_docs?: string;
   clicks?: number;
   city?: string;
-  category_type?: string;
+  category_type?: "food" | "electronics" | "fashion" | undefined;
   subscription_plan?: "free" | "custom" | "pro" | undefined;
   visitors?: number;
   views?: number;

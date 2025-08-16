@@ -8,7 +8,15 @@ import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import { useState, useEffect } from "react";
 import { brandSchema, type BrandFormValues } from "@/schemas/brand.schema";
 import instance from "@/api/axiosInstance";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Link } from "react-router";
+
 type EditableBrandFields = Pick<
   BrandFormValues,
   | "brand_name"
@@ -18,10 +26,10 @@ type EditableBrandFields = Pick<
   | "category_type"
   | "subscription_plan"
 > & { id: string };
+
 export default function BrandSettingPage() {
   const { isLoadingUser, brands } = useAuth();
   const brandId = brands[0]?.id;
-  console.log(brandId);
   const updateProfile = useUpdateProfile();
   const [brandData, setBrandData] = useState<EditableBrandFields | null>(null);
   const [message, setMessage] = useState<{
@@ -30,50 +38,40 @@ export default function BrandSettingPage() {
   } | null>(null);
 
   useEffect(() => {
-    // Replace with your API call
     const fetchBrand = async () => {
+      if (!brandId) return;
       const res = await instance.get(`/brands/${brandId}`);
       const data = res.data.data;
-      console.log(res);
       setBrandData(data);
     };
     fetchBrand();
   }, [brandId]);
 
-  // Example: fetched brand data from API
-
   const form = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
     mode: "onChange",
-    shouldFocusError: false,
-    defaultValues: brandData || {}, // populate once data is fetched
+    defaultValues: brandData || {},
   });
 
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-
     reset,
+    watch,
+    setValue,
   } = form;
 
+  // Update form values after brandData is fetched
   useEffect(() => {
-    if (brandData) {
-      reset(brandData); // ensure form updates after data is loaded
-    }
+    if (brandData) reset(brandData);
   }, [brandData, reset]);
-  console.log(brandId);
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
-      const { city, ...rest } = data;
-      console.log(city);
-      const res = await instance.patch(`/brands/${brandData?.id}`, rest);
+      const res = await instance.patch(`/brands/${brandData?.id}`, data);
       console.log(res);
-      setMessage({
-        type: "success",
-        text: "Brand updated successfully!",
-      });
+      setMessage({ type: "success", text: "Brand updated successfully!" });
     } catch (err) {
       console.error(err);
       setMessage({
@@ -82,7 +80,7 @@ export default function BrandSettingPage() {
       });
     }
   };
-  console.log(isLoadingUser, brandData);
+
   if (isLoadingUser || !brandData) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -98,13 +96,27 @@ export default function BrandSettingPage() {
           No brand found. Please create a brand first.
         </p>
         <Link to="/brands/add">
-          <Button className="">Create Brand</Button>
+          <Button>Create Brand</Button>
         </Link>
       </div>
     );
   }
+
+  const selectFields = [
+    {
+      name: "category_type",
+      label: "Business Domain",
+      options: ["food", "electronics", "fashion"],
+    },
+    {
+      name: "subscription_plan",
+      label: "Subscription Plan",
+      options: ["free", "pro", "custom"],
+    },
+  ];
+
   return (
-    <div className="px-8 py-6">
+    <div className="px-8 py-6 space-y-8">
       {message && (
         <div className="mt-4">
           <div
@@ -123,41 +135,15 @@ export default function BrandSettingPage() {
         <h3 className="form-header">Basic Info</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-10 mt-8">
-          {[
-            {
-              name: "brand_name",
-              label: "Brand Name",
-              placeholder: "Brand Name",
-            },
-            {
-              name: "email",
-              label: "Email",
-              placeholder: "name@example.com",
-            },
-            {
-              name: "phone_number",
-              label: "Phone Number",
-              placeholder: "Enter your phone number",
-            },
-            { name: "city", label: "City", placeholder: "Enter your city" },
-            {
-              name: "category_type",
-              label: "Business Domain",
-              placeholder: "Enter your business domain",
-            },
-            {
-              name: "subscription_plan",
-              label: "Subscription Plan",
-              placeholder: "Enter your plan",
-            },
-          ].map(({ name, label, placeholder }) => (
+          {/* Text Inputs */}
+          {["brand_name", "email", "phone_number", "city"].map((name) => (
             <div className="space-y-2" key={name}>
               <Label className="text-sm font-medium text-gray-700">
-                {label}
+                {name.replace("_", " ")}
               </Label>
               <Input
                 {...register(name as keyof BrandFormValues)}
-                placeholder={placeholder}
+                placeholder={`Enter ${name.replace("_", " ")}`}
                 className="focus:ring-2 font-semibold focus:ring-primary/20 focus:border-primary"
               />
               {errors[name as keyof BrandFormValues] && (
@@ -167,6 +153,42 @@ export default function BrandSettingPage() {
               )}
             </div>
           ))}
+
+          {/* Select Inputs */}
+          {selectFields.map(({ name, label, options }) => {
+            const value = watch(name as keyof BrandFormValues) || "";
+            return (
+              <div className="space-y-2" key={name}>
+                <Label className="text-sm font-medium text-gray-700">
+                  {label}
+                </Label>
+                <Select
+                  value={value}
+                  onValueChange={(val) =>
+                    setValue(name as keyof BrandFormValues, val, {
+                      shouldValidate: true,
+                    })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={`Select ${label}`} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {options.map((opt) => (
+                      <SelectItem key={opt} value={opt}>
+                        {opt}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors[name as keyof BrandFormValues] && (
+                  <p className="text-red-500 text-sm">
+                    {errors[name as keyof BrandFormValues]?.message}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className="px-8 py-6 border-gray-200 flex items-center justify-end">

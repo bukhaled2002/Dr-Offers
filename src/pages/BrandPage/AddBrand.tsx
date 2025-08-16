@@ -41,7 +41,7 @@ export default function AddBrand() {
           email: brands[0].email || "",
           phone_number: brands[0].phone_number || "",
           city: brands[0].city || "",
-          category_type: brands[0].category_type || "",
+          category_type: brands[0].category_type || "food",
           subscription_plan: brands[0].subscription_plan || "free",
         }
       : {
@@ -49,7 +49,7 @@ export default function AddBrand() {
           email: "",
           phone_number: "",
           city: "",
-          category_type: "",
+          category_type: "food",
           subscription_plan: "free",
         },
   });
@@ -69,7 +69,7 @@ export default function AddBrand() {
       setValue("email", brand.email || "");
       setValue("phone_number", brand.phone_number || "");
       setValue("city", brand.city || "");
-      setValue("category_type", brand.category_type || "");
+      setValue("category_type", brand?.category_type || "food");
       setValue("subscription_plan", brand.subscription_plan || "free");
     }
   }, [brands, setValue]);
@@ -166,13 +166,33 @@ export default function AddBrand() {
                       )
                     }
                   >
-                    <SelectTrigger className="focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                    <SelectTrigger className="focus:ring-2 focus:ring-primary/20 focus:border-primary w-full">
                       <SelectValue placeholder={placeholder} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="free">Free</SelectItem>
                       <SelectItem value="custom">Custom</SelectItem>
                       <SelectItem value="pro">Pro</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : name === "category_type" ? (
+                  <Select
+                    disabled={isSubmitted || isPendingBrand}
+                    defaultValue={form.getValues("category_type")}
+                    onValueChange={(value) =>
+                      setValue(
+                        "category_type",
+                        value as "food" | "electronics" | "fashion"
+                      )
+                    }
+                  >
+                    <SelectTrigger className="focus:ring-2 focus:ring-primary/20 focus:border-primary w-full">
+                      <SelectValue placeholder={placeholder} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="food">Food</SelectItem>
+                      <SelectItem value="electronics">Electronics</SelectItem>
+                      <SelectItem value="fashion">Fashion</SelectItem>
                     </SelectContent>
                   </Select>
                 ) : (
