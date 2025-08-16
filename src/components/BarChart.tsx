@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -7,13 +7,13 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import type { ClicksResponse } from "@/hooks/useStats";
 
 const chartConfig = {
@@ -53,9 +53,9 @@ export default function ChartBarClick({ days }: { days?: ClicksResponse }) {
     };
   });
 
-  const [selectedDay, setSelectedDay] = useState(
-    transformedDays[transformedDays.length - 1].label
-  );
+  // const [selectedDay, setSelectedDay] = useState(
+  //   transformedDays[transformedDays.length - 1].label
+  // );
 
   const chartData = transformedDays.map((day) => ({
     day: day.label,
@@ -66,7 +66,7 @@ export default function ChartBarClick({ days }: { days?: ClicksResponse }) {
     <Card className="bg-white border-none shadow-none w-full p-4">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <CardTitle>Clicks</CardTitle>
-        <Select value={selectedDay} onValueChange={setSelectedDay}>
+        {/* <Select value={selectedDay} onValueChange={setSelectedDay}>
           <SelectTrigger className="w-[140px]">
             <SelectValue placeholder="Select day" />
           </SelectTrigger>
@@ -77,7 +77,7 @@ export default function ChartBarClick({ days }: { days?: ClicksResponse }) {
               </SelectItem>
             ))}
           </SelectContent>
-        </Select>
+        </Select> */}
       </CardHeader>
 
       <CardContent className="p-0">
