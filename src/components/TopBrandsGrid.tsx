@@ -99,7 +99,7 @@ const TopBrandsGrid: React.FC<TopBrandsGridProps> = ({ data }) => {
         }}
       >
         {data.map((item, idx) => {
-          const brandStyle = getBrandStyle(item.brand_name);
+          const brandStyle = getBrandStyle(item.brand_name as string);
           return (
             <SwiperSlide key={idx}>
               <Link
@@ -114,7 +114,8 @@ const TopBrandsGrid: React.FC<TopBrandsGridProps> = ({ data }) => {
                   <div
                     className={`text-xs font-medium px-3 py-1 rounded-full w-fit tracking-wide ${brandStyle.labelBg} ${brandStyle.labelText}`}
                   >
-                    {item.brand_name.toUpperCase()}
+                    {item?.brand_name?.toUpperCase() || ""}
+                    "brandName"
                   </div>
 
                   {/* Logo */}
