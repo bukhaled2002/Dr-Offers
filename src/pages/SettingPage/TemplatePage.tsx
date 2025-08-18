@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { FormField } from "@/components/FormField";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/useAuth";
@@ -21,160 +22,180 @@ type FieldGroup = {
   }[];
 };
 
+// Define field groups with translation keys
 const fieldGroups: FieldGroup[] = [
   {
-    header: "Basic Info",
+    header: "template.basicInfo",
     fields: [
       {
         name: "email",
-        label: "Email",
-        placeholder: "example@mail.com",
+        label: "template.email",
+        placeholder: "template.emailPlaceholder",
         type: "email",
       },
-      { name: "phone", label: "Phone", placeholder: "+966...", type: "text" },
+      {
+        name: "phone",
+        label: "template.phone",
+        placeholder: "template.phonePlaceholder",
+        type: "text",
+      },
       {
         name: "name",
-        label: "Name",
-        placeholder: "Template Name",
+        label: "template.name",
+        placeholder: "template.namePlaceholder",
         type: "text",
       },
       {
         name: "address",
-        label: "Address",
-        placeholder: "Your address",
+        label: "template.address",
+        placeholder: "template.addressPlaceholder",
         type: "text",
       },
-      { name: "slug", label: "Slug", placeholder: "your-slug", type: "text" },
+      {
+        name: "slug",
+        label: "template.slug",
+        placeholder: "template.slugPlaceholder",
+        type: "text",
+      },
       {
         name: "description",
-        label: "Description",
-        placeholder: "describe your brand",
+        label: "template.description",
+        placeholder: "template.descriptionPlaceholder",
         type: "text",
       },
     ],
   },
   {
-    header: "Social Media",
+    header: "template.socialMedia",
     fields: [
       {
         name: "facebook_url",
-        label: "Facebook",
-        placeholder: "Username",
+        label: "template.facebook",
+        placeholder: "template.facebookPlaceholder",
         type: "url",
       },
       {
         name: "youtube_url",
-        label: "Youtube",
-        placeholder: "Username",
+        label: "template.youtube",
+        placeholder: "template.youtubePlaceholder",
         type: "url",
       },
       {
         name: "whatsapp_url",
-        label: "Whatsapp Number",
-        placeholder: "Phone Number",
+        label: "template.whatsapp",
+        placeholder: "template.whatsappPlaceholder",
         type: "number",
       },
       {
         name: "linkedin_url",
-        label: "LinkedIn",
-        placeholder: "Username",
+        label: "template.linkedin",
+        placeholder: "template.linkedinPlaceholder",
         type: "text",
       },
     ],
   },
   {
-    header: "Logo",
-    fields: [{ name: "logo_url", label: "Upload Logo", type: "image" }],
+    header: "template.logo",
+    fields: [{ name: "logo_url", label: "template.uploadLogo", type: "image" }],
   },
   {
-    header: "Section 1",
+    header: "template.section1",
     fields: [
       {
         name: "section1_title",
-        label: "Section 1 Title",
-        placeholder: "Title",
+        label: "template.section1Title",
+        placeholder: "template.section1Title",
         type: "text",
       },
       {
         name: "section1_description",
-        label: "Section 1 Description",
-        placeholder: "Description",
+        label: "template.section1Description",
+        placeholder: "template.section1Description",
         type: "text",
       },
       {
         name: "section1_cta_text",
-        label: "Section 1 CTA Text",
-        placeholder: "Click Here",
+        label: "template.section1CtaText",
+        placeholder: "template.section1CtaText",
         type: "text",
       },
       {
         name: "section1_cta_link",
-        label: "Section 1 CTA Link",
+        label: "template.section1CtaLink",
         placeholder: "https://...",
         type: "url",
       },
-      { name: "section1_media_url", label: "Section 1 Image", type: "image" },
+      {
+        name: "section1_media_url",
+        label: "template.section1Image",
+        type: "image",
+      },
     ],
   },
   {
-    header: "Section 2",
+    header: "template.section2",
     fields: [
       {
         name: "section2_header",
-        label: "Section Header",
-        placeholder: "Header",
+        label: "template.sectionHeader",
+        placeholder: "template.sectionHeader",
         type: "text",
       },
       {
         name: "section2_subheader",
-        label: "Section Subheader",
-        placeholder: "Subheader",
+        label: "template.sectionSubheader",
+        placeholder: "template.sectionSubheader",
         type: "text",
       },
     ],
   },
   {
-    header: "Section 3",
+    header: "template.section3",
     fields: [
       {
         name: "section3_title",
-        label: "Section 3 Title",
-        placeholder: "Title",
+        label: "template.section3Title",
+        placeholder: "template.section3Title",
         type: "text",
       },
       {
         name: "section3_description",
-        label: "Section 3 Description",
-        placeholder: "Description",
+        label: "template.section3Description",
+        placeholder: "template.section3Description",
         type: "text",
       },
       {
         name: "section3_cta_text",
-        label: "Section 3 CTA Text",
-        placeholder: "Click Here",
+        label: "template.section3CtaText",
+        placeholder: "template.section3CtaText",
         type: "text",
       },
       {
         name: "section3_cta_link",
-        label: "Section 3 CTA Link",
+        label: "template.section3CtaLink",
         placeholder: "https://...",
         type: "url",
       },
-      { name: "section3_media_url", label: "Section 3 Image", type: "image" },
+      {
+        name: "section3_media_url",
+        label: "template.section3Image",
+        type: "image",
+      },
     ],
   },
 ];
 
 const sectionOrder = [
-  "Basic Info",
-  "Social Media",
-  "Logo",
-  "Section 1",
-  "Section 2",
-  "Section 3",
+  "template.basicInfo",
+  "template.socialMedia",
+  "template.logo",
+  "template.section1",
+  "template.section2",
+  "template.section3",
 ];
 
 export default function TemplateEditor() {
+  const { t } = useTranslation();
   const { isLoadingUser, brands } = useAuth();
   const brandId = brands[0]?.id;
 
@@ -207,26 +228,21 @@ export default function TemplateEditor() {
     formState: { errors },
     reset,
   } = form;
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "section2_items",
   });
 
   useEffect(() => {
-    if (existingTemplate) {
-      reset(existingTemplate);
-    }
+    if (existingTemplate) reset(existingTemplate);
   }, [existingTemplate, reset]);
 
   const saveTemplate = useSaveTemplate({
     onSuccess: () => {
-      setMessage({ type: "success", text: "Template saved successfully!" });
-      // scroll to top here
+      setMessage({ type: "success", text: t("template.savedSuccess") });
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    onError: () =>
-      setMessage({ type: "error", text: "Failed to save template." }),
+    onError: () => setMessage({ type: "error", text: t("template.saveError") }),
   });
 
   const onSubmit = (data: TemplateFormValues) => {
@@ -236,7 +252,8 @@ export default function TemplateEditor() {
     });
   };
 
-  if (isLoadingUser || isLoadingTemplates) return <p>Loading...</p>;
+  if (isLoadingUser || isLoadingTemplates) return <p>{t("loading")}</p>;
+
   const watchedSection2Items = watch("section2_items");
 
   return (
@@ -256,21 +273,23 @@ export default function TemplateEditor() {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        {sectionOrder.map((sectionName) => {
-          const group = fieldGroups.find((g) => g.header === sectionName);
+        {sectionOrder.map((sectionKey) => {
+          const group = fieldGroups.find((g) => g.header === sectionKey);
           if (!group) return null;
 
-          if (sectionName === "Section 2") {
+          if (sectionKey === "template.section2") {
             return (
               <div key={group.header} className="mb-10">
-                <h3 className="form-header">{group.header}</h3>
+                <h3 className="form-header">{t(group.header)}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                   {group.fields.map((field) => (
                     <FormField
                       key={field.name}
                       name={field.name as keyof TemplateFormValues}
-                      label={field.label}
-                      placeholder={field.placeholder}
+                      label={t(field.label)}
+                      placeholder={
+                        field.placeholder ? t(field.placeholder) : undefined
+                      }
                       type={field.type as FieldType}
                       errors={errors}
                       register={register}
@@ -290,7 +309,7 @@ export default function TemplateEditor() {
                         name={
                           `section2_items.${index}.media_url` as keyof TemplateFormValues
                         }
-                        label="Item Media URL"
+                        label={t("template.itemMedia")}
                         type="image"
                         errors={errors}
                         register={register}
@@ -303,8 +322,8 @@ export default function TemplateEditor() {
                         name={
                           `section2_items.${index}.title` as keyof TemplateFormValues
                         }
-                        label="Item Title"
-                        placeholder="Title"
+                        label={t("template.itemTitle")}
+                        placeholder={t("template.itemTitle")}
                         type="text"
                         errors={errors}
                         register={register}
@@ -316,8 +335,8 @@ export default function TemplateEditor() {
                         name={
                           `section2_items.${index}.description` as keyof TemplateFormValues
                         }
-                        label="Item Description"
-                        placeholder="Description"
+                        label={t("template.itemDescription")}
+                        placeholder={t("template.itemDescription")}
                         type="text"
                         errors={errors}
                         register={register}
@@ -326,7 +345,7 @@ export default function TemplateEditor() {
                       />
                       {fields.length > 1 && (
                         <Button type="button" onClick={() => remove(index)}>
-                          Remove Item
+                          {t("template.removeItem")}
                         </Button>
                       )}
                     </div>
@@ -339,7 +358,7 @@ export default function TemplateEditor() {
                       append({ title: "", description: "", media_url: "" })
                     }
                   >
-                    Add Item
+                    {t("template.addItem")}
                   </Button>
                 </div>
               </div>
@@ -348,14 +367,16 @@ export default function TemplateEditor() {
 
           return (
             <div key={group.header} className="mb-10">
-              <h3 className="form-header">{group.header}</h3>
+              <h3 className="form-header">{t(group.header)}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {group.fields.map((field) => (
                   <FormField
                     key={field.name}
                     name={field.name as keyof TemplateFormValues}
-                    label={field.label}
-                    placeholder={field.placeholder}
+                    label={t(field.label)}
+                    placeholder={
+                      field.placeholder ? t(field.placeholder) : undefined
+                    }
                     type={field.type as FieldType}
                     errors={errors}
                     register={register}
@@ -387,7 +408,9 @@ export default function TemplateEditor() {
             className="px-6 py-2"
             disabled={saveTemplate.isPending}
           >
-            {existingTemplateId ? "Update Template" : "Create Template"}
+            {existingTemplateId
+              ? t("template.updateTemplate")
+              : t("template.createTemplate")}
           </Button>
         </div>
       </form>

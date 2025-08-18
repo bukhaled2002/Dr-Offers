@@ -7,7 +7,8 @@ import type {
   UseFormTrigger,
 } from "react-hook-form";
 import { IoImageSharp } from "react-icons/io5";
-// import { MdOutlineFileUpload } from "react-icons/md";
+import { useTranslation } from "react-i18next";
+
 interface ImageUploadProps<TFormValues extends FieldValues> {
   image_url?: string | null;
   name: FieldPath<TFormValues>;
@@ -15,6 +16,7 @@ interface ImageUploadProps<TFormValues extends FieldValues> {
   trigger: UseFormTrigger<TFormValues>;
   error?: string;
 }
+
 export default function ImageUpload<TFormValues extends FieldValues>({
   image_url,
   name,
@@ -22,9 +24,11 @@ export default function ImageUpload<TFormValues extends FieldValues>({
   trigger,
   error,
 }: ImageUploadProps<TFormValues>) {
+  const { t } = useTranslation();
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [tempPreview, setTempPreview] = useState<string | null>(null); // Only for confirmation dialog
+  const [tempPreview, setTempPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,12 +50,11 @@ export default function ImageUpload<TFormValues extends FieldValues>({
       const uploadedUrl = await uploadToSignedUrl(file);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setValue(name, uploadedUrl as any, { shouldValidate: true });
-      console.log(uploadedUrl);
       await trigger(name);
       setDialogOpen(false);
       setTempPreview(null);
-    } catch (error) {
-      console.error("Upload failed:", error);
+    } catch (err) {
+      console.error("Upload failed:", err);
     } finally {
       setUploading(false);
     }
@@ -73,13 +76,15 @@ export default function ImageUpload<TFormValues extends FieldValues>({
         {image_url ? (
           <img
             src={image_url}
-            alt="Image preview"
+            alt={t("imageUpload.previewAlt")}
             className="object-contain max-h-32 max-w-full rounded-md pointer-events-none"
           />
         ) : (
           <div className="flex flex-col items-center text-gray-400">
             <IoImageSharp className="text-8xl" />
-            <span className="text-sm select-none">Click to upload</span>
+            <span className="text-sm select-none">
+              {t("imageUpload.clickToUpload")}
+            </span>
           </div>
         )}
 
@@ -99,12 +104,12 @@ export default function ImageUpload<TFormValues extends FieldValues>({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
             <h3 className="text-lg font-semibold mb-4 text-gray-900">
-              Confirm Upload
+              {t("imageUpload.confirmUpload")}
             </h3>
             {tempPreview && (
               <img
                 src={tempPreview}
-                alt="Image preview"
+                alt={t("imageUpload.previewAlt")}
                 className="mb-4 max-h-60 w-full object-contain rounded"
               />
             )}
@@ -115,7 +120,7 @@ export default function ImageUpload<TFormValues extends FieldValues>({
                 disabled={uploading}
                 className="px-4 py-2 rounded border"
               >
-                Cancel
+                {t("imageUpload.cancel")}
               </button>
               <button
                 type="button"
@@ -123,7 +128,7 @@ export default function ImageUpload<TFormValues extends FieldValues>({
                 disabled={uploading}
                 className="px-4 py-2 rounded bg-orange-600 text-white"
               >
-                {uploading ? "Uploading..." : "Save"}
+                {uploading ? t("imageUpload.uploading") : t("imageUpload.save")}
               </button>
             </div>
           </div>

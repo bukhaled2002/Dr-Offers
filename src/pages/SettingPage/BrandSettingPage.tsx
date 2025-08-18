@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
 
 type EditableBrandFields = Pick<
   BrandFormValues,
@@ -28,6 +29,9 @@ type EditableBrandFields = Pick<
 > & { id: string };
 
 export default function BrandSettingPage() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar"; // detect Arabic
+
   const { isLoadingUser, brands } = useAuth();
   const brandId = brands[0]?.id;
   const updateProfile = useUpdateProfile();
@@ -62,7 +66,6 @@ export default function BrandSettingPage() {
     setValue,
   } = form;
 
-  // Update form values after brandData is fetched
   useEffect(() => {
     if (brandData) reset(brandData);
   }, [brandData, reset]);
@@ -71,13 +74,10 @@ export default function BrandSettingPage() {
     try {
       const res = await instance.patch(`/brands/${brandData?.id}`, data);
       console.log(res);
-      setMessage({ type: "success", text: "Brand updated successfully!" });
+      setMessage({ type: "success", text: t("brand.updatedSuccess") });
     } catch (err) {
-      console.error(err);
-      setMessage({
-        type: "error",
-        text: "Something went wrong while updating the brand.",
-      });
+      console.log(err);
+      setMessage({ type: "error", text: t("brand.updatedError") });
     }
   };
 
@@ -92,11 +92,9 @@ export default function BrandSettingPage() {
   if (!brandId) {
     return (
       <div className="flex items-center justify-center min-h-[400px] flex-col gap-4">
-        <p className="text-gray-500">
-          No brand found. Please create a brand first.
-        </p>
+        <p className="text-gray-500">{t("brand.noBrandFound")}</p>
         <Link to="/brands/add">
-          <Button>Create Brand</Button>
+          <Button>{t("brand.createBrand")}</Button>
         </Link>
       </div>
     );
@@ -105,12 +103,12 @@ export default function BrandSettingPage() {
   const selectFields = [
     {
       name: "category_type",
-      label: "Business Domain",
+      label: t("brand.businessDomain"),
       options: ["food", "electronics", "fashion"],
     },
     {
       name: "subscription_plan",
-      label: "Subscription Plan",
+      label: t("brand.subscriptionPlan"),
       options: ["free", "pro", "custom"],
     },
   ];
@@ -132,18 +130,17 @@ export default function BrandSettingPage() {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <h3 className="form-header">Basic Info</h3>
+        <h3 className="form-header">{t("brand.basicInfo")}</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-10 mt-8">
-          {/* Text Inputs */}
           {["brand_name", "email", "phone_number", "city"].map((name) => (
             <div className="space-y-2" key={name}>
               <Label className="text-sm font-medium text-gray-700">
-                {name.replace("_", " ")}
+                {t(`brand.fields.${name}`)}
               </Label>
               <Input
                 {...register(name as keyof BrandFormValues)}
-                placeholder={`Enter ${name.replace("_", " ")}`}
+                placeholder={t(`brand.placeholders.${name}`)}
                 className="focus:ring-2 font-semibold focus:ring-primary/20 focus:border-primary"
               />
               {errors[name as keyof BrandFormValues] && (
@@ -154,7 +151,6 @@ export default function BrandSettingPage() {
             </div>
           ))}
 
-          {/* Select Inputs */}
           {selectFields.map(({ name, label, options }) => {
             const value = watch(name as keyof BrandFormValues) || "";
             return (
@@ -170,13 +166,16 @@ export default function BrandSettingPage() {
                     })
                   }
                 >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder={`Select ${label}`} />
+                  {/* Apply dir="rtl" if Arabic */}
+                  <SelectTrigger className="w-full" dir={isRTL ? "rtl" : "ltr"}>
+                    <SelectValue
+                      placeholder={t("brand.select", { field: label })}
+                    />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent dir={isRTL ? "rtl" : "ltr"}>
                     {options.map((opt) => (
                       <SelectItem key={opt} value={opt}>
-                        {opt}
+                        {t(`brand.options.${opt}`)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -204,10 +203,10 @@ export default function BrandSettingPage() {
             {updateProfile.isPending ? (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Updating...
+                {t("brand.updating")}
               </div>
             ) : (
-              "Update"
+              t("brand.update")
             )}
           </Button>
         </div>

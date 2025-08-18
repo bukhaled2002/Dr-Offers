@@ -11,15 +11,17 @@ import {
   type ProfileFormValues,
 } from "@/schemas/profile.schema";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileSettingPage() {
+  const { t } = useTranslation();
   const { user, isLoadingUser } = useAuth();
   const updateProfile = useUpdateProfile();
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
-
+  console.log(user?.phone_number);
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -33,9 +35,9 @@ export default function ProfileSettingPage() {
   useEffect(() => {
     if (user) {
       form.reset({
-        address: user.address || "",
-        image_url: "https://i.ibb.co/6RjVRpGJ/default-photo.jpg",
+        ...user,
         language: (user.preferences?.language as "en" | "ar") || "en",
+        image_url: "https://i.ibb.co/6RjVRpGJ/default-photo.jpg",
       });
     }
   }, [user, form]);
@@ -50,38 +52,24 @@ export default function ProfileSettingPage() {
   } = form;
 
   const onSubmit = (data: ProfileFormValues) => {
-    console.log("SUBMIT WORKS", data);
-    setMessage(null); // مسح الرسائل السابقة
+    setMessage(null);
 
     const { language, ...profileData } = data;
-    console.log("Language:", language, "Profile data:", profileData);
-
-    const finalData: Record<string, unknown> = {
-      ...profileData,
-    };
-
-    console.log("Final data to send:", finalData);
+    console.log(language);
+    const finalData: Record<string, unknown> = { ...profileData };
 
     if (Object.keys(finalData).length === 0) {
-      setMessage({
-        type: "error",
-        text: "no data changed",
-      });
+      setMessage({ type: "error", text: t("profile.noChanges") });
       return;
     }
-
+    console.log(finalData);
     updateProfile.mutate(finalData, {
       onSuccess: () => {
-        setMessage({ type: "success", text: "profile updated Successfull!" });
-
+        setMessage({ type: "success", text: t("profile.updateSuccess") });
         form.reset(form.getValues());
       },
-      onError: (error) => {
-        console.error("Update profile error:", error);
-        setMessage({
-          type: "error",
-          text: "there was problem updating profile",
-        });
+      onError: () => {
+        setMessage({ type: "error", text: t("profile.updateError") });
       },
     });
   };
@@ -115,15 +103,13 @@ export default function ProfileSettingPage() {
         </div>
       )}
 
-      {/* Header Section */}
-
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Profile Image Section */}
         <div className="px-8 py-6 ">
           <div className="mb-6">
-            <h3 className="form-header">Profile Photo</h3>
+            <h3 className="form-header">{t("profile.photoTitle")}</h3>
             <p className="text-sm text-gray-600">
-              Upload a new profile picture to personalize your account
+              {t("profile.photoSubtitle")}
             </p>
           </div>
 
@@ -143,62 +129,65 @@ export default function ProfileSettingPage() {
               {errors.image_url.message}
             </p>
           )}
-          <p className="text-xs text-gray-500 mt-2">
-            Recommended: Square image, max 2MB
-          </p>
+          <p className="text-xs text-gray-500 mt-2">{t("profile.photoHint")}</p>
         </div>
 
         {/* Personal Information Section */}
         <div className="px-8 py-6">
-          <h3 className="form-header">Personal Information</h3>
+          <h3 className="form-header">{t("profile.infoTitle")}</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name Field */}
             <div className="space-y-2">
               <Label className="text-sm font-medium text-gray-700">
-                {user?.role === "owner" && "Owner"} Name
+                {user?.role === "owner"
+                  ? t("profile.ownerName")
+                  : t("profile.name")}
               </Label>
               <Input
                 disabled
                 value={user?.name || ""}
                 className="bg-gray-50 border-gray-200 text-gray-600"
               />
-              <p className="text-xs text-gray-500">Name cannot be changed</p>
+              <p className="text-xs text-gray-500">{t("profile.nameHint")}</p>
             </div>
 
             {/* Email Field */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">Email</Label>
+              <Label className="text-sm font-medium text-gray-700">
+                {t("profile.email")}
+              </Label>
               <Input
                 disabled
                 value={user?.email || ""}
                 className="bg-gray-50 border-gray-200 text-gray-600"
               />
-              <p className="text-xs text-gray-500">Email cannot be changed</p>
+              <p className="text-xs text-gray-500">{t("profile.emailHint")}</p>
             </div>
 
             {/* Address Field */}
             <div className="space-y-2 ">
               <Label className="text-sm font-medium text-gray-700">
-                Address
+                {t("profile.address")}
               </Label>
               <Input
                 {...register("address")}
-                placeholder="Enter your address"
+                placeholder={t("profile.addressPlaceholder")}
                 className="focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
               {errors.address && (
                 <p className="text-red-500 text-sm">{errors.address.message}</p>
               )}
             </div>
+
             {/* Phone Number Field */}
             <div className="space-y-2 ">
               <Label className="text-sm font-medium text-gray-700">
-                Phone Number
+                {t("profile.phone")}
               </Label>
               <Input
                 {...register("phone_number")}
-                placeholder="Enter your phone number"
+                placeholder={t("profile.phonePlaceholder")}
                 className="focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
               {errors.phone_number && (
@@ -213,7 +202,7 @@ export default function ProfileSettingPage() {
         {/* Action Buttons */}
         <div className="px-8 py-6 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
           <div className="text-sm text-gray-600">
-            {isDirty && "You have unsaved changes"}
+            {isDirty && t("profile.unsaved")}
           </div>
           <div className="flex space-x-3">
             <Button
@@ -223,7 +212,7 @@ export default function ProfileSettingPage() {
               disabled={!isDirty}
               className="px-6 py-2"
             >
-              Cancel
+              {t("profile.cancel")}
             </Button>
             <Button
               type="submit"
@@ -237,10 +226,10 @@ export default function ProfileSettingPage() {
               {updateProfile.isPending ? (
                 <div className="flex items-center">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Saving...
+                  {t("profile.saving")}
                 </div>
               ) : (
-                "Save Changes"
+                t("profile.save")
               )}
             </Button>
           </div>

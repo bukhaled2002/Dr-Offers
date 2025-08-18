@@ -1,8 +1,8 @@
 export const stats = [
-  { number: "200+", label: "International Brands" },
-  { number: "2,000+", label: "High-Quality Products" },
-  { number: "2,000+", label: "High-Quality Products" },
-  { number: "30,000+", label: "Happy Customers" },
+  { number: "200+", label: "international_brands" },
+  { number: "2,000+", label: "high_quality_products" },
+  { number: "2,000+", label: "high_quality_products" },
+  { number: "30,000+", label: "happy_customers" },
 ];
 
 export const brands = [

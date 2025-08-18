@@ -4,43 +4,38 @@ import { Button } from "@/components/ui/button";
 import type { UseFormSetValue, UseFormTrigger } from "react-hook-form";
 import type { BrandFormValues } from "@/schemas/brand.schema";
 import { uploadToSignedUrl } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
-// Add trigger and name from react-hook-form as props, adjust as needed
 export default function BusinessDocumentDrop({
   setValue,
   trigger,
   name = "business_docs",
   disabled = false,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
   setValue: UseFormSetValue<BrandFormValues>;
   trigger: UseFormTrigger<BrandFormValues>;
   disabled?: boolean;
   name: keyof BrandFormValues;
 }) {
+  const { t } = useTranslation();
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const onDrop = async (acceptedFiles: File[]) => {
     if (disabled || acceptedFiles.length === 0) return;
-
     const uploadedFile = acceptedFiles[0];
     setFile(uploadedFile);
     setError(null);
 
     try {
       setUploading(true);
-
       const uploadedImageUrl = await uploadToSignedUrl(uploadedFile);
-
-      // Update react-hook-form values
       setValue(name, uploadedImageUrl, { shouldDirty: true });
       await trigger(name);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      setError(e.message || "Upload failed");
+      setError(e.message || t("upload.failed"));
       setValue(name, undefined);
     } finally {
       setUploading(false);
@@ -75,12 +70,10 @@ export default function BusinessDocumentDrop({
       {!file ? (
         <div className="text-center text-[#475467] flex flex-col gap-2">
           <p>
-            <span className="font-bold text-primary">Click to Upload</span> or
-            drag and drop
+            <span className="font-bold text-primary">{t("upload.click")}</span>{" "}
+            {t("upload.orDrag")}
           </p>
-          <p className="text-xs text-gray-500">
-            SVG, PNG, JPG, GIF or PDF (MAX. 800×400px for images)
-          </p>
+          <p className="text-xs text-gray-500">{t("upload.supportedFiles")}</p>
         </div>
       ) : (
         <div className="flex flex-col items-center gap-4">
@@ -111,7 +104,9 @@ export default function BusinessDocumentDrop({
           )}
 
           <p className="text-sm font-medium text-gray-700">{file.name}</p>
-          {uploading && <p className="text-blue-500">Uploading...</p>}
+          {uploading && (
+            <p className="text-blue-500">{t("upload.uploading")}</p>
+          )}
           {error && <p className="text-red-500">{error}</p>}
           <div className="flex gap-3">
             <Button
@@ -124,7 +119,7 @@ export default function BusinessDocumentDrop({
               }
               disabled={uploading}
             >
-              Replace
+              {t("upload.replace")}
             </Button>
             <Button
               variant="destructive"
@@ -136,7 +131,7 @@ export default function BusinessDocumentDrop({
               }}
               disabled={uploading}
             >
-              Remove
+              {t("upload.remove")}
             </Button>
           </div>
         </div>

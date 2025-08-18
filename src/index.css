@@ -158,12 +158,15 @@ html {
 .brand-landing-heading {
   @apply flex items-center gap-2 bg-[#F2F2F2] p-1 w-40 justify-center text-primary font-semibold rounded-md py-3;
 }
+/* slider-styles.css */
 
+/* Base slider styles */
 .custom-slider .swiper-pagination {
   bottom: 20px !important;
-  left: 24px !important;
   width: auto !important;
-  text-align: left !important;
+  left: var(--pagination-left, 24px) !important;
+  right: var(--pagination-right, auto) !important;
+  text-align: var(--pagination-text-align, left) !important;
 }
 
 .custom-slider .swiper-pagination-bullet {
@@ -192,6 +195,32 @@ html {
   display: none;
 }
 
+/* Direction styles */
+.swiper-rtl {
+  direction: rtl !important;
+}
+
+.swiper-rtl .swiper-wrapper {
+  direction: rtl !important;
+}
+
+.swiper-rtl .swiper-slide {
+  direction: rtl !important;
+}
+
+.swiper-ltr {
+  direction: ltr !important;
+}
+
+.swiper-ltr .swiper-wrapper {
+  direction: ltr !important;
+}
+
+.swiper-ltr .swiper-slide {
+  direction: ltr !important;
+}
+
+/* Additional slider styles */
 .custom-slider-2 {
   padding-bottom: 40px !important;
 }
@@ -216,7 +245,6 @@ html {
   width: 20px;
   border-radius: 10px;
 }
-
 /* Splash Screen Animations */
 @keyframes fadeIn {
   from {

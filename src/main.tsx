@@ -7,6 +7,7 @@ import App from "./App.tsx";
 import SplashScreen from "./components/SplashScreen.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/useAuth.tsx";
+import "./i18n"; // import once
 
 const queryClient = new QueryClient();
 

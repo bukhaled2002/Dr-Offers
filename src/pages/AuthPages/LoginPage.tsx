@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { loginSchema, type LoginSchema } from "@/schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import instance from "@/api/axiosInstance"; // assumed API instance
+import instance from "@/api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/useAuth";
+import { useTranslation } from "react-i18next";
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const [authError, setAuthError] = useState<string | null>(null);
 
   const { login, role } = useAuth();
@@ -30,28 +32,31 @@ export function LoginPage() {
       setAuthError(null);
       login(access_token, refresh_token);
       navigate(role === "owner" ? "/setting/dashboard" : "/");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(err);
-      setAuthError(err?.response?.data?.message || "Invalid email or password");
+      setAuthError(
+        err?.response?.data?.message || t("login.invalidCredentials")
+      );
     }
   };
 
   return (
-    <AuthPageLayout title="Sign in" subtitle="Welcome back !!">
+    <AuthPageLayout title={t("login.title")} subtitle={t("login.subtitle")}>
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        {/* Email */}
         <div className="space-y-2">
           <label
             htmlFor="email"
             className="block text-sm font-medium text-gray-700"
           >
-            Email
+            {t("login.email")}
           </label>
           <Input
             {...register("email")}
             id="email"
             type="email"
-            placeholder="test@gmail.com"
+            placeholder={t("login.emailPlaceholder")}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#8B2F1D] focus:border-transparent"
           />
           {errors.email && (
@@ -59,19 +64,20 @@ export function LoginPage() {
           )}
         </div>
 
+        {/* Password */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <label
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
-              Password
+              {t("login.password")}
             </label>
             <Link
               to="/auth/forgot-password"
               className="text-xs text-gray-500 hover:underline"
             >
-              Forgot Password?
+              {t("login.forgotPassword")}
             </Link>
           </div>
           <Input
@@ -86,6 +92,7 @@ export function LoginPage() {
           )}
         </div>
 
+        {/* Auth error */}
         {authError && (
           <p className="text-red-600 text-sm text-center">{authError}</p>
         )}
@@ -94,17 +101,17 @@ export function LoginPage() {
           type="submit"
           className="w-full bg-[#8B2F1D] hover:bg-[#7A2818] text-white py-2 px-4 rounded-md font-medium transition-colors"
         >
-          {isSubmitting ? "Signing in..." : "SIGN IN →"}
+          {isSubmitting ? t("login.signingIn") : t("login.signIn")}
         </Button>
       </form>
 
       <div className="mt-6 text-center text-sm text-gray-600">
-        I don't have an account?{" "}
+        {t("login.noAccount")}{" "}
         <Link
           to="/auth/register"
           className="text-[#8B2F1D] hover:underline font-medium"
         >
-          Sign up
+          {t("login.signUp")}
         </Link>
       </div>
     </AuthPageLayout>

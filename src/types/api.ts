@@ -14,6 +14,7 @@ export type Deal = {
   created_at?: string;
   updated_at?: string;
   brand_name?: string;
+  brand_id: number;
   brand?: Brand;
 };
 

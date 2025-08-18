@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
 
 type Category = {
   name: string;
@@ -12,22 +13,29 @@ type CategoryCardsProps = {
 };
 
 const CategoryCards: React.FC<CategoryCardsProps> = ({ categories }) => {
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+
   return (
     <div className="flex justify-around flex-wrap gap-6">
       {categories.map((cat) => (
         <Link
           to={`/products?category=${cat.to.toLowerCase()}`}
           key={cat.name}
-          className="flex flex-col items-center text-sm "
+          className={`flex flex-col items-center text-sm ${
+            isArabic ? "text-right" : ""
+          }`}
         >
-          <div className="h-30 w-30 ">
+          <div className="h-30 w-30">
             <img
               src={cat.icon}
-              alt={cat.name}
+              alt={t(`categories.${cat.name}`)}
               className="rounded-full border-2 transition duration-200 hover:shadow-lg cursor-pointer hover:border-primary h-full w-full p-3 object-cover"
             />
           </div>
-          <p className="mt-3 font-semibold">{cat.name}</p>
+          <p className="mt-3 font-semibold">
+            {t(`categories.${cat.name.toLowerCase()}`)}
+          </p>
         </Link>
       ))}
     </div>

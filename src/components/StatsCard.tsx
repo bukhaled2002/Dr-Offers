@@ -2,6 +2,7 @@ import { FaEye, FaUser } from "react-icons/fa";
 import { AiFillLike } from "react-icons/ai";
 import { FaTag } from "react-icons/fa6";
 import type { AnalyticsData } from "@/hooks/useStats";
+import { useTranslation } from "react-i18next";
 
 export default function StatsCards({
   clicks,
@@ -9,12 +10,13 @@ export default function StatsCards({
   users,
   views,
 }: AnalyticsData) {
-  console.log(clicks);
+  const { t } = useTranslation();
+
   const stats = [
-    { label: "Views", value: views, icon: FaEye },
-    { label: "Clicks", value: clicks, icon: AiFillLike },
-    { label: "Users", value: users, icon: FaUser },
-    { label: "Products", value: products, icon: FaTag },
+    { label: t("stats.views"), value: views, icon: FaEye },
+    { label: t("stats.clicks"), value: clicks, icon: AiFillLike },
+    { label: t("stats.users"), value: users, icon: FaUser },
+    { label: t("stats.products"), value: products, icon: FaTag },
   ];
 
   return (

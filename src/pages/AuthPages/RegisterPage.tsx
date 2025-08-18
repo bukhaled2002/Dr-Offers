@@ -8,8 +8,10 @@ import { registerSchema, type RegisterSchema } from "@/schemas/register.schema";
 import { toast } from "react-toastify";
 import instance from "@/api/axiosInstance";
 import { useAuth } from "@/context/useAuth";
+import { useTranslation } from "react-i18next";
 
 export function RegisterPage() {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const {
     register,
@@ -41,19 +43,25 @@ export function RegisterPage() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(
+        error?.response?.data?.message || t("register.somethingWentWrong")
+      );
     }
   };
 
   return (
-    <AuthPageLayout title="Sign up">
+    <AuthPageLayout title={t("register.title")}>
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         {/* Name */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
-            Name
+            {t("register.name")}
           </label>
-          <Input {...register("name")} type="text" placeholder="John Doe" />
+          <Input
+            {...register("name")}
+            type="text"
+            placeholder={t("register.namePlaceholder")}
+          />
           {errors.name && (
             <p className="text-red-600 text-sm">{errors.name.message}</p>
           )}
@@ -62,12 +70,12 @@ export function RegisterPage() {
         {/* Email */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
-            Email
+            {t("register.email")}
           </label>
           <Input
             {...register("email")}
             type="email"
-            placeholder="example@gmail.com"
+            placeholder={t("register.emailPlaceholder")}
           />
           {errors.email && (
             <p className="text-red-600 text-sm">{errors.email.message}</p>
@@ -77,12 +85,12 @@ export function RegisterPage() {
         {/* Phone Number */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
-            Phone Number
+            {t("register.phoneNumber")}
           </label>
           <Input
             {...register("phone_number")}
             type="tel"
-            placeholder="+201234567890"
+            placeholder={t("register.phonePlaceholder")}
           />
           {errors.phone_number && (
             <p className="text-red-600 text-sm">
@@ -94,7 +102,7 @@ export function RegisterPage() {
         {/* Password */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
-            Password
+            {t("register.password")}
           </label>
           <Input
             {...register("password")}
@@ -106,7 +114,7 @@ export function RegisterPage() {
         {/* Confirm Password */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
-            Re-Type Password
+            {t("register.confirmPassword")}
           </label>
           <Input
             {...register("confirmPassword")}
@@ -124,17 +132,17 @@ export function RegisterPage() {
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-md"
         >
-          {isSubmitting ? "Submitting..." : "SIGN UP"}
+          {isSubmitting ? t("register.submitting") : t("register.signUp")}
         </Button>
       </form>
 
       <div className="mt-6 text-center text-sm text-gray-600">
-        Already have an account?{" "}
+        {t("register.alreadyHaveAccount")}{" "}
         <Link
           to="/auth/login"
           className="text-[#8B2F1D] hover:underline font-medium"
         >
-          Sign in
+          {t("register.signIn")}
         </Link>
       </div>
     </AuthPageLayout>

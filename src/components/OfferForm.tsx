@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
 interface OfferFormProps {
   onSubmit: (data: OfferSchemaInput) => void;
@@ -25,8 +26,10 @@ export default function OfferForm({
   onSubmit,
   isSubmitting = false,
   defaultValues,
-  submitText = "Save Offer",
+  submitText,
 }: OfferFormProps) {
+  const { t } = useTranslation();
+
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -57,16 +60,18 @@ export default function OfferForm({
 
   const imageValue = watch("image");
   const categoryValue = watch("category_type");
+
   const handleFormSubmit = async (data: OfferSchemaInput) => {
     try {
-      await onSubmit(data); // assume onSubmit returns a Promise
-      setMessage({ type: "success", text: "Offer saved successfully!" });
+      await onSubmit(data);
+      setMessage({ type: "success", text: t("offer.saveSuccess") });
       setOfferSubmitted(true);
     } catch (err) {
       console.log(err);
-      setMessage({ type: "error", text: "Failed to save offer. Try again." });
+      setMessage({ type: "error", text: t("offer.saveError") });
     }
   };
+
   return (
     <div className="px-8 py-6 space-y-8">
       {message && (
@@ -82,39 +87,40 @@ export default function OfferForm({
       )}
 
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <h3 className="form-header">Basic Info</h3>
+        <h3 className="form-header">{t("offer.basicInfo")}</h3>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           {[
             {
               name: "title",
-              label: "Title",
-              placeholder: "Offer Title",
+              label: t("offer.title"),
+              placeholder: t("offer.titlePlaceholder"),
               type: "text",
             },
             {
               name: "description",
-              label: "Description",
-              placeholder: "Offer description",
+              label: t("offer.description"),
+              placeholder: t("offer.descriptionPlaceholder"),
               type: "text",
             },
             {
               name: "price_before",
-              label: "Price Before",
+              label: t("offer.priceBefore"),
               placeholder: "760 SAR",
               type: "number",
             },
             {
               name: "discount_rate",
-              label: "Discount Rate",
+              label: t("offer.discountRate"),
               placeholder: "15%",
               type: "number",
             },
             {
               name: "category_type",
-              label: "Category Type",
+              label: t("offer.categoryType"),
               type: "select",
             },
-            { name: "image", label: "Image" },
+            { name: "image", label: t("offer.image") },
           ].map(({ name, label, placeholder, type }) => (
             <div className="space-y-2" key={name}>
               <Label className="text-sm font-medium text-gray-700">
@@ -135,13 +141,23 @@ export default function OfferForm({
                     setValue("category_type", value, { shouldValidate: true })
                   }
                 >
-                  <SelectTrigger className="w-full font-semibold">
-                    <SelectValue placeholder="Select a category" />
+                  <SelectTrigger
+                    className="w-full font-semibold text-right" // align text to the right
+                    dir="rtl" // force RTL for the trigger
+                  >
+                    <SelectValue placeholder={t("offer.selectCategory")} />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="food">Food</SelectItem>
-                    <SelectItem value="electronics">Electronics</SelectItem>
-                    <SelectItem value="fashion">Fashion</SelectItem>
+
+                  <SelectContent className="text-right" dir="rtl">
+                    <SelectItem value="food">
+                      {t("categories_brand.food")}
+                    </SelectItem>
+                    <SelectItem value="electronics">
+                      {t("categories_brand.electronics")}
+                    </SelectItem>
+                    <SelectItem value="fashion">
+                      {t("categories_brand.fashion")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               ) : (
@@ -172,7 +188,7 @@ export default function OfferForm({
                 setOfferSubmitted(false);
               }}
             >
-              Add another offer *
+              {t("offer.addAnother")}
             </p>
           )}
           <Button
@@ -180,7 +196,7 @@ export default function OfferForm({
             disabled={!isValid || isSubmitting}
             className={`${isSubmitting ? "opacity-50" : ""}`}
           >
-            {isSubmitting ? "Saving..." : submitText}
+            {isSubmitting ? t("offer.saving") : submitText || t("offer.save")}
           </Button>
         </div>
       </form>

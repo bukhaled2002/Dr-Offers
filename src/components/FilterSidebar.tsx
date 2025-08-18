@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import instance from "@/api/axiosInstance";
+import { useTranslation } from "react-i18next";
 
 type Brand = {
   id: string;
@@ -20,11 +21,6 @@ type BrandsResponse = {
   data: Brand[];
 };
 
-type Catergory = {
-  name: string;
-  value: string;
-};
-
 type FilterSidebarProps = {
   totalItems: number;
   currentPage: number;
@@ -36,6 +32,7 @@ const FilterSidebar = ({
   currentPage = 1,
   perPage = 20,
 }: FilterSidebarProps) => {
+  const { t } = useTranslation();
   const start = (currentPage - 1) * perPage + 1;
   const end = Math.min(currentPage * perPage, totalItems);
   const navigate = useNavigate();
@@ -53,14 +50,35 @@ const FilterSidebar = ({
 
   const brands = brandsResponse?.data ?? [];
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ["category"],
-    queryFn: async () => {
-      const res = await instance.get("/offers/categories");
-      return res?.data.data as Catergory[];
-    },
-  });
+  const categories = [
+    "GROCERIES",
 
+    "PREMIUM_FRUITS",
+
+    "HOME_KITCHEN",
+
+    "FASHION",
+
+    "ELECTRONICS",
+
+    "BEAUTY",
+
+    "HOME_IMPROVEMENT",
+
+    "SPORTS_TOYS_LUGGAGE",
+
+    "MOBILE",
+
+    "COSMETICS",
+
+    "FURNITURE",
+
+    "WATCHES",
+
+    "FOOD",
+
+    "ACCESSORIES",
+  ];
   const selectedBrands = searchParams.getAll("brand_id");
   const selectedCategories = searchParams.getAll("category");
   const priceMin = Number(searchParams.get("minPrice")) || 0;
@@ -90,18 +108,23 @@ const FilterSidebar = ({
     <div className="p-6 md:h-full w-full md:w-64">
       <div className="mb-6">
         <p className="text-sm text-gray-600 w-60">
-          Showing {start} - {end} out of {totalItems} Products
+          {t("filter.showing")} {start} - {end} {t("filter.outOf")} {totalItems}{" "}
+          {t("filter.products")}
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-x-4 md:block w-full">
         {/* Price Range */}
         <div className="mb-8 col-span-2 sm:col-span-1">
-          <h3 className="text-lg font-semibold mb-4">PRICES</h3>
-          <p className="text-sm text-gray-600 mb-2">Range</p>
+          <h3 className="text-lg font-semibold mb-4">{t("filter.prices")}</h3>
+          <p className="text-sm text-gray-600 mb-2">{t("filter.range")}</p>
           <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>{priceMin} SAR</span>
-            <span>{priceMax} SAR</span>
+            <span>
+              {priceMin} {t("filter.currency")}
+            </span>
+            <span>
+              {priceMax} {t("filter.currency")}
+            </span>
           </div>
           <Slider
             value={[priceMin, priceMax]}
@@ -115,10 +138,10 @@ const FilterSidebar = ({
 
         {/* Brands */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold mb-4">BRANDS</h3>
+          <h3 className="text-lg font-semibold mb-4">{t("filter.brands")}</h3>
           <div className="space-y-3">
             {brandsLoading ? (
-              <p>loading...</p>
+              <p>{t("filter.loading")}</p>
             ) : (
               (showAllBrands ? brands : brands.slice(0, 4)).map(
                 ({ id, brand_name }) => {
@@ -147,28 +170,32 @@ const FilterSidebar = ({
               onClick={() => setShowAllBrands((prev) => !prev)}
               className="text-red-500 text-sm p-0 mt-2 h-auto"
             >
-              {showAllBrands ? "View less" : `+ ${brands.length - 4} more`}
+              {showAllBrands
+                ? t("filter.viewLess")
+                : t("filter.viewMore", { count: brands.length - 4 })}
             </Button>
           )}
         </div>
 
         {/* Categories */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">CATEGORIES</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            {t("filter.categories")}
+          </h3>
           <div className="space-y-3">
             {(showAllCategories ? categories : categories.slice(0, 4)).map(
-              ({ name, value }) => (
-                <div key={value} className="flex items-center space-x-2">
+              (category) => (
+                <div key={category} className="flex items-center space-x-2">
                   <Checkbox
-                    id={value}
-                    checked={selectedCategories.includes(value)}
-                    onCheckedChange={() => toggleParam("category", value)}
+                    id={category}
+                    checked={selectedCategories.includes(category)}
+                    onCheckedChange={() => toggleParam("category", category)}
                   />
                   <label
-                    htmlFor={value}
+                    htmlFor={category}
                     className="text-sm text-gray-700 cursor-pointer"
                   >
-                    {name}
+                    {t(`All_Categories.${category}`)}
                   </label>
                 </div>
               )
@@ -181,8 +208,8 @@ const FilterSidebar = ({
               className="text-red-500 text-sm p-0 mt-2 h-auto"
             >
               {showAllCategories
-                ? "View less"
-                : `+ ${categories.length - 4} more`}
+                ? t("filter.viewLess")
+                : t("filter.viewMore", { count: categories.length - 4 })}
             </Button>
           )}
         </div>

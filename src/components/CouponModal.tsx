@@ -3,7 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
 import type { Deal } from "@/types/api";
-
+import { useTranslation } from "react-i18next";
 // Coupon Modal Component
 const CouponModal: React.FC<{
   deal: Deal | null;
@@ -12,6 +12,7 @@ const CouponModal: React.FC<{
 }> = ({ deal, isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
 
+  const { t } = useTranslation();
   const handleCopyCode = async () => {
     if (deal?.coupon) {
       try {
@@ -36,23 +37,25 @@ const CouponModal: React.FC<{
               <span className="text-white font-bold text-xl">D</span>
             </div>
             <p className="text-[#8B2F1D] text-sm font-medium mt-2">Dr.Offers</p>
-            <p className="text-gray-400 text-xs">دكتور أوفرز</p>
+            <p className="text-gray-400 text-xs">{t("drOffers_ar")}</p>
           </div>
 
           {/* Surprise gift text */}
-          <p className="text-gray-500 text-lg mb-8">Surprise gift for you</p>
+          <p className="text-gray-500 text-lg mb-8">{t("surpriseGift")}</p>
 
           {/* Discount */}
           <div className="mb-6">
             <h2 className="text-4xl font-bold text-[#8B2F1D] mb-2">
-              {deal.discount_rate}% OFF
+              {deal.discount_rate}% {t("off")}
             </h2>
-            <p className="text-gray-800 text-lg font-medium">Entire Purchase</p>
+            <p className="text-gray-800 text-lg font-medium">
+              {t("entirePurchase")}
+            </p>
           </div>
 
           {/* Coupon Code */}
           <div className="mb-8">
-            <p className="text-gray-500 text-sm mb-3">Your coupon code</p>
+            <p className="text-gray-500 text-sm mb-3">{t("yourCouponCode")}</p>
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
               <p className="text-2xl font-bold text-gray-800 tracking-wider">
                 {deal.coupon}
@@ -68,12 +71,12 @@ const CouponModal: React.FC<{
             {copied ? (
               <div className="flex items-center gap-2">
                 <Check className="w-5 h-5" />
-                Copied!
+                {t("copied")}
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Copy className="w-5 h-5" />
-                Copy Code
+                {t("copyCode")}
               </div>
             )}
           </Button>

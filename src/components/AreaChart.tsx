@@ -16,46 +16,45 @@ import {
   SelectValue,
 } from "./ui/select";
 import type { ViewsData, HourlyView } from "@/hooks/useStats";
+import { useTranslation } from "react-i18next";
 
-// Format hour like "03am", "12pm"
-const formatHourLabel = (hour: number) => {
+// Always English label for internal comparison
+const formatHourLabelEn = (hour: number) => {
   const suffix = hour < 12 ? "am" : "pm";
   const h = hour % 12 === 0 ? 12 : hour % 12;
   return h.toString().padStart(2, "0") + suffix;
 };
 
-// Generate hourly data for a day (0-23 hours)
-const getHourlyDataForDay = (data: HourlyView[] | undefined): HourlyView[] => {
-  return Array.from({ length: 24 }, (_, i) => {
-    const hourLabel = formatHourLabel(i);
+// Convert English label to UI based on language
+const formatHourLabelUI = (
+  label: string,
+  t: (key: string) => string,
+  isRTL: boolean
+) => {
+  if (!isRTL) return label;
+  const hour = parseInt(label.slice(0, 2), 10);
+  const suffix = label.slice(2) === "am" ? t("chart.am") : t("chart.pm");
+  return `${hour.toString().padStart(2, "0")}${suffix}`;
+};
+
+const getHourlyDataForDay = (data: HourlyView[] | undefined) =>
+  Array.from({ length: 24 }, (_, i) => {
+    const hourLabel = formatHourLabelEn(i);
     const found = data?.find((h) => h.time === hourLabel);
     return found ?? { time: hourLabel, value: 0 };
   });
-};
 
-// Generate labels for last 24 hours
-const getLast24HourLabels = (): string[] => {
-  const now = new Date();
-  const labels: string[] = [];
-  for (let i = 23; i >= 0; i--) {
-    const d = new Date(now);
-    d.setHours(now.getHours() - i);
-    labels.push(formatHourLabel(d.getHours()));
-  }
-  return labels;
-};
+const getLast24HourLabels = () =>
+  Array.from({ length: 24 }, (_, i) => {
+    const now = new Date();
+    now.setHours(now.getHours() - (23 - i));
+    return formatHourLabelEn(now.getHours());
+  });
 
-// Merge weekData into rolling last 24 hours
-const getLast24HourData = (
-  weekData: ViewsData,
-  todayLabel: string
-): HourlyView[] => {
+const getLast24HourData = (weekData: ViewsData, todayLabel: string) => {
   const labels = getLast24HourLabels();
   return labels.map((label) => {
-    // Try to find in today
     let found = weekData[todayLabel]?.find((h) => h.time === label);
-
-    // If not found, try yesterday
     if (!found) {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
@@ -64,12 +63,10 @@ const getLast24HourData = (
       });
       found = weekData[yesterdayLabel]?.find((h) => h.time === label);
     }
-
     return found ?? { time: label, value: 0 };
   });
 };
 
-// Get last 7 days
 const getLast7Days = () => {
   const days = [];
   for (let i = 6; i >= 0; i--) {
@@ -77,7 +74,7 @@ const getLast7Days = () => {
     d.setDate(d.getDate() - i);
     days.push({
       label: d.toLocaleDateString("en-US", { weekday: "short" }),
-      full: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      full: d.toLocaleDateString(undefined, { month: "short", day: "numeric" }),
       date: d.toDateString(),
     });
   }
@@ -89,9 +86,11 @@ interface ViewsChartProps {
 }
 
 export default function ViewsChart({ views: weekData = {} }: ViewsChartProps) {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+
   const days = getLast7Days();
   const [selectedDay, setSelectedDay] = useState(days[6].label);
-
   const selectedDayObj = days.find((d) => d.label === selectedDay);
   const isToday = selectedDayObj?.date === new Date().toDateString();
 
@@ -100,15 +99,17 @@ export default function ViewsChart({ views: weekData = {} }: ViewsChartProps) {
     : getHourlyDataForDay(weekData[selectedDay]);
 
   return (
-    <Card className="bg-white border-none shadow-none w-full p-4">
+    <Card
+      className="bg-white border-none shadow-none w-full p-4"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Views</CardTitle>
+          <CardTitle>{t("chart.views")}</CardTitle>
 
-          {/* Day selector */}
           <Select value={selectedDay} onValueChange={setSelectedDay}>
             <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Select day" />
+              <SelectValue placeholder={t("chart.selectDay")} />
             </SelectTrigger>
             <SelectContent>
               {days.map((day) => (
@@ -149,18 +150,25 @@ export default function ViewsChart({ views: weekData = {} }: ViewsChartProps) {
                 axisLine={false}
                 tickLine={false}
                 tickMargin={10}
+                tickFormatter={(time) => formatHourLabelUI(time, t, isRTL)}
               />
               <YAxis axisLine={false} tickLine={false} tickMargin={10} />
 
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
+                    const label = formatHourLabelUI(
+                      payload[0].payload.time,
+                      t,
+                      isRTL
+                    );
                     return (
                       <div className="bg-[#1a1a1a] text-white px-3 py-2 rounded-lg shadow-md text-center">
-                        <div className="text-sm">View</div>
+                        <div className="text-sm">{t("chart.view")}</div>
                         <div className="text-lg font-bold">
                           {payload[0].value}
                         </div>
+                        <div className="text-xs">{label}</div>
                       </div>
                     );
                   }

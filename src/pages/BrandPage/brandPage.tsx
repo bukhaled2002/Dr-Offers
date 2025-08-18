@@ -23,8 +23,7 @@ export default function BrandPage() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["brand", brandSlug],
     queryFn: async () => {
-      const res = await instance.get(`brands/${brandSlug}/templates`);
-      console.log(res);
+      const res = await instance.get(`/brands/${brandSlug}/templates`);
       return res.data;
     },
     enabled: !!brandSlug,
@@ -33,7 +32,7 @@ export default function BrandPage() {
   // 👁️ Track view once
   useEffect(() => {
     const sendView = async () => {
-      const brandId = data?.data?.id;
+      const brandId = data?.data?.id || brandSlug;
       if (!brandId || viewSentRef.current) return;
 
       try {
@@ -46,12 +45,12 @@ export default function BrandPage() {
     };
 
     sendView();
-  }, [data?.data?.id]);
+  }, [data?.data?.id, brandSlug]);
 
   // 🖱️ Track clicks (batched)
   useEffect(() => {
     const sendClicks = async () => {
-      const brandId = data?.data?.id;
+      const brandId = data?.data?.id || brandSlug;
       if (!brandId || pendingClicks.current === 0) return;
 
       const count = pendingClicks.current;
@@ -88,7 +87,7 @@ export default function BrandPage() {
   if (isLoading) return <div>Loading...</div>;
   if (isError || !data?.data) return <ErrorPage />;
 
-  const brandData: BrandData = data.data[0];
+  const brandData: BrandData = data.data;
 
   const category = "food";
 

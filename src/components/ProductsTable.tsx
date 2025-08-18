@@ -29,11 +29,12 @@ import {
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import instance from "@/api/axiosInstance";
+import { useTranslation } from "react-i18next";
 
 export default function ProductsTable({ deals }: { deals: Deal[] }) {
+  const { t } = useTranslation();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
-
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
@@ -54,24 +55,32 @@ export default function ProductsTable({ deals }: { deals: Deal[] }) {
   return (
     <div>
       <div className="flex justify-between py-4">
-        <h2 className="text-2xl font-semibold mb-4">Active Offers</h2>
+        <h2 className="text-2xl font-semibold mb-4">
+          {t("products.activeOffers")}
+        </h2>
         <Button>
           <Link to={"/setting/offers"} className="flex items-center gap-2">
             <MdOutlineAddBox />
-            Add new Offer
+            {t("products.addNewOffer")}
           </Link>
         </Button>
       </div>
 
       <Table>
-        <TableCaption>Active Offers</TableCaption>
+        <TableCaption>{t("products.activeOffers")}</TableCaption>
         <TableHeader className="bg-gray-200/50 rounded-2xl overflow-hidden">
           <TableRow className="border-none">
-            <TableHead>Product name</TableHead>
-            <TableHead>Discount Rate</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Category Type</TableHead>
+            <TableHead className="text-start">
+              {t("products.productName")}
+            </TableHead>
+            <TableHead className="text-start">
+              {t("products.discountRate")}
+            </TableHead>
+            <TableHead className="text-start">{t("products.price")}</TableHead>
+            <TableHead className="text-start">{t("products.status")}</TableHead>
+            <TableHead className="text-start">
+              {t("products.categoryType")}
+            </TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -90,9 +99,11 @@ export default function ProductsTable({ deals }: { deals: Deal[] }) {
                 <p>{deal.title}</p>
               </TableCell>
               <TableCell>{deal.discount_rate}%</TableCell>
-              <TableCell>{deal.price_after} EGP</TableCell>
-              <TableCell>{deal.status}</TableCell>
-              <TableCell>{deal.category_type}</TableCell>
+              <TableCell>
+                {deal.price_after} {t("currency.symbol")}
+              </TableCell>
+              <TableCell>{t(`status.${deal.status}`)}</TableCell>
+              <TableCell>{t(`categories.${deal.category_type}`)}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -108,13 +119,15 @@ export default function ProductsTable({ deals }: { deals: Deal[] }) {
                       asChild
                       className="hover:bg-gray-100 cursor-pointer"
                     >
-                      <Link to={`/setting/offers/${deal.id}`}>Edit</Link>
+                      <Link to={`/setting/offers/${deal.id}`}>
+                        {t("products.edit")}
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="hover:bg-gray-100 cursor-pointer text-red-500"
                       onClick={() => handleDeleteClick(deal)}
                     >
-                      Delete
+                      {t("products.delete")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -128,15 +141,15 @@ export default function ProductsTable({ deals }: { deals: Deal[] }) {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Product</DialogTitle>
+            <DialogTitle>{t("products.deleteProduct")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete the product{" "}
+              {t("products.confirmDelete")}{" "}
               <span className="font-semibold">"{selectedDeal?.title}"</span>?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpenDialog(false)}>
-              Cancel
+              {t("products.cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -147,7 +160,9 @@ export default function ProductsTable({ deals }: { deals: Deal[] }) {
               }}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Confirm"}
+              {deleteMutation.isPending
+                ? t("products.deleting")
+                : t("products.confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>

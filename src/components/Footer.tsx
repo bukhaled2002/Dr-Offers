@@ -1,24 +1,31 @@
 import React, { useState } from "react";
 import { Facebook, Twitter, Instagram, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Footer: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState("");
 
   const handleSubscribe = () => {
-    // Handle newsletter subscription
     console.log("Subscribing email:", email);
     setEmail("");
   };
 
+  const isArabic = i18n.language === "ar";
+
   return (
-    <footer className="pt-12 pb-8 px-4 md:px-8 md:mt-20">
+    <footer
+      className={`pt-12 pb-8 px-4 md:px-8 md:mt-20 ${
+        isArabic ? "direction-rtl" : "direction-ltr"
+      }`}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
           <div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
-              COMPANY INFO
+              {t("company_info")}
             </h3>
             <ul className="space-y-3">
               <li>
@@ -26,7 +33,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  About Dr Offers
+                  {t("about_dr_offers")}
                 </a>
               </li>
               <li>
@@ -34,7 +41,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Social Responsibility
+                  {t("social_responsibility")}
                 </a>
               </li>
               <li>
@@ -42,7 +49,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Affiliate
+                  {t("affiliate")}
                 </a>
               </li>
               <li>
@@ -50,7 +57,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Fashion Blogger
+                  {t("fashion_blogger")}
                 </a>
               </li>
             </ul>
@@ -59,7 +66,7 @@ const Footer: React.FC = () => {
           {/* Help & Support */}
           <div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
-              HELP & SUPPORT
+              {t("help_support")}
             </h3>
             <ul className="space-y-3">
               <li>
@@ -67,7 +74,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Shipping Info
+                  {t("shipping_info")}
                 </a>
               </li>
               <li>
@@ -75,7 +82,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Returns
+                  {t("returns")}
                 </a>
               </li>
               <li>
@@ -83,7 +90,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  How to Order
+                  {t("how_to_order")}
                 </a>
               </li>
               <li>
@@ -91,7 +98,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  How to Track
+                  {t("how_to_track")}
                 </a>
               </li>
             </ul>
@@ -100,7 +107,7 @@ const Footer: React.FC = () => {
           {/* Customer Care */}
           <div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
-              CUSTOMER CARE
+              {t("customer_care")}
             </h3>
             <ul className="space-y-3">
               <li>
@@ -108,7 +115,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Contact Us
+                  {t("contact_us")}
                 </a>
               </li>
               <li>
@@ -116,7 +123,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Payment
+                  {t("payment")}
                 </a>
               </li>
               <li>
@@ -124,7 +131,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Bonus Point
+                  {t("bonus_point")}
                 </a>
               </li>
               <li>
@@ -132,7 +139,7 @@ const Footer: React.FC = () => {
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  Notices
+                  {t("notices")}
                 </a>
               </li>
             </ul>
@@ -141,7 +148,7 @@ const Footer: React.FC = () => {
           {/* Socials & Newsletter */}
           <div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
-              SOCIALS
+              {t("socials")}
             </h3>
             <div className="flex space-x-3 mb-6">
               <a
@@ -179,136 +186,55 @@ const Footer: React.FC = () => {
             </div>
 
             <h4 className="text-gray-800 font-semibold text-sm mb-3 tracking-wide">
-              SIGN UP FOR Dr Offers NEWS
+              {t("newsletter_signup")}
             </h4>
             <div className="flex">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                placeholder={t("your_email")}
+                className={`flex-1 px-4 py-2 border border-gray-300 ${
+                  isArabic ? "rounded-r-md" : "rounded-l-md"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${
+                  isArabic ? "text-right" : ""
+                }`}
               />
               <button
                 onClick={handleSubscribe}
-                className="bg-gray-700 text-white px-6 py-2 rounded-r-md hover:bg-gray-600 transition-colors text-sm font-medium"
+                className={`bg-gray-700 text-white px-6 py-2  ${
+                  isArabic ? "rounded-l-md" : "rounded-r-md"
+                } hover:bg-gray-600 transition-colors text-sm font-medium`}
               >
-                SUBSCRIBE
+                {t("subscribe")}
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
-              By clicking the SUBSCRIBE button, you are agreeing to our{" "}
+            <p
+              className={`text-xs text-gray-500 mt-2 ${
+                isArabic ? "text-right" : ""
+              }`}
+            >
+              {t("subscribe_note")}
               <a href="#" className="text-blue-600 hover:underline">
-                Privacy & Cookie Policy
+                {t("privacy_policy")}
               </a>
             </p>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-200 pt-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
-            {/* Copyright and Links */}
-            <div className="mb-6 lg:mb-0">
-              <p className="text-gray-600 text-sm mb-4">
-                © 2025 Dr All Rights Reserved
-              </p>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 underline"
-                >
-                  Privacy Center
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 underline"
-                >
-                  Privacy & Cookie Policy
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 underline"
-                >
-                  Manage Cookies
-                </a>
-              </div>
-              <div className="flex flex-wrap gap-4 text-sm mt-2">
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 underline"
-                >
-                  Terms & Conditions
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 underline"
-                >
-                  Copyright Notice
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 underline"
-                >
-                  Imprint
-                </a>
-              </div>
-            </div>
-
-            {/* Payment Methods */}
-            <div>
-              <h4 className="text-gray-800 font-semibold text-sm mb-3 tracking-wide">
-                WE ACCEPT
-              </h4>
-              <div className="grid grid-cols-4 gap-2">
-                {/* Row 1 */}
-                <div className="w-12 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded text-white text-xs flex items-center justify-center font-bold">
-                  MC
-                </div>
-                <div className="w-12 h-8 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">
-                  PP
-                </div>
-                <div className="w-12 h-8 bg-gradient-to-r from-blue-600 to-yellow-400 rounded text-white text-xs flex items-center justify-center font-bold">
-                  eB
-                </div>
-                <div className="w-12 h-8 bg-gradient-to-r from-blue-500 to-green-400 rounded text-white text-xs flex items-center justify-center font-bold">
-                  GP
-                </div>
-
-                {/* Row 2 */}
-                <div className="w-12 h-8 bg-gray-800 rounded text-white text-xs flex items-center justify-center font-bold">
-                  AE
-                </div>
-                <div className="w-12 h-8 bg-orange-500 rounded text-white text-xs flex items-center justify-center font-bold">
-                  DS
-                </div>
-                <div className="w-12 h-8 bg-black rounded text-white text-xs flex items-center justify-center font-bold">
-                  AP
-                </div>
-                <div className="w-12 h-8 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">
-                  AE
-                </div>
-
-                {/* Row 3 */}
-                <div className="w-12 h-8 bg-orange-500 rounded text-white text-xs flex items-center justify-center font-bold">
-                  AM
-                </div>
-                <div className="w-12 h-8 bg-blue-500 rounded text-white text-xs flex items-center justify-center font-bold">
-                  Al
-                </div>
-                <div className="w-12 h-8 bg-blue-600 rounded text-white text-xs flex items-center justify-center font-bold">
-                  bt
-                </div>
-                <div className="w-12 h-8 bg-yellow-400 rounded text-black text-xs flex items-center justify-center font-bold">
-                  BC
-                </div>
-              </div>
-            </div>
+        <div className="border-t border-gray-200 pt-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+          <div>
+            <p
+              className={`text-gray-600 text-sm mb-4 ${
+                isArabic ? "text-right" : ""
+              }`}
+            >
+              © 2025 Dr {t("all_rights_reserved")}
+            </p>
           </div>
         </div>
       </div>
-
-      <p className="text-center text-xs mt-6">©2025 Dr All Rights Reserved</p>
     </footer>
   );
 };

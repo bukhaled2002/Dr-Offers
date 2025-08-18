@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Home, LayoutGrid, Percent, User, Store } from "lucide-react";
 import type { ReactNode } from "react";
 import { useLocation, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type NavItem = {
   label: string;
@@ -11,15 +12,15 @@ type NavItem = {
 };
 
 export default function AppSidebar() {
+  const { t, i18n } = useTranslation();
   const location = useLocation();
-
   const { user } = useAuth();
 
   const role = user?.role || "visitor";
 
   const commonItems: NavItem[] = [
     {
-      label: "Profile",
+      label: t("sidebar.profile"),
       href: "/setting/profile",
       icon: <User className="w-5 h-5" />,
     },
@@ -27,22 +28,22 @@ export default function AppSidebar() {
 
   const ownerExtraItems: NavItem[] = [
     {
-      label: "Dashboard",
+      label: t("sidebar.dashboard"),
       href: "/setting/dashboard",
       icon: <Home className="w-5 h-5" />,
     },
     {
-      label: "Templates",
+      label: t("sidebar.templates"),
       href: "/setting/template",
       icon: <LayoutGrid className="w-5 h-5" />,
     },
     {
-      label: "Brand",
+      label: t("sidebar.brand"),
       href: "/setting/brand",
       icon: <Store className="w-5 h-5" />,
     },
     {
-      label: "Add Offer",
+      label: t("sidebar.addOffer"),
       href: "/setting/offers",
       icon: <Percent className="w-5 h-5" />,
     },
@@ -53,8 +54,10 @@ export default function AppSidebar() {
 
   return (
     <aside
-      className="bg-[#EDEAEA99] border-r shadow-sm flex flex-col gap-4 h-[100vh] sticky top-0 
-                 w-16 md:w-64 transition-all duration-300 z-10"
+      className={cn(
+        "bg-[#EDEAEA99] border-r shadow-sm flex flex-col gap-4 h-[100vh] sticky top-0 w-16 md:w-64 transition-all duration-300 z-10",
+        i18n.language === "ar" && "rtl"
+      )}
     >
       <div className="flex items-center justify-center md:justify-start px-2 md:px-6 max-h-40">
         <Link to={role === "owner" ? "/brand-landing" : "/"} className="mt-15">
