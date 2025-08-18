@@ -54,7 +54,14 @@ export default function BrandSettingPage() {
   const form = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
     mode: "onChange",
-    defaultValues: brandData || {},
+    defaultValues: {
+      brand_name: "",
+      email: "",
+      phone_number: "",
+      city: "",
+      category_type: "food", // fallback default
+      subscription_plan: "free", // fallback default
+    },
   });
 
   const {
@@ -67,11 +74,31 @@ export default function BrandSettingPage() {
   } = form;
 
   useEffect(() => {
-    if (brandData) reset(brandData);
-  }, [brandData, reset]);
+    if (brandData) {
+      const resetData = {
+        brand_name: brandData.brand_name || "",
+        email: brandData.email || "",
+        phone_number: brandData.phone_number || "",
+        city: brandData.city || "",
+        category_type: brandData.category_type || "food", // Ensure fallback
+        subscription_plan: brandData.subscription_plan || "free", // Ensure fallback
+      };
+
+      reset(resetData);
+
+      // Explicitly set the select values after reset
+      setValue("category_type", resetData.category_type, {
+        shouldValidate: true,
+      });
+      setValue("subscription_plan", resetData.subscription_plan, {
+        shouldValidate: true,
+      });
+    }
+  }, [brandData, reset, setValue]);
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
+      console.log(data);
       const res = await instance.patch(`/brands/${brandData?.id}`, data);
       console.log(res);
       setMessage({ type: "success", text: t("brand.updatedSuccess") });
@@ -152,7 +179,6 @@ export default function BrandSettingPage() {
           ))}
 
           {selectFields.map(({ name, label, options }) => {
-            const value = watch(name as keyof BrandFormValues) || "";
             return (
               <div className="space-y-2" key={name}>
                 <Label className="text-sm font-medium text-gray-700">
@@ -160,7 +186,10 @@ export default function BrandSettingPage() {
                 </Label>
 
                 <Select
-                  value={value}
+                  value={
+                    watch(name as keyof BrandFormValues) ||
+                    (name === "category_type" ? "food" : "free")
+                  }
                   onValueChange={(val) =>
                     setValue(name as keyof BrandFormValues, val, {
                       shouldValidate: true,
@@ -168,12 +197,10 @@ export default function BrandSettingPage() {
                   }
                 >
                   <SelectTrigger className="w-full" dir={isRTL ? "rtl" : "ltr"}>
-                    {/* DO NOT pass value prop here */}
                     <SelectValue
                       placeholder={t("brand.select", { field: label })}
                     />
                   </SelectTrigger>
-
                   <SelectContent dir={isRTL ? "rtl" : "ltr"}>
                     {options.map((opt) => (
                       <SelectItem key={opt} value={opt}>

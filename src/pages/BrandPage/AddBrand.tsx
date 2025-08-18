@@ -12,11 +12,15 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { brandSchema, type BrandFormValues } from "@/schemas/brand.schema";
 import BusinessDocumentDrop from "@/components/BusinessDocumentDrop";
 import instance from "@/api/axiosInstance";
 import { useTranslation } from "react-i18next";
+
+// Define the select field options with proper typing
+const CATEGORY_OPTIONS = ["food", "electronics", "fashion"] as const;
+const SUBSCRIPTION_OPTIONS = ["free", "pro", "custom"] as const;
 
 export default function AddBrand() {
   const { t, i18n } = useTranslation();
@@ -31,30 +35,25 @@ export default function AddBrand() {
   const isPendingBrand = brands[0]?.status === "pending";
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const defaultValues: BrandFormValues = brands[0]
-    ? {
-        brand_name: brands[0].brand_name || "",
-        email: brands[0].email || "",
-        phone_number: brands[0].phone_number || "",
-        city: brands[0].city || "",
-        category_type: brands[0].category_type || "food",
-        subscription_plan: brands[0].subscription_plan || "free",
-        business_docs: brands[0].business_docs || "",
-      }
-    : {
-        brand_name: "",
-        email: "",
-        phone_number: "",
-        city: "",
-        category_type: "food",
-        subscription_plan: "free",
-        business_docs: "",
-      };
+  // Create default values with proper fallbacks
+  const createDefaultValues = (): BrandFormValues => {
+    const existingBrand = brands[0];
+
+    return {
+      brand_name: existingBrand?.brand_name || "",
+      email: existingBrand?.email || "",
+      phone_number: existingBrand?.phone_number || "",
+      city: existingBrand?.city || "",
+      category_type: existingBrand?.category_type || "food",
+      subscription_plan: existingBrand?.subscription_plan || "free",
+      business_docs: existingBrand?.business_docs || "",
+    };
+  };
 
   const form = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
     mode: "onChange",
-    defaultValues,
+    defaultValues: createDefaultValues(),
   });
 
   const {
@@ -64,16 +63,25 @@ export default function AddBrand() {
     setValue,
     trigger,
     control,
+    reset,
   } = form;
+
+  // Reset form when brands data changes
+  useEffect(() => {
+    if (brands.length > 0) {
+      const newDefaultValues = createDefaultValues();
+      reset(newDefaultValues);
+    }
+  }, [brands, reset]);
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
-      console.log(data);
+      console.log("Submitting data:", data);
       await instance.post("/brands", data);
       setMessage({ type: "success", text: t("add_brand.success") });
       setIsSubmitted(true);
     } catch (err) {
-      console.error(err);
+      console.error("Submit error:", err);
       setMessage({ type: "error", text: t("add_brand.error") });
     }
   };
@@ -86,7 +94,8 @@ export default function AddBrand() {
     );
   }
 
-  const fields: {
+  // Define form fields configuration
+  const inputFields: {
     name: keyof BrandFormValues;
     label: string;
     placeholder: string;
@@ -111,15 +120,22 @@ export default function AddBrand() {
       label: t("add_brand.fields.city"),
       placeholder: t("add_brand.placeholders.city"),
     },
+  ];
+
+  const selectFields = [
     {
-      name: "category_type",
+      name: "category_type" as const,
       label: t("add_brand.fields.category"),
       placeholder: t("add_brand.placeholders.category"),
+      options: CATEGORY_OPTIONS,
+      defaultValue: "food" as const,
     },
     {
-      name: "subscription_plan",
+      name: "subscription_plan" as const,
       label: t("add_brand.fields.plan"),
       placeholder: t("add_brand.placeholders.plan"),
+      options: SUBSCRIPTION_OPTIONS,
+      defaultValue: "free" as const,
     },
   ];
 
@@ -148,67 +164,79 @@ export default function AddBrand() {
         <div className="py-6 mt-10">
           <h3 className="form-header">{t("brand.basicInfo")}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {fields.map(({ name, label, placeholder }) => (
+            {/* Input fields */}
+            {inputFields.map(({ name, label, placeholder }) => (
               <div key={name} className="space-y-2">
                 <Label className="text-sm font-medium text-gray-700">
                   {label}
                 </Label>
-
-                {(name === "subscription_plan" || name === "category_type") && (
-                  <Controller
-                    name={name}
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        dir={isArabic ? "rtl" : "ltr"}
-                        disabled={isSubmitted || isPendingBrand}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger className="focus:ring-2 focus:ring-primary/20 focus:border-primary w-full">
-                          <SelectValue placeholder={placeholder} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {name === "subscription_plan" ? (
-                            <>
-                              <SelectItem value="free">
-                                {t("add_brand.plans.free")}
-                              </SelectItem>
-                              <SelectItem value="custom">
-                                {t("add_brand.plans.custom")}
-                              </SelectItem>
-                              <SelectItem value="pro">
-                                {t("add_brand.plans.pro")}
-                              </SelectItem>
-                            </>
-                          ) : (
-                            <>
-                              <SelectItem value="food">
-                                {t("add_brand.categories.food")}
-                              </SelectItem>
-                              <SelectItem value="electronics">
-                                {t("add_brand.categories.electronics")}
-                              </SelectItem>
-                              <SelectItem value="fashion">
-                                {t("add_brand.categories.fashion")}
-                              </SelectItem>
-                            </>
-                          )}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
+                <Input
+                  {...register(name)}
+                  placeholder={placeholder}
+                  disabled={isSubmitted || isPendingBrand}
+                  className="focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                />
+                {errors[name] && (
+                  <p className="text-red-500 text-sm">
+                    {errors[name]?.message as string}
+                  </p>
                 )}
+              </div>
+            ))}
 
-                {name !== "subscription_plan" && name !== "category_type" && (
-                  <Input
-                    {...register(name)}
-                    placeholder={placeholder}
-                    disabled={isSubmitted || isPendingBrand}
-                    className="focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                  />
-                )}
-
+            {/* Select fields with Controller */}
+            {selectFields.map(({ name, label, placeholder, defaultValue }) => (
+              <div key={name} className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  {label}
+                </Label>
+                <Controller
+                  name={name}
+                  control={control}
+                  defaultValue={defaultValue}
+                  render={({ field }) => (
+                    <Select
+                      dir={isArabic ? "rtl" : "ltr"}
+                      disabled={isSubmitted || isPendingBrand}
+                      value={field.value || defaultValue}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        trigger(name); // Trigger validation
+                      }}
+                    >
+                      <SelectTrigger className="focus:ring-2 focus:ring-primary/20 focus:border-primary w-full">
+                        <SelectValue placeholder={placeholder} />
+                      </SelectTrigger>
+                      <SelectContent dir={isArabic ? "rtl" : "ltr"}>
+                        {name === "subscription_plan" ? (
+                          <>
+                            <SelectItem value="free">
+                              {t("add_brand.plans.free")}
+                            </SelectItem>
+                            <SelectItem value="pro">
+                              {t("add_brand.plans.pro")}
+                            </SelectItem>
+                            <SelectItem value="custom">
+                              {t("add_brand.plans.custom")}
+                            </SelectItem>
+                          </>
+                        ) : (
+                          <>
+                            <SelectItem value="food">
+                              {t("add_brand.categories.food")}
+                            </SelectItem>
+                            <SelectItem value="electronics">
+                              {t("add_brand.categories.electronics")}
+                            </SelectItem>
+                            <SelectItem value="fashion">
+                              {t("add_brand.categories.fashion")}
+                            </SelectItem>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 {errors[name] && (
                   <p className="text-red-500 text-sm">
                     {errors[name]?.message as string}
@@ -242,9 +270,14 @@ export default function AddBrand() {
                 : "hover:bg-primary/90"
             }
           >
-            {isSubmitted || updateProfile.isPending || isPendingBrand
-              ? t("add_brand.saved")
-              : t("add_brand.save")}
+            {isSubmitted || updateProfile.isPending || isPendingBrand ? (
+              <div className="flex items-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                {t("add_brand.saved")}
+              </div>
+            ) : (
+              t("add_brand.save")
+            )}
           </Button>
         </div>
       </form>
