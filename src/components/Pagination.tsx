@@ -2,6 +2,7 @@ import React from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 interface PaginationProps {
   totalPages?: number;
@@ -10,7 +11,9 @@ interface PaginationProps {
 const Pagination: React.FC<PaginationProps> = ({ totalPages = 5 }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
 
+  const isArabic = i18n.language === "ar";
   const currentPage = Number(searchParams.get("page")) || 1;
 
   const handlePageChange = (page: number): void => {
@@ -97,15 +100,21 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages = 5 }) => {
   };
 
   return (
-    <div className="flex items-center justify-center space-x-1 mt-8">
+    <div
+      className={`flex items-center justify-center mt-8 ${
+        isArabic ? "flex-row space-x-reverse space-x-1" : "space-x-1"
+      }`}
+    >
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
+        onClick={() =>
+          handlePageChange(isArabic ? currentPage + 1 : currentPage - 1)
+        }
+        disabled={isArabic ? currentPage === totalPages : currentPage === 1}
         className="w-8 h-8 p-0 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ChevronLeft size={16} />
+        {isArabic ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </Button>
 
       {renderPageNumbers()}
@@ -113,11 +122,13 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages = 5 }) => {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
+        onClick={() =>
+          handlePageChange(isArabic ? currentPage - 1 : currentPage + 1)
+        }
+        disabled={isArabic ? currentPage === 1 : currentPage === totalPages}
         className="w-8 h-8 p-0 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ChevronRight size={16} />
+        {isArabic ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
       </Button>
     </div>
   );

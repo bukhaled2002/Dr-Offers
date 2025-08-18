@@ -32,7 +32,7 @@ const FilterSidebar = ({
   currentPage = 1,
   perPage = 20,
 }: FilterSidebarProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const start = (currentPage - 1) * perPage + 1;
   const end = Math.min(currentPage * perPage, totalItems);
   const navigate = useNavigate();
@@ -52,33 +52,21 @@ const FilterSidebar = ({
 
   const categories = [
     "GROCERIES",
-
     "PREMIUM_FRUITS",
-
     "HOME_KITCHEN",
-
     "FASHION",
-
     "ELECTRONICS",
-
     "BEAUTY",
-
     "HOME_IMPROVEMENT",
-
     "SPORTS_TOYS_LUGGAGE",
-
     "MOBILE",
-
     "COSMETICS",
-
     "FURNITURE",
-
     "WATCHES",
-
     "FOOD",
-
     "ACCESSORIES",
   ];
+
   const selectedBrands = searchParams.getAll("brand_id");
   const selectedCategories = searchParams.getAll("category");
   const priceMin = Number(searchParams.get("minPrice")) || 0;
@@ -126,14 +114,17 @@ const FilterSidebar = ({
               {priceMax} {t("filter.currency")}
             </span>
           </div>
-          <Slider
-            value={[priceMin, priceMax]}
-            onValueChange={updatePriceRange}
-            max={1000}
-            min={0}
-            step={1}
-            className="w-full"
-          />
+          <div>
+            <Slider
+              dir={i18n.language === "ar" ? "rtl" : "ltr"}
+              value={[priceMin, priceMax]}
+              onValueChange={updatePriceRange}
+              max={1000}
+              min={0}
+              step={1}
+              className="w-full"
+            />
+          </div>
         </div>
 
         {/* Brands */}
