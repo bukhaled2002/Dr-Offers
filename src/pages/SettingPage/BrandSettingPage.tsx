@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,29 +28,25 @@ type EditableBrandFields = Pick<
   | "subscription_plan"
 > & { id: string };
 
+// Define constants for select options
+const CATEGORY_OPTIONS = ["food", "electronics", "fashion"] as const;
+const SUBSCRIPTION_OPTIONS = ["free", "pro", "custom"] as const;
+
 export default function BrandSettingPage() {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === "ar"; // detect Arabic
+  const isRTL = i18n.language === "ar";
 
   const { isLoadingUser, brands } = useAuth();
   const brandId = brands[0]?.id;
   const updateProfile = useUpdateProfile();
   const [brandData, setBrandData] = useState<EditableBrandFields | null>(null);
+  const [isLoadingBrand, setIsLoadingBrand] = useState(true);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
 
-  useEffect(() => {
-    const fetchBrand = async () => {
-      if (!brandId) return;
-      const res = await instance.get(`/brands/${brandId}`);
-      const data = res.data.data;
-      setBrandData(data);
-    };
-    fetchBrand();
-  }, [brandId]);
-
+  // Initialize form with empty defaults - we'll populate it after data loads
   const form = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
     mode: "onChange",
@@ -59,8 +55,8 @@ export default function BrandSettingPage() {
       email: "",
       phone_number: "",
       city: "",
-      category_type: "food", // fallback default
-      subscription_plan: "free", // fallback default
+      category_type: "food",
+      subscription_plan: "free",
     },
   });
 
@@ -69,46 +65,72 @@ export default function BrandSettingPage() {
     handleSubmit,
     formState: { errors, isValid },
     reset,
-    watch,
-    setValue,
+    control,
   } = form;
 
+  // Fetch brand data
   useEffect(() => {
-    if (brandData) {
-      const resetData = {
+    const fetchBrand = async () => {
+      if (!brandId) {
+        setIsLoadingBrand(false);
+        return;
+      }
+
+      try {
+        setIsLoadingBrand(true);
+        const res = await instance.get(`/brands/${brandId}`);
+        const data = res.data.data;
+
+        // Ensure we have valid values with fallbacks
+        const processedData: EditableBrandFields = {
+          ...data,
+          category_type: data.category_type || "food",
+          subscription_plan: data.subscription_plan || "free",
+        };
+
+        setBrandData(processedData);
+      } catch (error) {
+        console.error("Failed to fetch brand data:", error);
+        setMessage({ type: "error", text: t("brand.fetchError") });
+      } finally {
+        setIsLoadingBrand(false);
+      }
+    };
+
+    fetchBrand();
+  }, [brandId, t]);
+
+  // Reset form when brandData is loaded
+  useEffect(() => {
+    if (brandData && !isLoadingBrand) {
+      const formData = {
         brand_name: brandData.brand_name || "",
         email: brandData.email || "",
         phone_number: brandData.phone_number || "",
         city: brandData.city || "",
-        category_type: brandData.category_type || "food", // Ensure fallback
-        subscription_plan: brandData.subscription_plan || "free", // Ensure fallback
+        category_type: brandData.category_type || "food",
+        subscription_plan: brandData.subscription_plan || "free",
       };
 
-      reset(resetData);
-
-      // Explicitly set the select values after reset
-      setValue("category_type", resetData.category_type, {
-        shouldValidate: true,
-      });
-      setValue("subscription_plan", resetData.subscription_plan, {
-        shouldValidate: true,
-      });
+      console.log("Resetting form with data:", formData); // Debug log
+      reset(formData);
     }
-  }, [brandData, reset, setValue]);
+  }, [brandData, isLoadingBrand, reset]);
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
-      console.log(data);
+      console.log("Submitting data:", data);
       const res = await instance.patch(`/brands/${brandData?.id}`, data);
-      console.log(res);
+      console.log("Update response:", res);
       setMessage({ type: "success", text: t("brand.updatedSuccess") });
     } catch (err) {
-      console.log(err);
+      console.error("Update error:", err);
       setMessage({ type: "error", text: t("brand.updatedError") });
     }
   };
 
-  if (isLoadingUser || !brandData) {
+  // Show loading while user or brand data is loading
+  if (isLoadingUser || isLoadingBrand) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -116,6 +138,7 @@ export default function BrandSettingPage() {
     );
   }
 
+  // Show no brand message if no brandId
   if (!brandId) {
     return (
       <div className="flex items-center justify-center min-h-[400px] flex-col gap-4">
@@ -127,16 +150,27 @@ export default function BrandSettingPage() {
     );
   }
 
+  // Show loading if brand data hasn't loaded yet
+  if (!brandData) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   const selectFields = [
     {
-      name: "category_type",
+      name: "category_type" as const,
       label: t("brand.businessDomain"),
-      options: ["food", "electronics", "fashion"],
+      options: CATEGORY_OPTIONS,
+      defaultValue: "food" as const,
     },
     {
-      name: "subscription_plan",
+      name: "subscription_plan" as const,
       label: t("brand.subscriptionPlan"),
-      options: ["free", "pro", "custom"],
+      options: SUBSCRIPTION_OPTIONS,
+      defaultValue: "free" as const,
     },
   ];
 
@@ -160,6 +194,7 @@ export default function BrandSettingPage() {
         <h3 className="form-header">{t("brand.basicInfo")}</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-10 mt-8">
+          {/* Input fields */}
           {["brand_name", "email", "phone_number", "city"].map((name) => (
             <div className="space-y-2" key={name}>
               <Label className="text-sm font-medium text-gray-700">
@@ -178,46 +213,45 @@ export default function BrandSettingPage() {
             </div>
           ))}
 
-          {selectFields.map(({ name, label, options }) => {
-            return (
-              <div className="space-y-2" key={name}>
-                <Label className="text-sm font-medium text-gray-700">
-                  {label}
-                </Label>
-
-                <Select
-                  value={
-                    watch(name as keyof BrandFormValues) ||
-                    (name === "category_type" ? "food" : "free")
-                  }
-                  onValueChange={(val) =>
-                    setValue(name as keyof BrandFormValues, val, {
-                      shouldValidate: true,
-                    })
-                  }
-                >
-                  <SelectTrigger className="w-full" dir={isRTL ? "rtl" : "ltr"}>
-                    <SelectValue
-                      placeholder={t("brand.select", { field: label })}
-                    />
-                  </SelectTrigger>
-                  <SelectContent dir={isRTL ? "rtl" : "ltr"}>
-                    {options.map((opt) => (
-                      <SelectItem key={opt} value={opt}>
-                        {t(`brand.options.${opt}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {errors[name as keyof BrandFormValues] && (
-                  <p className="text-red-500 text-sm">
-                    {errors[name as keyof BrandFormValues]?.message}
-                  </p>
+          {/* Select fields with Controller */}
+          {selectFields.map(({ name, label, options, defaultValue }) => (
+            <div className="space-y-2" key={name}>
+              <Label className="text-sm font-medium text-gray-700">
+                {label}
+              </Label>
+              <Controller
+                name={name}
+                control={control}
+                defaultValue={defaultValue}
+                render={({ field }) => (
+                  <Select
+                    dir={isRTL ? "rtl" : "ltr"}
+                    value={field.value || defaultValue}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      console.log(`${name} changed to:`, value); // Debug log
+                    }}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue
+                        placeholder={t("brand.select", { field: label })}
+                      />
+                    </SelectTrigger>
+                    <SelectContent dir={isRTL ? "rtl" : "ltr"}>
+                      {options.map((opt) => (
+                        <SelectItem key={opt} value={opt}>
+                          {t(`brand.options.${opt}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
-              </div>
-            );
-          })}
+              />
+              {errors[name] && (
+                <p className="text-red-500 text-sm">{errors[name]?.message}</p>
+              )}
+            </div>
+          ))}
         </div>
 
         <div className="px-8 py-6 border-gray-200 flex items-center justify-end">
