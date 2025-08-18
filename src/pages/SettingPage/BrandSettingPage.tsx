@@ -158,6 +158,7 @@ export default function BrandSettingPage() {
                 <Label className="text-sm font-medium text-gray-700">
                   {label}
                 </Label>
+
                 <Select
                   value={value}
                   onValueChange={(val) =>
@@ -166,12 +167,13 @@ export default function BrandSettingPage() {
                     })
                   }
                 >
-                  {/* Apply dir="rtl" if Arabic */}
                   <SelectTrigger className="w-full" dir={isRTL ? "rtl" : "ltr"}>
+                    {/* DO NOT pass value prop here */}
                     <SelectValue
                       placeholder={t("brand.select", { field: label })}
                     />
                   </SelectTrigger>
+
                   <SelectContent dir={isRTL ? "rtl" : "ltr"}>
                     {options.map((opt) => (
                       <SelectItem key={opt} value={opt}>
@@ -180,6 +182,7 @@ export default function BrandSettingPage() {
                     ))}
                   </SelectContent>
                 </Select>
+
                 {errors[name as keyof BrandFormValues] && (
                   <p className="text-red-500 text-sm">
                     {errors[name as keyof BrandFormValues]?.message}

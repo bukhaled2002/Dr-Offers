@@ -12,7 +12,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-
 import { useState } from "react";
 import { brandSchema, type BrandFormValues } from "@/schemas/brand.schema";
 import BusinessDocumentDrop from "@/components/BusinessDocumentDrop";
@@ -21,7 +20,7 @@ import { useTranslation } from "react-i18next";
 
 export default function AddBrand() {
   const { t, i18n } = useTranslation();
-  const isArabic = i18n.language == "ar";
+  const isArabic = i18n.language === "ar";
   const { isLoadingUser, brands } = useAuth();
   const updateProfile = useUpdateProfile();
   const [message, setMessage] = useState<{
@@ -32,26 +31,30 @@ export default function AddBrand() {
   const isPendingBrand = brands[0]?.status === "pending";
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const defaultValues: BrandFormValues = brands[0]
+    ? {
+        brand_name: brands[0].brand_name || "",
+        email: brands[0].email || "",
+        phone_number: brands[0].phone_number || "",
+        city: brands[0].city || "",
+        category_type: brands[0].category_type || "food",
+        subscription_plan: brands[0].subscription_plan || "free",
+        business_docs: brands[0].business_docs || "",
+      }
+    : {
+        brand_name: "",
+        email: "",
+        phone_number: "",
+        city: "",
+        category_type: "food",
+        subscription_plan: "free",
+        business_docs: "",
+      };
+
   const form = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
     mode: "onChange",
-    defaultValues: brands[0]
-      ? {
-          brand_name: brands[0].brand_name || "",
-          email: brands[0].email || "",
-          phone_number: brands[0].phone_number || "",
-          city: brands[0].city || "",
-          category_type: brands[0].category_type || "food",
-          subscription_plan: brands[0].subscription_plan || "free",
-        }
-      : {
-          brand_name: "",
-          email: "",
-          phone_number: "",
-          city: "",
-          category_type: "food",
-          subscription_plan: "free",
-        },
+    defaultValues,
   });
 
   const {
@@ -65,6 +68,7 @@ export default function AddBrand() {
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
+      console.log(data);
       await instance.post("/brands", data);
       setMessage({ type: "success", text: t("add_brand.success") });
       setIsSubmitted(true);
@@ -161,11 +165,7 @@ export default function AddBrand() {
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger
-                          className={`focus:ring-2 focus:ring-primary/20 focus:border-primary w-full ${
-                            isArabic ? "" : ""
-                          }`}
-                        >
+                        <SelectTrigger className="focus:ring-2 focus:ring-primary/20 focus:border-primary w-full">
                           <SelectValue placeholder={placeholder} />
                         </SelectTrigger>
                         <SelectContent>
