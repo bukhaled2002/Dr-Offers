@@ -1,8 +1,7 @@
-"use client";
-
 import { AuthCard } from "@/components/AuthCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "react-toastify";
 import {
   Form,
   FormControl,
@@ -14,24 +13,26 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
 import { useState } from "react";
 import instance from "@/api/axiosInstance";
-
-// ✅ Zod validation schema
-const forgotPasswordSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-});
-
-type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
+import { useTranslation } from "react-i18next";
 
 export default function ForgotPassword() {
   const [isSent, setIsSent] = useState(false);
   const [sentEmail, setSentEmail] = useState("");
+  const { t } = useTranslation();
+
+  // Create schema inside component to access t function
+  const forgotPasswordSchema = z.object({
+    email: z.string().email(t("forgotPassword.errors.invalidEmail")),
+  });
+
+  type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
 
   const form = useForm<ForgotPasswordForm>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: { email: "" },
+    mode: "onBlur",
   });
 
   const onSubmit = async ({ email }: ForgotPasswordForm) => {
@@ -39,23 +40,29 @@ export default function ForgotPassword() {
       await instance.get("/auth/password/reset", {
         params: { email, reset_password_page_pathname: "/auth/reset-password" },
       });
-      toast.success("Password reset link sent to your email");
+      toast.success(t("forgotPassword.success"));
       setSentEmail(email);
       setIsSent(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Something went wrong");
+      const errorKey = err?.response?.data?.message;
+      toast.error(
+        t(`forgotPassword.errors.${errorKey}`) ||
+          t("forgotPassword.errors.default")
+      );
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <AuthCard
-        title={isSent ? "Check your email" : "Forgot Your Password"}
+        title={
+          isSent ? t("forgotPassword.checkEmail") : t("forgotPassword.title")
+        }
         description={
           isSent
-            ? `A reset link was sent to ${sentEmail}. Please check your inbox.`
-            : "Please enter your email to reset your password"
+            ? t("forgotPassword.checkInbox", { email: sentEmail })
+            : t("forgotPassword.description")
         }
       >
         {!isSent && (
@@ -69,9 +76,12 @@ export default function ForgotPassword() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("forgotPassword.emailLabel")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="you@example.com" {...field} />
+                      <Input
+                        placeholder={t("forgotPassword.emailPlaceholder")}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -82,7 +92,9 @@ export default function ForgotPassword() {
                 className="w-full bg-[#8B2F1D] hover:bg-[#7A2818] text-white"
                 disabled={form.formState.isSubmitting}
               >
-                {form.formState.isSubmitting ? "Sending..." : "Send Reset Link"}
+                {form.formState.isSubmitting
+                  ? t("forgotPassword.sending")
+                  : t("forgotPassword.sendLink")}
               </Button>
             </form>
           </Form>

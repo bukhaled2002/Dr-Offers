@@ -1,5 +1,3 @@
-"use client";
-
 import { AuthCard } from "@/components/AuthCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,27 +12,31 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { toast } from "react-toastify";
 import { useState } from "react";
 import instance from "@/api/axiosInstance";
 import { Link, useParams } from "react-router-dom";
-
-// ✅ Schema
-const resetPasswordSchema = z
-  .object({
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
+import { useTranslation } from "react-i18next";
 
 export default function ResetPassword() {
   const { token } = useParams<{ token: string }>();
   const [isReset, setIsReset] = useState(false);
+  const { t } = useTranslation();
+
+  // Create schema inside component to access t function
+  const resetPasswordSchema = z
+    .object({
+      password: z.string().min(6, t("resetPassword.errors.passwordMinLength")),
+      confirmPassword: z
+        .string()
+        .min(1, t("resetPassword.errors.confirmPasswordRequired")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("resetPassword.errors.passwordsDoNotMatch"),
+      path: ["confirmPassword"],
+    });
+
+  type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 
   const form = useForm<ResetPasswordForm>({
     resolver: zodResolver(resetPasswordSchema),
@@ -42,29 +44,35 @@ export default function ResetPassword() {
   });
 
   const onSubmit = async ({ password }: ResetPasswordForm) => {
-    if (!token) return toast.error("Invalid or missing token");
+    console.log(token, password);
+    if (!token) return toast.error(t("resetPassword.errors.invalidToken"));
 
     try {
       const response = await instance.post(`/auth/password/reset/${token}`, {
         password,
       });
       console.log(response);
-      toast.success("Password reset successfully");
+      toast.success(t("resetPassword.success"));
       setIsReset(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to reset password");
+      console.log(err);
+      toast.error(
+        err?.response?.data?.message || t("resetPassword.errors.resetFailed")
+      );
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <AuthCard
-        title={isReset ? "Password Reset Successful" : "Reset Your Password"}
+        title={
+          isReset ? t("resetPassword.successTitle") : t("resetPassword.title")
+        }
         description={
           isReset
-            ? `Your password has been updated successfully. You can now log in.`
-            : "Enter your new password below."
+            ? t("resetPassword.successDescription")
+            : t("resetPassword.description")
         }
       >
         {!isReset ? (
@@ -78,11 +86,11 @@ export default function ResetPassword() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>New Password</FormLabel>
+                    <FormLabel>{t("resetPassword.newPasswordLabel")}</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Enter new password"
+                        placeholder={t("resetPassword.newPasswordPlaceholder")}
                         {...field}
                       />
                     </FormControl>
@@ -95,11 +103,15 @@ export default function ResetPassword() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm New Password</FormLabel>
+                    <FormLabel>
+                      {t("resetPassword.confirmPasswordLabel")}
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Confirm password"
+                        placeholder={t(
+                          "resetPassword.confirmPasswordPlaceholder"
+                        )}
                         {...field}
                       />
                     </FormControl>
@@ -113,15 +125,17 @@ export default function ResetPassword() {
                 disabled={form.formState.isSubmitting}
               >
                 {form.formState.isSubmitting
-                  ? "Resetting..."
-                  : "Reset Password"}
+                  ? t("resetPassword.resettingButton")
+                  : t("resetPassword.resetButton")}
               </Button>
             </form>
           </Form>
         ) : (
           <>
             <Button>
-              <Link to={"/auth/login"}>Go to Login Page</Link>
+              <Link to={"/auth/login"}>
+                {t("resetPassword.goToLoginButton")}
+              </Link>
             </Button>
           </>
         )}

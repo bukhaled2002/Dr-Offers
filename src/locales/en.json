@@ -450,5 +450,42 @@
   "entirePurchase": "Entire Purchase",
   "yourCouponCode": "Your coupon code",
   "copyCode": "Copy Code",
-  "copied": "Copied!"
+  "copied": "Copied!",
+  "forgotPassword": {
+    "title": "Forgot Your Password",
+    "description": "Please enter your email to reset your password",
+    "checkEmail": "Check your email",
+    "checkInbox": "A reset link was sent to {{email}}. Please check your inbox.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendLink": "Send Reset Link",
+    "sending": "Sending...",
+    "success": "Password reset link sent to your email",
+    "errors": {
+      "invalidEmail": "Please enter a valid email address",
+      "default": "Something went wrong",
+      "INVALID_CREDENTIALS": "no user found with this email"
+    }
+  },
+  "resetPassword": {
+    "title": "Reset Your Password",
+    "successTitle": "Password Reset Successful",
+    "description": "Enter your new password below.",
+    "successDescription": "Your password has been updated successfully. You can now log in.",
+    "newPasswordLabel": "New Password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPasswordLabel": "Confirm New Password",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "resetButton": "Reset Password",
+    "resettingButton": "Resetting...",
+    "goToLoginButton": "Go to Login Page",
+    "errors": {
+      "passwordMinLength": "Password must be at least 6 characters",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "invalidToken": "Invalid or missing token",
+      "resetFailed": "Failed to reset password"
+    },
+    "success": "Password reset successfully"
+  }
 }

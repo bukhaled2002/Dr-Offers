@@ -457,5 +457,42 @@
   "entirePurchase": "على كل المشتريات",
   "yourCouponCode": "كود الخصم الخاص بك",
   "copyCode": "نسخ الكود",
-  "copied": "تم النسخ!"
+  "copied": "تم النسخ!",
+  "forgotPassword": {
+    "title": "هل نسيت كلمة المرور؟",
+    "description": "الرجاء إدخال بريدك الإلكتروني لإعادة تعيين كلمة المرور",
+    "checkEmail": "تحقق من بريدك الإلكتروني",
+    "checkInbox": "تم إرسال رابط إعادة التعيين إلى {{email}}. يرجى التحقق من صندوق الوارد.",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "sendLink": "إرسال رابط إعادة التعيين",
+    "sending": "جارٍ الإرسال...",
+    "success": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+    "errors": {
+      "invalidEmail": "الرجاء إدخال بريد إلكتروني صحيح",
+      "default": "حدث خطأ ما",
+      "INVALID_CREDENTIALS": "لا يوجد حساب مرتبط بهذا البريد الإلكتروني"
+    }
+  },
+  "resetPassword": {
+    "title": "إعادة تعيين كلمة المرور",
+    "successTitle": "تم إعادة تعيين كلمة المرور بنجاح",
+    "description": "أدخل كلمة المرور الجديدة أدناه.",
+    "successDescription": "تم تحديث كلمة المرور الخاصة بك بنجاح. يمكنك الآن تسجيل الدخول.",
+    "newPasswordLabel": "كلمة المرور الجديدة",
+    "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+    "confirmPasswordLabel": "تأكيد كلمة المرور الجديدة",
+    "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+    "resetButton": "إعادة تعيين كلمة المرور",
+    "resettingButton": "جاري إعادة التعيين...",
+    "goToLoginButton": "انتقل إلى صفحة تسجيل الدخول",
+    "errors": {
+      "passwordMinLength": "يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل",
+      "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+      "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+      "invalidToken": "رمز غير صالح أو مفقود",
+      "resetFailed": "فشل في إعادة تعيين كلمة المرور"
+    },
+    "success": "تم إعادة تعيين كلمة المرور بنجاح"
+  }
 }
