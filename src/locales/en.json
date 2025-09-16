@@ -256,10 +256,18 @@
   },
   "chart": {
     "views": "Views",
-    "selectDay": "Select day",
+    "clicks": "Clicks",
     "view": "View",
-    "am": "am",
-    "pm": "pm"
+    "selectDay": "Select Day",
+    "am": "AM",
+    "pm": "PM",
+    "mon": "Monday",
+    "tue": "Tuesday",
+    "wed": "Wednesday",
+    "thu": "Thursday",
+    "fri": "Friday",
+    "sat": "Saturday",
+    "sun": "Sunday"
   },
   "products": {
     "activeOffers": "Active Offers",
@@ -317,7 +325,11 @@
     "submitting": "Submitting...",
     "alreadyHaveAccount": "Already have an account?",
     "signIn": "Sign in",
-    "somethingWentWrong": "Something went wrong"
+    "somethingWentWrong": "Something went wrong",
+
+    "or": "Or",
+    "registerAsBrand": "Register as a brand",
+    "registerAsVisitor": "Register as a visitor"
   },
   "login": {
     "title": "Sign in",

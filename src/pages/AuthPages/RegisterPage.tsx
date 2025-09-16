@@ -145,6 +145,24 @@ export function RegisterPage() {
           {t("register.signIn")}
         </Link>
       </div>
+      <div className="mt-3 text-center text-sm text-gray-600">
+        {t("register.or")}{" "}
+        {role === "owner" ? (
+          <Link
+            to="/auth/register?role=visitor"
+            className="text-[#8B2F1D] hover:underline font-medium"
+          >
+            {t("register.registerAsVisitor")}
+          </Link>
+        ) : (
+          <Link
+            to="/auth/register?role=owner"
+            className="text-[#8B2F1D] hover:underline font-medium"
+          >
+            {t("register.registerAsBrand")}
+          </Link>
+        )}
+      </div>
     </AuthPageLayout>
   );
 }

@@ -5,6 +5,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/useAuth";
 import { useUpdateProfile } from "@/hooks/useUpdateProfile";
+import { useNavigate } from "react-router-dom";
+
 import {
   Select,
   SelectTrigger,
@@ -24,6 +26,7 @@ const SUBSCRIPTION_OPTIONS = ["free", "pro", "custom"] as const;
 
 export default function AddBrand() {
   const { t, i18n } = useTranslation();
+
   const isArabic = i18n.language === "ar";
   const { isLoadingUser, brands } = useAuth();
   const updateProfile = useUpdateProfile();
@@ -34,7 +37,7 @@ export default function AddBrand() {
 
   const isPendingBrand = brands[0]?.status === "pending";
   const [isSubmitted, setIsSubmitted] = useState(false);
-
+  const navigate = useNavigate();
   // Create default values with proper fallbacks
   const createDefaultValues = (): BrandFormValues => {
     const existingBrand = brands[0];
@@ -79,7 +82,10 @@ export default function AddBrand() {
       console.log("Submitting data:", data);
       await instance.post("/brands", data);
       setMessage({ type: "success", text: t("add_brand.success") });
-      setIsSubmitted(true);
+      setIsSubmitted(true); // ✅ Wait 5 seconds before navigating
+      setTimeout(() => {
+        navigate("/setting/dashboard");
+      }, 5000);
     } catch (err) {
       console.error("Submit error:", err);
       setMessage({ type: "error", text: t("add_brand.error") });

@@ -323,7 +323,10 @@
     "submitting": "جارٍ الإرسال...",
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
     "signIn": "تسجيل الدخول",
-    "somethingWentWrong": "حدث خطأ ما"
+    "somethingWentWrong": "حدث خطأ ما",
+    "or": "أو",
+    "registerAsBrand": "سجّل كعلامة تجارية",
+    "registerAsVisitor": "سجّل كزائر"
   },
   "login": {
     "title": "تسجيل الدخول",

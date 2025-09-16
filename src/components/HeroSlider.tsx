@@ -206,8 +206,8 @@ export default function DealSlider({ className }: { className?: string }) {
               className={`${
                 item.bgColor
               } text-white rounded-xl p-6 px-26 flex flex-col md:flex-row ${
-                isRtl ? "md:flex-row-reverse" : ""
-              } justify-between items-center relative overflow-hidden min-h-96 md:min-h-72`}
+                isRtl ? "" : ""
+              } justify-between items-center relative overflow-hidden h-96 md:h-72`}
             >
               <div
                 className={`z-[2] space-y-2 h-full ${

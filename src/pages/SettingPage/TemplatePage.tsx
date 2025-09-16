@@ -257,7 +257,7 @@ export default function TemplateEditor() {
   const watchedSection2Items = watch("section2_items");
 
   return (
-    <div className="px-8 py-6 space-y-8">
+    <div>
       {message && (
         <div className="mt-4">
           <div
@@ -273,11 +273,99 @@ export default function TemplateEditor() {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        {sectionOrder.map((sectionKey) => {
-          const group = fieldGroups.find((g) => g.header === sectionKey);
-          if (!group) return null;
+        <div className="px-8 py-6 space-y-8">
+          {sectionOrder.map((sectionKey) => {
+            const group = fieldGroups.find((g) => g.header === sectionKey);
+            if (!group) return null;
 
-          if (sectionKey === "template.section2") {
+            if (sectionKey === "template.section2") {
+              return (
+                <div key={group.header} className="mb-10">
+                  <h3 className="form-header">{t(group.header)}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {group.fields.map((field) => (
+                      <FormField
+                        key={field.name}
+                        name={field.name as keyof TemplateFormValues}
+                        label={t(field.label)}
+                        placeholder={
+                          field.placeholder ? t(field.placeholder) : undefined
+                        }
+                        type={field.type as FieldType}
+                        errors={errors}
+                        register={register}
+                        trigger={trigger}
+                        setValue={setValue}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-8 space-y-6">
+                    {fields.map((item, index) => (
+                      <div
+                        key={item.id}
+                        className="flex flex-col md:flex-row w-full gap-3 md:items-end justify-center"
+                      >
+                        <FormField
+                          className="flex-1"
+                          name={
+                            `section2_items.${index}.media_url` as keyof TemplateFormValues
+                          }
+                          label={t("template.itemMedia")}
+                          type="image"
+                          errors={errors}
+                          register={register}
+                          trigger={trigger}
+                          setValue={setValue}
+                          value={watchedSection2Items[index]?.media_url}
+                        />
+                        <FormField
+                          className="flex-1"
+                          name={
+                            `section2_items.${index}.title` as keyof TemplateFormValues
+                          }
+                          label={t("template.itemTitle")}
+                          placeholder={t("template.itemTitle")}
+                          type="text"
+                          errors={errors}
+                          register={register}
+                          trigger={trigger}
+                          setValue={setValue}
+                        />
+                        <FormField
+                          className="flex-1"
+                          name={
+                            `section2_items.${index}.description` as keyof TemplateFormValues
+                          }
+                          label={t("template.itemDescription")}
+                          placeholder={t("template.itemDescription")}
+                          type="text"
+                          errors={errors}
+                          register={register}
+                          trigger={trigger}
+                          setValue={setValue}
+                        />
+                        {fields.length > 1 && (
+                          <Button type="button" onClick={() => remove(index)}>
+                            {t("template.removeItem")}
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="bg-gray-200 cursor-pointer"
+                      onClick={() =>
+                        append({ title: "", description: "", media_url: "" })
+                      }
+                    >
+                      {t("template.addItem")}
+                    </Button>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <div key={group.header} className="mb-10">
                 <h3 className="form-header">{t(group.header)}</h3>
@@ -295,113 +383,26 @@ export default function TemplateEditor() {
                       register={register}
                       trigger={trigger}
                       setValue={setValue}
+                      value={
+                        field.type === "image"
+                          ? (() => {
+                              const val = watch(
+                                field.name as keyof TemplateFormValues
+                              );
+                              return typeof val === "string" ||
+                                typeof val === "number"
+                                ? val
+                                : undefined;
+                            })()
+                          : undefined
+                      }
                     />
                   ))}
                 </div>
-                <div className="mt-8 space-y-6">
-                  {fields.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="flex flex-col md:flex-row w-full gap-3 md:items-end justify-center"
-                    >
-                      <FormField
-                        className="flex-1"
-                        name={
-                          `section2_items.${index}.media_url` as keyof TemplateFormValues
-                        }
-                        label={t("template.itemMedia")}
-                        type="image"
-                        errors={errors}
-                        register={register}
-                        trigger={trigger}
-                        setValue={setValue}
-                        value={watchedSection2Items[index]?.media_url}
-                      />
-                      <FormField
-                        className="flex-1"
-                        name={
-                          `section2_items.${index}.title` as keyof TemplateFormValues
-                        }
-                        label={t("template.itemTitle")}
-                        placeholder={t("template.itemTitle")}
-                        type="text"
-                        errors={errors}
-                        register={register}
-                        trigger={trigger}
-                        setValue={setValue}
-                      />
-                      <FormField
-                        className="flex-1"
-                        name={
-                          `section2_items.${index}.description` as keyof TemplateFormValues
-                        }
-                        label={t("template.itemDescription")}
-                        placeholder={t("template.itemDescription")}
-                        type="text"
-                        errors={errors}
-                        register={register}
-                        trigger={trigger}
-                        setValue={setValue}
-                      />
-                      {fields.length > 1 && (
-                        <Button type="button" onClick={() => remove(index)}>
-                          {t("template.removeItem")}
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    className="bg-gray-200 cursor-pointer"
-                    onClick={() =>
-                      append({ title: "", description: "", media_url: "" })
-                    }
-                  >
-                    {t("template.addItem")}
-                  </Button>
-                </div>
               </div>
             );
-          }
-
-          return (
-            <div key={group.header} className="mb-10">
-              <h3 className="form-header">{t(group.header)}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {group.fields.map((field) => (
-                  <FormField
-                    key={field.name}
-                    name={field.name as keyof TemplateFormValues}
-                    label={t(field.label)}
-                    placeholder={
-                      field.placeholder ? t(field.placeholder) : undefined
-                    }
-                    type={field.type as FieldType}
-                    errors={errors}
-                    register={register}
-                    trigger={trigger}
-                    setValue={setValue}
-                    value={
-                      field.type === "image"
-                        ? (() => {
-                            const val = watch(
-                              field.name as keyof TemplateFormValues
-                            );
-                            return typeof val === "string" ||
-                              typeof val === "number"
-                              ? val
-                              : undefined;
-                          })()
-                        : undefined
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-          );
-        })}
-
+          })}
+        </div>
         <div className="px-8 py-6 flex justify-end gap-4">
           <Button
             type="submit"

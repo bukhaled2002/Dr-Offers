@@ -53,7 +53,7 @@ export default function ProductsTable({ deals }: { deals: Deal[] }) {
   };
 
   return (
-    <div>
+    <div className="w-full container">
       <div className="flex justify-between py-4">
         <h2 className="text-2xl font-semibold mb-4">
           {t("products.activeOffers")}
@@ -65,78 +65,82 @@ export default function ProductsTable({ deals }: { deals: Deal[] }) {
           </Link>
         </Button>
       </div>
-
-      <Table>
-        <TableCaption>{t("products.activeOffers")}</TableCaption>
-        <TableHeader className="bg-gray-200/50 rounded-2xl overflow-hidden">
-          <TableRow className="border-none">
-            <TableHead className="text-start">
-              {t("products.productName")}
-            </TableHead>
-            <TableHead className="text-start">
-              {t("products.discountRate")}
-            </TableHead>
-            <TableHead className="text-start">{t("products.price")}</TableHead>
-            <TableHead className="text-start">{t("products.status")}</TableHead>
-            <TableHead className="text-start">
-              {t("products.categoryType")}
-            </TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {deals.map((deal) => (
-            <TableRow
-              key={deal.id}
-              className="border-b-1 font-semibold text-gray-500"
-            >
-              <TableCell className="flex items-center gap-2">
-                <img
-                  className="h-8 w-8 object-cover rounded-full"
-                  src={deal.image}
-                  alt={deal.title}
-                />
-                <p>{deal.title}</p>
-              </TableCell>
-              <TableCell>{deal.discount_rate}%</TableCell>
-              <TableCell>
-                {deal.price_after} {t("currency.symbol")}
-              </TableCell>
-              <TableCell>{t(`status.${deal.status}`)}</TableCell>
-              <TableCell>{t(`categories.${deal.category_type}`)}</TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="p-2 rounded-full h-10 w-10 cursor-pointer"
-                    >
-                      <BsThreeDotsVertical />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      asChild
-                      className="hover:bg-gray-100 cursor-pointer"
-                    >
-                      <Link to={`/setting/offers/${deal.id}`}>
-                        {t("products.edit")}
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="hover:bg-gray-100 cursor-pointer text-red-500"
-                      onClick={() => handleDeleteClick(deal)}
-                    >
-                      {t("products.delete")}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+      <div className="overflow-x-auto mx-auto w-full max-w-full">
+        <Table className="min-w-full table-auto">
+          <TableCaption>{t("products.activeOffers")}</TableCaption>
+          <TableHeader className="bg-gray-200/50 rounded-2xl w-full">
+            <TableRow className="border-none">
+              <TableHead className="text-start">
+                {t("products.productName")}
+              </TableHead>
+              <TableHead className="text-start">
+                {t("products.discountRate")}
+              </TableHead>
+              <TableHead className="text-start">
+                {t("products.price")}
+              </TableHead>
+              <TableHead className="text-start">
+                {t("products.status")}
+              </TableHead>
+              <TableHead className="text-start">
+                {t("products.categoryType")}
+              </TableHead>
+              <TableHead></TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
+          </TableHeader>
+          <TableBody>
+            {deals.map((deal) => (
+              <TableRow
+                key={deal.id}
+                className="border-b-1 font-semibold text-gray-500"
+              >
+                <TableCell className="flex items-center gap-2">
+                  <img
+                    className="h-8 w-8 object-cover rounded-full"
+                    src={deal.image}
+                    alt={deal.title}
+                  />
+                  <p>{deal.title}</p>
+                </TableCell>
+                <TableCell>{deal.discount_rate}%</TableCell>
+                <TableCell>
+                  {deal.price_after} {t("currency.symbol")}
+                </TableCell>
+                <TableCell>{t(`status.${deal.status}`)}</TableCell>
+                <TableCell>{t(`categories.${deal.category_type}`)}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="p-2 rounded-full h-10 w-10 cursor-pointer"
+                      >
+                        <BsThreeDotsVertical />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        asChild
+                        className="hover:bg-gray-100 cursor-pointer"
+                      >
+                        <Link to={`/setting/offers/${deal.id}`}>
+                          {t("products.edit")}
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="hover:bg-gray-100 cursor-pointer text-red-500"
+                        onClick={() => handleDeleteClick(deal)}
+                      >
+                        {t("products.delete")}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>

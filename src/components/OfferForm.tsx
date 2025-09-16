@@ -28,7 +28,8 @@ export default function OfferForm({
   defaultValues,
   submitText,
 }: OfferFormProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar"; // ✅ Detect if current language is Arabic
 
   const [message, setMessage] = useState<{
     type: "success" | "error";
@@ -141,14 +142,19 @@ export default function OfferForm({
                     setValue("category_type", value, { shouldValidate: true })
                   }
                 >
+                  {" "}
                   <SelectTrigger
-                    className="w-full font-semibold text-right" // align text to the right
-                    dir="rtl" // force RTL for the trigger
+                    className={`w-full font-semibold ${
+                      isArabic ? "text-right" : "text-left"
+                    }`}
+                    dir={isArabic ? "rtl" : "ltr"}
                   >
                     <SelectValue placeholder={t("offer.selectCategory")} />
-                  </SelectTrigger>
-
-                  <SelectContent className="text-right" dir="rtl">
+                  </SelectTrigger>{" "}
+                  <SelectContent
+                    className={`${isArabic ? "text-right" : "text-left"}`}
+                    dir={isArabic ? "rtl" : "ltr"}
+                  >
                     <SelectItem value="food">
                       {t("categories_brand.food")}
                     </SelectItem>

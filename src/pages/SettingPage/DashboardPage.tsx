@@ -41,7 +41,7 @@ export default function DashboardPage() {
     useStats(brandId);
 
   return (
-    <main className="py-6 space-y-8">
+    <main className="py-6 space-y-8 container">
       {/* Brand Button */}
       {brandId && brandHasTemplate && (
         <div className="mt-6">
