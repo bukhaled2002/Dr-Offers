@@ -14,9 +14,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
+import type { OfferResponse } from "@/types/types";
 
 interface OfferFormProps {
-  onSubmit: (data: OfferSchemaInput) => void;
+  onSubmit: (data: OfferSchemaInput) => Promise<OfferResponse>;
   isSubmitting?: boolean;
   defaultValues?: Partial<OfferSchemaInput>;
   submitText?: string;
@@ -64,11 +65,15 @@ export default function OfferForm({
 
   const handleFormSubmit = async (data: OfferSchemaInput) => {
     try {
-      await onSubmit(data);
-      setMessage({ type: "success", text: t("offer.saveSuccess") });
+      const res = await onSubmit(data); // <-- Now this gives you the API response
+
+      setMessage({
+        type: "success",
+        text: `${t("offer.saveSuccess")} ${res.data.coupon || " "}`, // Example usage
+      });
       setOfferSubmitted(true);
     } catch (err) {
-      console.log(err);
+      console.error("Error submitting form:", err);
       setMessage({ type: "error", text: t("offer.saveError") });
     }
   };

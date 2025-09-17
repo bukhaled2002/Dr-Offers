@@ -12,7 +12,9 @@ export default function AddOfferPage() {
     <OfferForm
       submitText={t("offerPage.addButton")}
       isSubmitting={addOffer.isPending}
-      onSubmit={(data) => addOffer.mutate({ ...data, brand_id: brands[0].id })}
+      onSubmit={(data) =>
+        addOffer.mutateAsync({ ...data, brand_id: brands[0].id })
+      }
     />
   );
 }

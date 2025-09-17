@@ -5,3 +5,6 @@ export type FieldType =
   | "url"
   | "image"
   | "select";
+export interface OfferResponse {
+  data: { id: number; title: string; coupon: string; message: string };
+}

@@ -133,7 +133,7 @@
     "saving": "Saving..."
   },
   "offer": {
-    "saveSuccess": "Offer saved successfully!",
+    "saveSuccess": "Offer saved successfully, your Offer Coupon is: ",
     "saveError": "Failed to save offer. Try again.",
     "basicInfo": "Basic Info",
     "title": "Title",

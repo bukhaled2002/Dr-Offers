@@ -9,7 +9,6 @@ export function useAddOffer() {
   return useMutation({
     mutationFn: async (data: OfferSchemaInput & { brand_id: number }) => {
       const res = await instance.post("/offers", data);
-      console.log(res);
       return res.data;
     },
     onSuccess: () => {
