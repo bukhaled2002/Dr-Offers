@@ -9,9 +9,10 @@ interface UpdateOfferInput extends OfferSchemaInput {
 export const useUpdateOffer = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, UpdateOfferInput>({
-    mutationFn: async ({ id, ...data }) => {
-      await instance.patch(`/offers/${id}`, data);
+  return useMutation({
+    mutationFn: async ({ id, ...data }: UpdateOfferInput) => {
+      const res = await instance.patch(`/offers/${id}`, data);
+      return res.data;
     },
     onSuccess: () => {
       // Invalidate offers list queries

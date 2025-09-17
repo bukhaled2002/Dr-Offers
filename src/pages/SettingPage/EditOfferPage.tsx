@@ -21,7 +21,7 @@ export default function EditOfferPage() {
       defaultValues={offer}
       submitText={t("offerPage.updateButton")}
       isSubmitting={updateOffer.isPending}
-      onSubmit={(data) => updateOffer.mutate({ id: id!, ...data })}
+      onSubmit={(data) => updateOffer.mutateAsync({ id: id!, ...data })}
     />
   );
 }
