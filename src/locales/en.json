@@ -435,26 +435,27 @@
     "viewMore": "+ {{count}} more"
   },
   "All_Categories": {
-    "GROCERIES": "Groceries",
-    "PREMIUM_FRUITS": "Premium Fruits",
-    "HOME_KITCHEN": "Home & Kitchen",
-    "FASHION": "Fashion",
-    "ELECTRONICS": "Electronics",
-    "BEAUTY": "Beauty",
-    "HOME_IMPROVEMENT": "Home Improvement",
-    "SPORTS_TOYS_LUGGAGE": "Sports, Toys & Luggage",
-    "MOBILE": "Mobile",
-    "COSMETICS": "Cosmetics",
-    "FURNITURE": "Furniture",
-    "WATCHES": "Watches",
-    "FOOD": "Food",
-    "ACCESSORIES": "Accessories"
+    "groceries": "Groceries",
+    "premium_fruits": "Premium Fruits",
+    "home_kitchen": "Home & Kitchen",
+    "fashion": "Fashion",
+    "electronics": "Electronics",
+    "beauty": "Beauty",
+    "home_improvement": "Home Improvement",
+    "sports_toys_luggage": "Sports, Toys & Luggage",
+    "mobile": "Mobile",
+    "cosmetics": "Cosmetics",
+    "furniture": "Furniture",
+    "watches": "Watches",
+    "food": "Food",
+    "accessories": "Accessories"
   },
   "DealsGrid": {
     "error": "Failed to load deals. Please try again later.",
     "off": "OFF",
     "coupon": "Dr.offers Coupon",
-    "currency": "SAR"
+    "currency": "SAR",
+    "noDealsFound": "No deals found based on your search"
   },
   "drOffers_ar": "Dr.Offers",
   "surpriseGift": "Surprise gift for you",

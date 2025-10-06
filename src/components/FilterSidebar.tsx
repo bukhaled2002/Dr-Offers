@@ -40,6 +40,12 @@ const FilterSidebar = ({
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
 
+  // 🟢 Local state for slider (not directly updating URL)
+  const [priceRange, setPriceRange] = useState<number[]>([
+    Number(searchParams.get("minPrice")) || 0,
+    Number(searchParams.get("maxPrice")) || 10000,
+  ]);
+
   const { data: brandsResponse, isLoading: brandsLoading } = useQuery({
     queryKey: ["brands"],
     queryFn: async () => {
@@ -51,26 +57,24 @@ const FilterSidebar = ({
   const brands = brandsResponse?.data ?? [];
 
   const categories = [
-    "GROCERIES",
-    "PREMIUM_FRUITS",
-    "HOME_KITCHEN",
-    "FASHION",
-    "ELECTRONICS",
-    "BEAUTY",
-    "HOME_IMPROVEMENT",
-    "SPORTS_TOYS_LUGGAGE",
-    "MOBILE",
-    "COSMETICS",
-    "FURNITURE",
-    "WATCHES",
-    "FOOD",
-    "ACCESSORIES",
+    "groceries",
+    "premium_fruits",
+    "home_kitchen",
+    "fashion",
+    "electronics",
+    "beauty",
+    "home_improvement",
+    "sports_toys_luggage",
+    "mobile",
+    "cosmetics",
+    "furniture",
+    "watches",
+    "food",
+    "accessories",
   ];
 
   const selectedBrands = searchParams.getAll("brand_id");
   const selectedCategories = searchParams.getAll("category");
-  const priceMin = Number(searchParams.get("minPrice")) || 0;
-  const priceMax = Number(searchParams.get("maxPrice")) || 10000;
 
   const toggleParam = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -85,7 +89,8 @@ const FilterSidebar = ({
     navigate({ search: params.toString() });
   };
 
-  const updatePriceRange = (range: number[]) => {
+  // 🟢 Trigger navigation only when user finishes sliding
+  const commitPriceRange = (range: number[]) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("minPrice", range[0].toString());
     params.set("maxPrice", range[1].toString());
@@ -108,21 +113,24 @@ const FilterSidebar = ({
           <p className="text-sm text-gray-600 mb-2">{t("filter.range")}</p>
           <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>
-              {priceMin} {t("filter.currency")}
+              {priceRange[0]} {t("filter.currency")}
             </span>
             <span>
-              {priceMax} {t("filter.currency")}
+              {priceRange[1]} {t("filter.currency")}
             </span>
           </div>
           <div>
             <Slider
               dir={i18n.language === "ar" ? "rtl" : "ltr"}
-              value={[priceMin, priceMax]}
-              onValueChange={updatePriceRange}
+              value={priceRange}
               max={1000}
               min={0}
               step={1}
               className="w-full"
+              // 🟢 Update local state while sliding
+              onValueChange={(val) => setPriceRange(val)}
+              // 🟢 Trigger request only when user releases
+              onValueCommit={(val) => commitPriceRange(val)}
             />
           </div>
         </div>
@@ -135,23 +143,21 @@ const FilterSidebar = ({
               <p>{t("filter.loading")}</p>
             ) : (
               (showAllBrands ? brands : brands.slice(0, 4)).map(
-                ({ id, brand_name }) => {
-                  return (
-                    <div key={id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={id}
-                        checked={selectedBrands.includes(`${id}`)}
-                        onCheckedChange={() => toggleParam("brand_id", `${id}`)}
-                      />
-                      <label
-                        htmlFor={id}
-                        className="text-sm text-gray-700 cursor-pointer"
-                      >
-                        {brand_name}
-                      </label>
-                    </div>
-                  );
-                }
+                ({ id, brand_name }) => (
+                  <div key={id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={id}
+                      checked={selectedBrands.includes(`${id}`)}
+                      onCheckedChange={() => toggleParam("brand_id", `${id}`)}
+                    />
+                    <label
+                      htmlFor={id}
+                      className="text-sm text-gray-700 cursor-pointer"
+                    >
+                      {brand_name}
+                    </label>
+                  </div>
+                )
               )
             )}
           </div>

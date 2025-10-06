@@ -14,13 +14,13 @@ export const brands = [
 ];
 
 export const categories = [
-  { name: "Mobile", icon: "/icons/mobile.png", to: "MOBILE" },
-  { name: "Cosmetics", icon: "/icons/cosmetics.png", to: "MOBILE" },
-  { name: "Electronics", icon: "/icons/electronics.png", to: "GROCERIES" },
-  { name: "Furniture", icon: "/icons/furniture.png", to: "FURNITURE" },
-  { name: "Watches", icon: "/icons/watches.png", to: "WATCHES" },
-  { name: "Food", icon: "/icons/food.jpg", to: "FOOD" },
-  { name: "Accessories", icon: "/icons/accessories.png", to: "ACCESSORIES" },
+  { name: "Mobile", icon: "/icons/mobile.png", to: "mobile" },
+  { name: "Cosmetics", icon: "/icons/cosmetics.png", to: "cosmetics" },
+  { name: "Electronics", icon: "/icons/electronics.png", to: "electronics" },
+  { name: "Furniture", icon: "/icons/furniture.png", to: "furniture" },
+  { name: "Watches", icon: "/icons/watches.png", to: "watches" },
+  { name: "Food", icon: "/icons/food.jpg", to: "food" },
+  { name: "Accessories", icon: "/icons/accessories.png", to: "accessories" },
 ];
 export const sliderData = [
   {

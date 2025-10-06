@@ -133,6 +133,13 @@ const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
       </div>
     );
   }
+  if (deals.length === 0) {
+    return (
+      <div className="w-full py-10 text-center text-red-500 text-sm font-medium">
+        {t("DealsGrid.noDealsFound")}
+      </div>
+    );
+  }
 
   return (
     <>

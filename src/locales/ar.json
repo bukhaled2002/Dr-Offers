@@ -432,26 +432,27 @@
     "viewMore": "+ {{count}} المزيد"
   },
   "All_Categories": {
-    "GROCERIES": "البقالة",
-    "PREMIUM_FRUITS": "الفواكه الفاخرة",
-    "HOME_KITCHEN": "المنزل والمطبخ",
-    "FASHION": "الأزياء",
-    "ELECTRONICS": "الإلكترونيات",
-    "BEAUTY": "الجمال",
-    "HOME_IMPROVEMENT": "تحسين المنزل",
-    "SPORTS_TOYS_LUGGAGE": "الرياضة والألعاب والحقائب",
-    "MOBILE": "الموبايل",
-    "COSMETICS": "مستحضرات التجميل",
-    "FURNITURE": "الأثاث",
-    "WATCHES": "الساعات",
-    "FOOD": "الطعام",
-    "ACCESSORIES": "الإكسسوارات"
+    "groceries": "البقالة",
+    "premium_fruits": "الفواكه الفاخرة",
+    "home_kitchen": "المنزل والمطبخ",
+    "fashion": "الأزياء",
+    "electronics": "الإلكترونيات",
+    "beauty": "الجمال",
+    "home_improvement": "تحسين المنزل",
+    "sports_toys_luggage": "الرياضة والألعاب والحقائب",
+    "mobile": "الموبايل",
+    "cosmetics": "مستحضرات التجميل",
+    "furniture": "الأثاث",
+    "watches": "الساعات",
+    "food": "الطعام",
+    "accessories": "الإكسسوارات"
   },
   "DealsGrid": {
     "error": "فشل تحميل العروض. يرجى المحاولة لاحقًا.",
     "off": "خصم",
     "coupon": "كوبون Dr.offers",
-    "currency": "ر.س"
+    "currency": "ر.س",
+    "noDealsFound": "لم يتم العثور على عروض بناءً على بحثك"
   },
 
   "drOffers_ar": "دكتور أوفرز",
