@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Facebook, Twitter, Instagram, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import PrivacyDialogHtml from "./PrivacyDialogHtml";
 
 const Footer: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -112,7 +113,7 @@ const Footer: React.FC = () => {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="#"
+                  href="tel:+966554469058"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("contact_us")}
@@ -215,9 +216,8 @@ const Footer: React.FC = () => {
               }`}
             >
               {t("subscribe_note")}
-              <a href="#" className="text-blue-600 hover:underline">
-                {t("privacy_policy")}
-              </a>
+
+              <PrivacyDialogHtml />
             </p>
           </div>
         </div>
