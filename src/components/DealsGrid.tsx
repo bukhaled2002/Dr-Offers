@@ -4,6 +4,9 @@ import CouponModal from "./CouponModal";
 import type { Deal } from "@/types/api";
 import { useTranslation } from "react-i18next";
 import instance from "@/api/axiosInstance";
+import { useNumberFormatter } from "@/hooks/useNumberFormatter";
+
+import { SaudiRiyal } from "lucide-react";
 
 type DealsGridProps = {
   deals: Deal[];
@@ -84,6 +87,7 @@ const ImageWithLoading: React.FC<{
 
 const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
   const { t } = useTranslation();
+  const formatNumber = useNumberFormatter();
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -143,7 +147,7 @@ const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {deals.map((deal) => (
           <Card
             key={deal.id}
@@ -151,13 +155,13 @@ const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
             className="group relative rounded-xl overflow-hidden shadow-sm border flex flex-col p-0 max-w-[300px] mx-auto gap-0 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
           >
             <span className="absolute top-0 right-0 bg-[#8B2F1D] text-white text-[13px] font-semibold text-center w-14 h-12 py-[2px] rounded-bl-xl z-10 leading-5">
-              {deal.discount_rate}% <br />
+              {formatNumber(deal.discount_rate)}% <br />
               {t("DealsGrid.off")}
             </span>
 
             <div className="w-full h-52 bg-white flex items-center justify-center overflow-hidden">
               <ImageWithLoading
-                src={deal.image ?? "/imgs/phone-1.jpg"}
+                src={deal.image as string}
                 alt={deal.name || deal.title}
                 className="object-contain w-full transition-transform duration-300"
                 fallbackSrc="/imgs/phone-1.jpg"
@@ -170,10 +174,13 @@ const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
               </p>
               <div className="flex items-center gap-2">
                 <p className="font-semibold text-black">
-                  {deal.price_after} {t("DealsGrid.currency")}
+                  {formatNumber(deal.price_after)}
+                  <SaudiRiyal className="w-5 h-5 inline mx-1" />
                 </p>
-                <p className="line-through text-gray-400">
-                  {deal.price_before} {t("DealsGrid.currency")}
+                <p className="text-gray-400 relative inline">
+                  {formatNumber(deal.price_before)}
+                  <SaudiRiyal className="w-5 h-5 inline mx-1" />
+                  <span className="absolute top-[50%] left-0 w-full h-[2px] rounded-2xl bg-primary opacity-90" />
                 </p>
               </div>
               {/* <p className="text-[11px] text-primary font-semibold mt-2 pt-2 border-t-2">

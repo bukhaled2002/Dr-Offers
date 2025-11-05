@@ -14,7 +14,6 @@ export default function ProductsPage() {
 
   const { deals, meta, totalPages, isLoading, error } = useOffers();
 
-  console.log(meta);
   return (
     <main className="flex min-h-screen flex-col md:flex-row">
       <FilterSidebar

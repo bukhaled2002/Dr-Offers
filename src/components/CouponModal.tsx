@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
 import type { Deal } from "@/types/api";
 import { useTranslation } from "react-i18next";
+import { useNumberFormatter } from "@/hooks/useNumberFormatter";
 // Coupon Modal Component
 const CouponModal: React.FC<{
   deal: Deal | null;
@@ -11,7 +12,7 @@ const CouponModal: React.FC<{
   onClose: () => void;
 }> = ({ deal, isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
-
+  const formatNumber = useNumberFormatter();
   const { t } = useTranslation();
   const handleCopyCode = async () => {
     if (deal?.coupon) {
@@ -32,13 +33,14 @@ const CouponModal: React.FC<{
       <DialogContent className="sm:max-w-md p-0 bg-white rounded-2xl border-0 shadow-2xl">
         <div className="flex flex-col items-center text-center p-8">
           {/* Logo */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <div className="w-16 h-16 bg-[#8B2F1D] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">D</span>
             </div>
             <p className="text-[#8B2F1D] text-sm font-medium mt-2">Dr.Offers</p>
             <p className="text-gray-400 text-xs">{t("drOffers_ar")}</p>
-          </div>
+          </div> */}
+          <img src="/logo.png" alt="Dr.Offers Logo" className="h-25 mb-6" />
 
           {/* Surprise gift text */}
           <p className="text-gray-500 text-lg mb-8">{t("surpriseGift")}</p>
@@ -46,7 +48,7 @@ const CouponModal: React.FC<{
           {/* Discount */}
           <div className="mb-6">
             <h2 className="text-4xl font-bold text-[#8B2F1D] mb-2">
-              {deal.discount_rate}% {t("off")}
+              {formatNumber(deal.discount_rate)}% {t("off")}
             </h2>
             <p className="text-gray-800 text-lg font-medium">
               {t("entirePurchase")}

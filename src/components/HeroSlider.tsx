@@ -225,7 +225,7 @@ export default function DealSlider({ className }: { className?: string }) {
               />
               <img
                 src="/imgs/mask-group.png"
-                className={`absolute top-0 ${
+                className={`absolute top-0 object-cover  ${
                   isRtl ? "left-0 scale-x-[-1]" : "right-0"
                 } z-[1] h-full`}
                 alt=""

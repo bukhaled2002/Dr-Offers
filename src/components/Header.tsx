@@ -32,7 +32,15 @@ function Header() {
       {/* Top Bar */}
       <div className=" bg-[#D9D9D9]/30 px-8 py-3 flex justify-between items-center text-gray-600">
         <div>
-          <p>{t("welcome", { name: user?.name || "" })}</p>
+          <p>
+            {t("welcome", { name: user?.name || "" })}{" "}
+            <img
+              src="/textlogo.png"
+              alt="textlogo"
+              className="inline p-0 h-8 w-17"
+            />
+            !
+          </p>
         </div>
         <div className="flex items-center gap-4 relative">
           {/* 🌍 Language Dropdown */}
@@ -87,7 +95,7 @@ function Header() {
       {/* Main Header */}
       <div className="flex items-center justify-between px-4 py-4 max-w-7xl mx-auto">
         <Link to={"/"}>
-          <img src="/logo.png" alt="Logo" height={60} width={60} />
+          <img src="/logo.png" alt="Logo" height={50} width={50} />
         </Link>
 
         {/* Search Bar */}
