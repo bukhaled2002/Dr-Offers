@@ -1,7 +1,7 @@
 import { useAuth } from "@/context/useAuth";
 import {
   Globe,
-  Search,
+  // Search,
   User,
   LogOut,
   Settings,
@@ -99,14 +99,14 @@ function Header() {
         </Link>
 
         {/* Search Bar */}
-        <div className="flex-1 mx-6 hidden sm:flex items-center bg-gray-100 rounded-full px-4 py-2 max-w-2xl">
+        {/* <div className="flex-1 mx-6 hidden sm:flex items-center bg-gray-100 rounded-full px-4 py-2 max-w-2xl">
           <Search className="w-4 h-4 text-gray-400" />
           <input
             type="text"
             placeholder={t("searchPlaceholder")}
             className="ml-2 bg-transparent outline-none flex-1 text-sm"
           />
-        </div>
+        </div> */}
 
         {/* Right Side */}
         <div className="flex items-center gap-6 text-sm text-primary relative">

@@ -2,10 +2,10 @@ import HeroSlider from "../../components/HeroSlider";
 import CategoryCards from "@/components/CategoriesCards";
 import SectionHeader from "@/components/ui/SectionHeader";
 import DealsGrid from "@/components/DealsGrid";
-import TopBrandsGrid from "@/components/TopBrandsGrid";
+// import TopBrandsGrid from "@/components/TopBrandsGrid";
 import { stats, brands, categories } from "@/constants";
 import { useBestDeals } from "@/hooks/useBestDeals";
-import { useTopBrands } from "@/hooks/useTopBrands";
+// import { useTopBrands } from "@/hooks/useTopBrands";
 import BrandOwnerJoin from "@/components/BrandOwnerJoin";
 import { Link } from "react-router";
 import { useAuth } from "@/context/useAuth";
@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 export default function LandingPage() {
   const { data: deals, isLoading: dealsLoading, error } = useBestDeals();
-  const { data: topBrands } = useTopBrands();
+  // const { data: topBrands } = useTopBrands();
   const { language } = useAuth();
   const { t } = useTranslation();
 
@@ -71,13 +71,13 @@ export default function LandingPage() {
         </div>
 
         {/* top brands */}
-        <div className="section-container">
+        {/* <div className="section-container">
           <SectionHeader
             text={t("top", "Top ")}
             primaryText={t("brands", "Brands")}
           />
           <TopBrandsGrid data={topBrands?.data || []} />
-        </div>
+        </div> */}
 
         {/* brand owner join */}
         <div className="section-container ">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Facebook, Twitter, Instagram, User } from "lucide-react";
+// import { Facebook, Twitter, Instagram, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PrivacyDialogHtml from "./PrivacyDialogHtml";
 
@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Company Info */}
           <div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
@@ -45,27 +45,27 @@ const Footer: React.FC = () => {
                   {t("social_responsibility")}
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("affiliate")}
                 </a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("fashion_blogger")}
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
           {/* Help & Support */}
-          <div>
+          {/* <div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
               {t("help_support")}
             </h3>
@@ -103,7 +103,7 @@ const Footer: React.FC = () => {
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Customer Care */}
           <div>
@@ -119,39 +119,39 @@ const Footer: React.FC = () => {
                   {t("contact_us")}
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("payment")}
                 </a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("bonus_point")}
                 </a>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <a
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("notices")}
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
 
           {/* Socials & Newsletter */}
           <div>
-            <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
+            {/* <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
               {t("socials")}
-            </h3>
-            <div className="flex space-x-3 mb-6">
+            </h3> */}
+            {/* <div className="flex space-x-3 mb-6">
               <a
                 href="#"
                 className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600 transition-colors"
@@ -184,7 +184,7 @@ const Footer: React.FC = () => {
               >
                 <User className="w-4 h-4 text-white" />
               </a>
-            </div>
+            </div> */}
 
             <h4 className="text-gray-800 font-semibold text-sm mb-3 tracking-wide">
               {t("newsletter_signup")}
