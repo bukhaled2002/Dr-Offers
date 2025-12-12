@@ -116,11 +116,11 @@ function Header() {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="flex items-center gap-2 focus:outline-none cursor-pointer"
               >
-                <img
+                {/* <img
                   src={user?.image_url || "/imgs/user-placeholder.png"}
                   alt="User"
                   className="w-8 h-8 rounded-full object-cover border"
-                />
+                /> */}
                 <span>{user?.name}</span>
               </button>
 

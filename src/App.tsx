@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import BrandPage from "./pages/BrandPage/brandPage";
 import LandingPage from "./pages/LandingPage/LandingPage.tsx";
 import ProductsPage from "./pages/ProductsPage/ProductsPage";
+import AboutPage from "./pages/AboutPage";
 // import { ProtectedRoute } from "@/components/ProtectedRoute";
 import LoginRequiredPage from "./pages/AuthPages/LoginRequiredPage";
 import { LoginPage } from "./pages/AuthPages/LoginPage";
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
         element: <BrandLanding />,
       },
       { path: "products", element: <ProductsPage /> },
+      { path: "about", element: <AboutPage /> },
       // {
       //   path: "products",
       //   element: <ProtectedRoute />,

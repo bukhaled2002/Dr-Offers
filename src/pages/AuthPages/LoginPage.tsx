@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { AuthPageLayout } from "./AuthPageLayout";
 import { Link } from "react-router-dom";
@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 
 export function LoginPage() {
   const { t } = useTranslation();
-  const [authError, setAuthError] = useState<string | null>(null);
 
   const { login, role } = useAuth();
   const navigate = useNavigate();
@@ -29,14 +28,13 @@ export function LoginPage() {
       const responseData = res.data?.data || res.data;
       const { access_token, refresh_token } = responseData;
 
-      setAuthError(null);
       login(access_token, refresh_token);
       navigate(role === "owner" ? "/setting/dashboard" : "/");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(err);
-      setAuthError(
-        err?.response?.data?.message || t("login.invalidCredentials")
+      toast.error(
+         t("login.invalidCredentials")
       );
     }
   };
@@ -91,11 +89,6 @@ export function LoginPage() {
             <p className="text-red-600 text-sm">{errors.password.message}</p>
           )}
         </div>
-
-        {/* Auth error */}
-        {authError && (
-          <p className="text-red-600 text-sm text-center">{authError}</p>
-        )}
 
         <Button
           type="submit"

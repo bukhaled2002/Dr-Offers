@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import ProfileImageEditor from "@/components/ProfileImageEditor";
+// import ProfileImageEditor from "@/components/ProfileImageEditor";
 import { useAuth } from "@/context/useAuth";
 import { useUpdateProfile } from "@/hooks/useUpdateProfile";
 import {
@@ -25,8 +25,8 @@ export default function ProfileSettingPage() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      address: "",
-      image_url: "",
+      address: user?.address || "",
+      // image_url: "",
       language: "en",
       phone_number: user?.phone_number || "",
     },
@@ -37,7 +37,7 @@ export default function ProfileSettingPage() {
       form.reset({
         ...user,
         language: (user.preferences?.language as "en" | "ar") || "en",
-        image_url: "https://i.ibb.co/6RjVRpGJ/default-photo.jpg",
+        // image_url: "https://i.ibb.co/6RjVRpGJ/default-photo.jpg",
       });
     }
   }, [user, form]);
@@ -105,7 +105,7 @@ export default function ProfileSettingPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Profile Image Section */}
-        <div className="px-8 py-6 ">
+        {/* <div className="px-8 py-6 ">
           <div className="mb-6">
             <h3 className="form-header">{t("profile.photoTitle")}</h3>
             <p className="text-sm text-gray-600">
@@ -130,7 +130,7 @@ export default function ProfileSettingPage() {
             </p>
           )}
           <p className="text-xs text-gray-500 mt-2">{t("profile.photoHint")}</p>
-        </div>
+        </div> */}
 
         {/* Personal Information Section */}
         <div className="px-8 py-6">

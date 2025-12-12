@@ -44,7 +44,11 @@ export function RegisterPage() {
     } catch (error: any) {
       console.log(error);
       toast.error(
-        error?.response?.data?.message || t("register.somethingWentWrong")
+        error?.response?.data?.message === "PHONE_NUMBER_EXISTS"
+          ? t("register.phoneNumberExists")
+          : error?.response?.data?.message === "EMAIL_EXISTS"
+            ? t("register.emailExists")
+            : t("register.somethingWentWrong"),
       );
     }
   };

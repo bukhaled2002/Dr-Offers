@@ -111,10 +111,10 @@ export default function BrandLanding() {
       </section>
 
       {/* Testimonials */}
-      <TestimonialGrid />
+      {/* <TestimonialGrid /> */}
 
       {/* Pricing */}
-      <PricingSection />
+      {/* <PricingSection /> */}
 
       {/* Join Section */}
       <div className="section-container">

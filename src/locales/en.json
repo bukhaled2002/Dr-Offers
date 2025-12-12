@@ -95,7 +95,7 @@
   "subscribe": "Subscribe",
   "subscribe_note": "By clicking the SUBSCRIBE button, you agree to our ",
   "privacy_policy": "Privacy & Cookie Policy",
-  "all_rights_reserved": "All Rights Reserved",
+  "all_rights_reserved": "© 2025 Dr. Offers. All rights reserved",
 
   "international_brands": "International Brands",
   "high_quality_products": "High-Quality Products",
@@ -329,7 +329,9 @@
 
     "or": "Or",
     "registerAsBrand": "Register as a brand",
-    "registerAsVisitor": "Register as a visitor"
+    "registerAsVisitor": "Register as a visitor",
+    "phoneNumberExists": "Phone number already exists",
+    "emailExists": "Email already exists"
   },
   "login": {
     "title": "Sign in",
@@ -500,5 +502,13 @@
       "resetFailed": "Failed to reset password"
     },
     "success": "Password reset successfully"
+  },
+  "aboutPage": {
+    "title": "About Dr Offers",
+    "description": "Dr Offers is your one-stop destination for the best deals, discounts, and offers across various categories. We strive to bring you the most value for your money by partnering with top brands and retailers.",
+    "mission_title": "Our Mission",
+    "mission_text": "To empower consumers with the best savings opportunities and help brands reach their target audience effectively.",
+    "vision_title": "Our Vision",
+    "vision_text": "To be the leading platform for deals and discounts in the region, known for trust, variety, and user experience."
   }
 }

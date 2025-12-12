@@ -59,9 +59,9 @@ export default function AppSidebar() {
         i18n.language === "ar" && "rtl"
       )}
     >
-      <div className="flex items-center justify-center md:justify-start px-2 md:px-6 max-h-40">
-        <Link to={role === "owner" ? "/brand-landing" : "/"} className="mt-15">
-          <img src="/logo.png" alt="Logo" className="w-auto h-full" />
+      <div className="flex items-center justify-center px-2 md:px-6 max-h-40">
+        <Link to={role === "owner" ? "/brand-landing" : "/"} className="mt-15 flex justify-center align-center">
+          <img src="/logo.png" alt="Logo" className="size-14 md:size-20  object-cover  aspect-square" />
         </Link>
       </div>
       <nav className="flex-1 px-2 md:px-4 py-4 space-y-1">

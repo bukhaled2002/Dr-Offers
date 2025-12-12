@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 // import { Facebook, Twitter, Instagram, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PrivacyDialogHtml from "./PrivacyDialogHtml";
@@ -30,21 +31,21 @@ const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("about_dr_offers")}
-                </a>
+                </Link>
               </li>
-              <li>
+              {/* <li>
                 <a
                   href="#"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
                   {t("social_responsibility")}
                 </a>
-              </li>
+              </li> */}
               {/* <li>
                 <a
                   href="#"
@@ -230,7 +231,7 @@ const Footer: React.FC = () => {
                 isArabic ? "text-right" : ""
               }`}
             >
-              © 2025 Dr {t("all_rights_reserved")}
+              {t("all_rights_reserved")}
             </p>
           </div>
         </div>
