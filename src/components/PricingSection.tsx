@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -32,8 +33,8 @@ const getPlans = (t: TFunction): Plan[] => [
   },
   {
     name: "Pro",
-    monthlyPrice: 85,
-    annualPrice: 55,
+    monthlyPrice: 0,
+    annualPrice: 0,
     description: t("pro_desc", "Great for small businesses"),
     features: [
       t("pro_feature_1", "Unlimited phone calls"),
@@ -46,8 +47,8 @@ const getPlans = (t: TFunction): Plan[] => [
   },
   {
     name: "Enterprise",
-    monthlyPrice: null,
-    annualPrice: null,
+    monthlyPrice: 0,
+    annualPrice: 0,
     description: t("enterprise_desc", "For multiple teams"),
     features: [
       t("enterprise_feature_1", "Everything in Pro"),
@@ -56,12 +57,13 @@ const getPlans = (t: TFunction): Plan[] => [
       t("enterprise_feature_4", "15 status pages"),
       t("enterprise_feature_5", "200+ integrations"),
     ],
-    isCustom: true,
+    isCustom: false,
   },
 ];
 
 export default function PricingPlans() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const plans = getPlans(t);
 
@@ -192,6 +194,15 @@ export default function PricingPlans() {
 
                 <div className="pt-4">
                   <Button
+                    onClick={() =>
+                      navigate(
+                        `/checkout?plan=${plan.name}&billing=${billing}&price=${
+                          billing === "monthly"
+                            ? plan.monthlyPrice
+                            : plan.annualPrice
+                        }`
+                      )
+                    }
                     className={`w-full py-3 font-medium cursor-pointer ${
                       plan.isCustom
                         ? "bg-white text-gray-900 hover:bg-gray-100"

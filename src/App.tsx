@@ -24,6 +24,7 @@ import AddBrand from "./pages/BrandPage/AddBrand.tsx";
 import BrandSettingPage from "./pages/SettingPage/BrandSettingPage.tsx";
 import EditOfferPage from "./pages/SettingPage/EditOfferPage.tsx";
 import { Outlet } from "react-router-dom";
+import CheckoutPage from "./pages/CheckoutPage";
 
 // Layout wrapper for offers
 function OffersLayout() {
@@ -90,6 +91,7 @@ const router = createBrowserRouter([
   { path: "/auth/reset-password/:token", element: <ResetPassword /> },
 
   { path: "/login-required", element: <LoginRequiredPage /> },
+  { path: "/checkout", element: <CheckoutPage /> },
 ]);
 function App() {
   const { user } = useAuth();
