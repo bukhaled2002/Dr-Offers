@@ -20,7 +20,7 @@ export const brandSchema = z.object({
     .enum(["free", "custom", "pro"], { message: "Invalid subscription plan" })
     .default("free")
     .optional(),
-  business_docs: z.string().optional(),
+  // business_docs: z.string().optional(),
 });
 
 export type BrandFormValues = z.infer<typeof brandSchema>;

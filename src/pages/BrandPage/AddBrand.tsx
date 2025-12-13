@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 import { brandSchema, type BrandFormValues } from "@/schemas/brand.schema";
-import BusinessDocumentDrop from "@/components/BusinessDocumentDrop";
+// import BusinessDocumentDrop from "@/components/BusinessDocumentDrop";
 import instance from "@/api/axiosInstance";
 import { useTranslation } from "react-i18next";
 
@@ -49,7 +49,7 @@ export default function AddBrand() {
       city: existingBrand?.city || "",
       category_type: existingBrand?.category_type || "food",
       subscription_plan: existingBrand?.subscription_plan || "free",
-      business_docs: existingBrand?.business_docs || "",
+      // business_docs: existingBrand?.business_docs || "",
     };
   };
 
@@ -63,7 +63,7 @@ export default function AddBrand() {
     register,
     handleSubmit,
     formState: { errors, isValid },
-    setValue,
+    // setValue,
     trigger,
     control,
     reset,
@@ -253,13 +253,13 @@ export default function AddBrand() {
           </div>
         </div>
 
-        <h3 className="form-header">{t("add_brand.docs")}</h3>
+        {/* <h3 className="form-header">{t("add_brand.docs")}</h3>
         <BusinessDocumentDrop
           setValue={setValue}
           trigger={trigger}
           name="business_docs"
           disabled={isSubmitted || isPendingBrand}
-        />
+        /> */}
 
         <div className="px-8 py-6 flex items-center justify-end">
           <Button
