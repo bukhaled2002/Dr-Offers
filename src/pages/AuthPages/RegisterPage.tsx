@@ -39,7 +39,8 @@ export function RegisterPage() {
       const responseData = res.data?.data || res.data;
       const { access_token, refresh_token } = responseData;
       login(access_token, refresh_token);
-      navigate(`/auth/verify-otp?email=${email}`);
+      navigate(role === "owner" ? "/setting/dashboard" : "/");
+      // navigate(`/auth/verify-otp?email=${email}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
