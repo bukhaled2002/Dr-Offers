@@ -6,9 +6,9 @@ import { FaShoppingBag } from "react-icons/fa";
 import { Check } from "lucide-react";
 
 import BrandHero from "@/components/BrandHero";
-import PricingSection from "@/components/PricingSection";
+// import PricingSection from "@/components/PricingSection";
 import { SocialSyncGrid } from "@/components/SocialSyncGrid";
-import { TestimonialGrid } from "@/components/TestimonialsSection";
+// import { TestimonialGrid } from "@/components/TestimonialsSection";
 import BrandOwnerJoin from "@/components/BrandOwnerJoin";
 
 export default function BrandLanding() {

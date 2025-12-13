@@ -1,4 +1,3 @@
-import React from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useTranslation } from 'react-i18next';
 

@@ -45,9 +45,6 @@ export default function ProfileSettingPage() {
   const {
     register,
     handleSubmit,
-    setValue,
-    trigger,
-    watch,
     formState: { isDirty, errors },
   } = form;
 
