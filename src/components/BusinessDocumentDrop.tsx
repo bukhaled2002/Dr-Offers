@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export default function BusinessDocumentDrop({
   setValue,
   trigger,
-  name = "business_docs",
+  name ,
   disabled = false,
 }: {
   setValue: UseFormSetValue<BrandFormValues>;
