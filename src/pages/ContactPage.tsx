@@ -2,6 +2,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { useTranslation } from 'react-i18next';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ContactPage() {
   const { t, i18n } = useTranslation();
@@ -28,13 +29,24 @@ export default function ContactPage() {
   };
 
   return (
-    <main className="bg-white text-black min-h-screen">
+    <main className="bg-white text-black min-h-screen overflow-hidden">
       <div className="section-container pt-12 pb-16">
-        <SectionHeader primaryText={t('contactPage.title')} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <SectionHeader primaryText={t('contactPage.title')} />
+        </motion.div>
         
         <div className={`mt-12 grid lg:grid-cols-2 gap-16 ${isArabic ? 'text-right' : 'text-left'}`}>
           {/* Contact Information */}
-          <div className="space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, x: isArabic ? 50 : -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="space-y-8"
+          >
             <div>
               <h2 className="text-3xl font-bold text-[#6d2c13] mb-4">{t('contactPage.get_in_touch')}</h2>
               <p className="text-gray-600 text-lg">
@@ -43,42 +55,37 @@ export default function ContactPage() {
             </div>
 
             <div className="space-y-6">
-              <div className={`flex items-start gap-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
-                <div className="w-12 h-12 bg-[#F6F3F2] rounded-full flex items-center justify-center shrink-0 text-[#6d2c13]">
-                  <Phone size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">{t('contactPage.phone')}</h4>
-                  <p className="text-gray-600" dir="ltr">+966 55 446 9058</p>
-                </div>
-              </div>
-
-              <div className={`flex items-start gap-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
-                <div className="w-12 h-12 bg-[#F6F3F2] rounded-full flex items-center justify-center shrink-0 text-[#6d2c13]">
-                  <Mail size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">{t('contactPage.email')}</h4>
-                  <p className="text-gray-600">info@droffers.com</p>
-                </div>
-              </div>
-
-              <div className={`flex items-start gap-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
-                <div className="w-12 h-12 bg-[#F6F3F2] rounded-full flex items-center justify-center shrink-0 text-[#6d2c13]">
-                  <MapPin size={24} />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900">{t('contactPage.address')}</h4>
-                  <p className="text-gray-600">
-                    {t('contactPage.address_text')}
-                  </p>
-                </div>
-              </div>
+              {[
+                { icon: <Phone size={24} />, title: t('contactPage.phone'), content: '+966 55 446 9058', dir: 'ltr' },
+                { icon: <Mail size={24} />, title: t('contactPage.email'), content: 'info@droffers.com' },
+                { icon: <MapPin size={24} />, title: t('contactPage.address'), content: t('contactPage.address_text') }
+              ].map((item, idx) => (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + idx * 0.1 }}
+                  className={`flex items-start gap-4 ${isArabic ? 'flex-row-reverse' : ''}`}
+                >
+                  <div className="w-12 h-12 bg-[#F6F3F2] rounded-full flex items-center justify-center shrink-0 text-[#6d2c13]">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900">{item.title}</h4>
+                    <p className="text-gray-600" dir={item.dir}>{item.content}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Contact Form */}
-          <div className="bg-[#F6F3F2] p-8 md:p-10 rounded-2xl shadow-sm">
+          <motion.div 
+            initial={{ opacity: 0, x: isArabic ? -50 : 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-[#F6F3F2] p-8 md:p-10 rounded-2xl shadow-sm"
+          >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
@@ -133,15 +140,17 @@ export default function ContactPage() {
                 ></textarea>
               </div>
 
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 type="submit"
                 className="w-full bg-[#6d2c13] text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-[#5a2410] transition-colors"
               >
                 <Send size={20} />
                 {t('contactPage.form_submit')}
-              </button>
+              </motion.button>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </main>

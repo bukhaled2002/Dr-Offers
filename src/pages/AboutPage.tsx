@@ -1,24 +1,42 @@
 import SectionHeader from '@/components/ui/SectionHeader';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 export default function AboutPage() {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
 
   return (
-    <main className="bg-white text-black">
+    <main className="bg-white text-black overflow-hidden">
       <div className="section-container pt-12 pb-16">
-        <SectionHeader primaryText={t('aboutPage.title')} />
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <SectionHeader primaryText={t('aboutPage.title')} />
+        </motion.div>
         
         <div className={`mt-8 space-y-12 ${isArabic ? 'text-right' : 'text-left'}`}>
-            <section className="max-w-4xl mx-auto">
+            <motion.section 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="max-w-4xl mx-auto"
+            >
                 <p className="text-lg text-gray-600 leading-relaxed">
                     {t('aboutPage.description')}
                 </p>
-            </section>
+            </motion.section>
             
             <section className="grid md:grid-cols-2 gap-8">
-                <div className="bg-[#F6F3F2] p-8 rounded-xl hover:shadow-md transition-shadow">
+                <motion.div 
+                  initial={{ opacity: 0, x: isArabic ? 50 : -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="bg-[#F6F3F2] p-8 rounded-xl hover:shadow-md transition-shadow"
+                >
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 text-[#6d2c13]">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
@@ -30,9 +48,15 @@ export default function AboutPage() {
                     <p className="text-gray-600 leading-relaxed">
                         {t('aboutPage.mission_text')}
                     </p>
-                </div>
+                </motion.div>
                 
-                <div className="bg-[#F6F3F2] p-8 rounded-xl hover:shadow-md transition-shadow">
+                <motion.div 
+                  initial={{ opacity: 0, x: isArabic ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="bg-[#F6F3F2] p-8 rounded-xl hover:shadow-md transition-shadow"
+                >
                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 text-[#6d2c13]">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
@@ -45,7 +69,7 @@ export default function AboutPage() {
                     <p className="text-gray-600 leading-relaxed">
                         {t('aboutPage.vision_text')}
                     </p>
-                </div>
+                </motion.div>
             </section>
         </div>
       </div>

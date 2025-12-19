@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useRef } from "react";
+import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper/types";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
@@ -209,20 +210,26 @@ export default function DealSlider({ className }: { className?: string }) {
                 isRtl ? "" : ""
               } justify-between items-center relative overflow-hidden h-96 md:h-72`}
             >
-              <div
-                className={`z-[2] space-y-2 h-full ${
-                  isRtl ? "text-right" : "text-left"
-                }`}
-              >
-                <p className="text-base">{subtitle}</p>
-                <h1 className="text-5xl font-bold">{item.title}</h1>
-                <p className="text-xl">{item.desc}</p>
-              </div>
-              <img
-                src={item.image}
-                alt={item.title}
-                className="z-[2] max-h-40 md:max-h-60"
-              />
+                <motion.div
+                  initial={{ opacity: 0, x: isRtl ? 30 : -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className={`z-[2] space-y-2 h-full ${
+                    isRtl ? "text-right" : "text-left"
+                  }`}
+                >
+                  <p className="text-base">{subtitle}</p>
+                  <h1 className="text-5xl font-bold">{item.title}</h1>
+                  <p className="text-xl">{item.desc}</p>
+                </motion.div>
+                <motion.img
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  src={item.image}
+                  alt={item.title}
+                  className="z-[2] max-h-40 md:max-h-60"
+                />
               <img
                 src="/imgs/mask-group.png"
                 className={`absolute top-0 object-cover  ${
