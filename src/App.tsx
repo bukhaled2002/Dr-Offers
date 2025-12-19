@@ -3,6 +3,7 @@ import BrandPage from "./pages/BrandPage/brandPage";
 import LandingPage from "./pages/LandingPage/LandingPage.tsx";
 import ProductsPage from "./pages/ProductsPage/ProductsPage";
 import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
 // import { ProtectedRoute } from "@/components/ProtectedRoute";
 import LoginRequiredPage from "./pages/AuthPages/LoginRequiredPage";
 import { LoginPage } from "./pages/AuthPages/LoginPage";
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
       },
       { path: "products", element: <ProductsPage /> },
       { path: "about", element: <AboutPage /> },
+      { path: "contact", element: <ContactPage /> },
       // {
       //   path: "products",
       //   element: <ProtectedRoute />,

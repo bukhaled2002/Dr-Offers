@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
+import { useAuth } from "@/context/useAuth";
 
 interface Plan {
   name: string;
@@ -64,6 +65,7 @@ const getPlans = (t: TFunction): Plan[] => [
 export default function PricingPlans() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const {isAuthenticated,user} = useAuth()
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const plans = getPlans(t);
 
@@ -92,7 +94,20 @@ export default function PricingPlans() {
       name: plan.name,
     });
   };
-
+const handleNavigate = (plan:Plan)=>{
+  if (isAuthenticated&&user?.role === 'owner') {
+    
+    navigate(
+      `/checkout?plan=${plan.name}&billing=${billing}&price=${
+        billing === "monthly"
+        ? plan.monthlyPrice
+        : plan.annualPrice
+        }`)}
+      else if(isAuthenticated && user?.role !== 'owner'){
+        navigate('/dashboard')
+      }else{
+        navigate('/login/?role=owner')
+      }}
   return (
     <div className="max-w-6xl mx-auto px-6 py-16 bg-gray-50 min-h-screen">
       <div className="text-center mb-12">
@@ -194,15 +209,8 @@ export default function PricingPlans() {
 
                 <div className="pt-4">
                   <Button
-                    onClick={() =>
-                      navigate(
-                        `/checkout?plan=${plan.name}&billing=${billing}&price=${
-                          billing === "monthly"
-                            ? plan.monthlyPrice
-                            : plan.annualPrice
-                        }`
-                      )
-                    }
+                    onClick={()=>handleNavigate(plan)}
+
                     className={`w-full py-3 font-medium cursor-pointer ${
                       plan.isCustom
                         ? "bg-white text-gray-900 hover:bg-gray-100"

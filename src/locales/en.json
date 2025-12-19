@@ -86,6 +86,7 @@
   "how_to_track": "How to Track",
   "customer_care": "Customer Care",
   "contact_us": "Contact Us",
+  "call_us": "Call Us",
   "payment": "Payment",
   "bonus_point": "Bonus Point",
   "notices": "Notices",
@@ -510,5 +511,23 @@
     "mission_text": "To empower consumers with the best savings opportunities and help brands reach their target audience effectively.",
     "vision_title": "Our Vision",
     "vision_text": "To be the leading platform for deals and discounts in the region, known for trust, variety, and user experience."
+  },
+  "contactPage": {
+    "title": "Contact Us",
+    "get_in_touch": "Get In Touch",
+    "description": "Have a question or feedback? We'd love to hear from you. Fill out the form below and our team will get back to you as soon as possible.",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "address_text": "Riyadh, Saudi Arabia",
+    "form_name": "Your Name",
+    "form_name_placeholder": "Enter your name",
+    "form_email": "Your Email",
+    "form_email_placeholder": "Enter your email",
+    "form_subject": "Subject",
+    "form_subject_placeholder": "What is this about?",
+    "form_message": "Message",
+    "form_message_placeholder": "Write your message here...",
+    "form_submit": "Send Message"
   }
 }

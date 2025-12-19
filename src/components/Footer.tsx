@@ -113,11 +113,19 @@ const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-3">
               <li>
+                <Link
+                  to="/contact"
+                  className="text-gray-600 hover:text-gray-800 text-sm"
+                >
+                  {t("contact_us")}
+                </Link>
+              </li>
+              <li>
                 <a
                   href="tel:+966554469058"
                   className="text-gray-600 hover:text-gray-800 text-sm"
                 >
-                  {t("contact_us")}
+                  {t("call_us")}
                 </a>
               </li>
               {/* <li>
