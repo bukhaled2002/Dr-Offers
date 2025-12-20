@@ -31,7 +31,7 @@ export const useOffers = (options?: UseOffersOptions) => {
       const res = await instance.get(`${endpoint}?perPage=${perPage}`, {
         params: {
           categories,
-          brand_id: brandIds,
+          brand_ids: brandIds,
           page,
           max_price: maxPrice,
           min_price: minPrice,
