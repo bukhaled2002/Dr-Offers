@@ -328,8 +328,8 @@
     "or": "أو",
     "registerAsBrand": "سجّل كعلامة تجارية",
     "registerAsVisitor": "سجّل كزائر",
-    "phoneNumberExists":"الرقم تم استخدامه بالفعل",
-    "emailExists":"الرقم تم استخدامه بالفعل"
+    "phoneNumberExists": "الرقم تم استخدامه بالفعل",
+    "emailExists": "الرقم تم استخدامه بالفعل"
   },
   "login": {
     "title": "تسجيل الدخول",
@@ -527,5 +527,17 @@
     "form_message": "الرسالة",
     "form_message_placeholder": "اكتب رسالتك هنا...",
     "form_submit": "إرسال الرسالة"
+  },
+  "checkout": {
+    "title": "الدفع",
+    "subtitle": "أكمل اشتراكك",
+    "plan": "الخطة",
+    "billing": "دورة الفوترة",
+    "total": "المجموع",
+    "noPaymentRequired": "لا يتطلب دفع. يمكنك الترقية أو الإلغاء في أي وقت.",
+    "completeSetup": "إكمال الإعداد",
+    "payNow": "ادفع الآن",
+    "processing": "جاري المعالجة...",
+    "error": "فشل بدء عملية الدفع. يرجى المحاولة مرة أخرى."
   }
 }

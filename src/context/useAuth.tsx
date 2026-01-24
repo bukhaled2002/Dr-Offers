@@ -21,9 +21,9 @@ type AuthContextType = {
   role: "visitor" | "owner" | null;
   verifyEmail: () => void;
 
-  // 👇 Added language control
   language: string;
   setLanguage: (lang: string) => void;
+  refreshUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,14 +32,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem("accessToken")
+    localStorage.getItem("accessToken"),
   );
   const [role, setRole] = useState<"visitor" | "owner" | null>(null);
   const [isLoadingUser, setIsLoadingUser] = useState<boolean>(!!token);
 
   // 👇 new language state (defaults to "en")
   const [language, setLanguageState] = useState<string>(
-    localStorage.getItem("language") || "ar"
+    localStorage.getItem("language") || "ar",
   );
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -88,9 +88,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("accessToken", newAccessToken);
         localStorage.setItem("refreshToken", newRefreshToken);
         setToken(newAccessToken);
-        instance.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${newAccessToken}`;
+        instance.defaults.headers.common["Authorization"] =
+          `Bearer ${newAccessToken}`;
         return true;
       }
       logout();
@@ -113,46 +112,45 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [token, refreshToken]);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!token) return;
+  const refreshUser = useCallback(async () => {
+    if (!token) return;
 
-      try {
-        setIsLoadingUser(true);
-        const res = await instance.get("/users/me");
-        const data = res.data?.data || res.data || null;
-        setUser(data);
-        console.log(user?.phone_number);
-        setRole(data?.role || null);
-        setBrands(data?.brands || []);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        if (error?.response?.status === 401) {
-          const refreshed = await refreshToken();
-          if (refreshed) {
-            try {
-              const retryRes = await instance.get("/users/me");
-              const retryData = retryRes.data?.data || retryRes.data || null;
-
-              setUser(retryData);
-              setRole(retryData?.role || null);
-              setBrands(retryData?.brands || []);
-            } catch {
-              logout();
-            }
-          } else {
+    try {
+      setIsLoadingUser(true);
+      const res = await instance.get("/users/me");
+      const data = res.data?.data || res.data || null;
+      setUser(data);
+      setRole(data?.role || null);
+      setBrands(data?.brands || []);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        const refreshed = await refreshToken();
+        if (refreshed) {
+          try {
+            const retryRes = await instance.get("/users/me");
+            const retryData = retryRes.data?.data || retryRes.data || null;
+            setUser(retryData);
+            setRole(retryData?.role || null);
+            setBrands(retryData?.brands || []);
+          } catch {
             logout();
           }
         } else {
-          console.error("Failed to fetch user", error);
           logout();
         }
-      } finally {
-        setIsLoadingUser(false);
+      } else {
+        console.error("Failed to fetch user", error);
+        logout();
       }
-    };
-    fetchUser();
+    } finally {
+      setIsLoadingUser(false);
+    }
   }, [token, refreshToken]);
+
+  useEffect(() => {
+    refreshUser();
+  }, [refreshUser]);
 
   // 👇 Keep i18n synced with language state
   useEffect(() => {
@@ -178,7 +176,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         refreshToken,
         verifyEmail,
         language,
-        setLanguage, // 👈 new
+        setLanguage,
+        refreshUser,
       }}
     >
       {children}
