@@ -34,8 +34,8 @@ const getPlans = (t: TFunction): Plan[] => [
   },
   {
     name: "Pro",
-    monthlyPrice: 0,
-    annualPrice: 0,
+    monthlyPrice: 20,
+    annualPrice: 200,
     description: t("pro_desc", "Great for small businesses"),
     features: [
       t("pro_feature_1", "Unlimited phone calls"),
@@ -48,8 +48,8 @@ const getPlans = (t: TFunction): Plan[] => [
   },
   {
     name: "Enterprise",
-    monthlyPrice: 0,
-    annualPrice: 0,
+    monthlyPrice: 50,
+    annualPrice: 500,
     description: t("enterprise_desc", "For multiple teams"),
     features: [
       t("enterprise_feature_1", "Everything in Pro"),
@@ -65,7 +65,7 @@ const getPlans = (t: TFunction): Plan[] => [
 export default function PricingPlans() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {isAuthenticated,user} = useAuth()
+  const { isAuthenticated, user } = useAuth();
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const plans = getPlans(t);
 
@@ -94,20 +94,19 @@ export default function PricingPlans() {
       name: plan.name,
     });
   };
-const handleNavigate = (plan:Plan)=>{
-  if (isAuthenticated&&user?.role === 'owner') {
-    
-    navigate(
-      `/checkout?plan=${plan.name}&billing=${billing}&price=${
-        billing === "monthly"
-        ? plan.monthlyPrice
-        : plan.annualPrice
-        }`)}
-      else if(isAuthenticated && user?.role !== 'owner'){
-        navigate('/dashboard')
-      }else{
-        navigate('/login/?role=owner')
-      }}
+  const handleNavigate = (plan: Plan) => {
+    if (isAuthenticated && user?.role === "owner") {
+      navigate(
+        `/checkout?plan=${plan.name}&billing=${billing}&price=${
+          billing === "monthly" ? plan.monthlyPrice : plan.annualPrice
+        }`,
+      );
+    } else if (isAuthenticated && user?.role !== "owner") {
+      navigate("/dashboard");
+    } else {
+      navigate("/login/?role=owner");
+    }
+  };
   return (
     <div className="max-w-6xl mx-auto px-6 py-16 bg-gray-50 min-h-screen">
       <div className="text-center mb-12">
@@ -117,7 +116,7 @@ const handleNavigate = (plan:Plan)=>{
         <p className="text-gray-600 text-lg mb-8">
           {t(
             "pricing_description",
-            "Receive unlimited credits when you pay yearly, and save on your plan."
+            "Receive unlimited credits when you pay yearly, and save on your plan.",
           )}
         </p>
 
@@ -209,8 +208,7 @@ const handleNavigate = (plan:Plan)=>{
 
                 <div className="pt-4">
                   <Button
-                    onClick={()=>handleNavigate(plan)}
-
+                    onClick={() => handleNavigate(plan)}
                     className={`w-full py-3 font-medium cursor-pointer ${
                       plan.isCustom
                         ? "bg-white text-gray-900 hover:bg-gray-100"

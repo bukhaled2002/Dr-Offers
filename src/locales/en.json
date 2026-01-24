@@ -529,5 +529,17 @@
     "form_message": "Message",
     "form_message_placeholder": "Write your message here...",
     "form_submit": "Send Message"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Complete your subscription",
+    "plan": "Plan",
+    "billing": "Billing Cycle",
+    "total": "Total",
+    "noPaymentRequired": "No payment required. You can upgrade or cancel at any time.",
+    "completeSetup": "Complete Setup",
+    "payNow": "Pay Now",
+    "processing": "Processing...",
+    "error": "Payment initiation failed. Please try again."
   }
 }
