@@ -16,7 +16,7 @@ export default function PaymentSuccessPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { user, refreshUser } = useAuth();
+  const { refreshUser } = useAuth();
   const [isVerifying, setIsVerifying] = useState(true);
 
   const paymentId = searchParams.get("paymentId");
