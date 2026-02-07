@@ -1,10 +1,10 @@
 // hooks/useBestDeals.ts
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import instance from "@/api/axiosInstance";
 import type { DealsResponse } from "@/types/api";
 
 export const useBestDeals = () =>
-  useQuery<DealsResponse>({
+  useSuspenseQuery<DealsResponse>({
     queryKey: ["deals"],
     queryFn: async () => {
       const res = await instance.get("/offers/best?limit=5");

@@ -13,7 +13,7 @@ function Navbar({ brandData }: { brandData?: BrandData }) {
   const [scrolled, setScrolled] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  console.log(brandData);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -36,23 +36,39 @@ function Navbar({ brandData }: { brandData?: BrandData }) {
   return (
     <div
       className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-md" : "bg-transparent"
+        scrolled ? "bg-white shadow-md shadow-gray-100" : "bg-transparent"
       } ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
     >
-      <div className="section-container flex items-center justify-between py-7">
-        <div className="logo font-bold text-lg">
-          {brandData?.name || "Logo"}
+      <div className="section-container flex items-center justify-between py-4">
+        <div className="logo h-12 w-auto flex items-center gap-2">
+          {brandData?.logo_url ? (
+            <img
+              src={brandData.logo_url}
+              alt={brandData.name}
+              className="h-full object-contain"
+            />
+          ) : (
+            <span className="font-bold text-lg">
+              {brandData?.name || "Logo"}
+            </span>
+          )}
         </div>
-        <ul className="flex gap-5 items-center">
+        <ul className="hidden md:flex gap-8 items-center font-medium text-gray-700">
           {navItems.map((item) => (
             <li key={item.id}>
-              <a href={item.href} className="cursor-pointer">
+              <a
+                href={item.href}
+                className="cursor-pointer hover:text-primary transition-colors"
+              >
                 {item.title}
               </a>
             </li>
           ))}
         </ul>
-        <IoSearchOutline size={20} />
+        <div className="flex items-center gap-4">
+          <IoSearchOutline size={20} className="cursor-pointer" />
+          <Button className="rounded-full hidden sm:flex">Order Now</Button>
+        </div>
       </div>
     </div>
   );
@@ -65,184 +81,252 @@ export default function FoodBrandPage({ brandData }: FoodBrandPageProps) {
       <main>
         <section
           id="home"
-          className="section-container pt-28 h-screen flex justify-between items-start overflow-hidden"
-          style={{ height: "calc(100vh - 84px)" }}
+          className="section-container pt-12 md:pt-28 min-h-[calc(100vh-84px)] flex flex-col md:flex-row justify-between items-center overflow-hidden"
         >
-          <div className="flex flex-col z-10 md:max-w-md">
-            <h1 className="text-6xl font-bold mb-4 leading-20">
-              {brandData?.section1_title || "Main title to be added Here"}
+          <div className="flex flex-col z-10 md:max-w-xl text-center md:text-left">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+              {brandData?.section1_title || "Experience Fine Dining"}
             </h1>
-            <p className="mb-6 text-gray-700 leading-8">
+            <p className="mb-8 text-gray-700 text-lg leading-relaxed">
               {brandData?.section1_description ||
-                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit fugit architecto doloremque cum nulla temporibus ipsam quisquam"}
+                "Product Quality Is Our Priority, And Always Guarantees Halal And Safety Until It Is In Your Hands."}
             </p>
-            <Button
-              className="rounded-full w-fit"
-              onClick={() =>
-                window.open(brandData?.section1_cta_link, "_blank")
-              }
-            >
-              {brandData?.section1_cta_text || "CTA 1"}
-            </Button>
+            <div className="flex justify-center md:justify-start">
+              <Button
+                className="rounded-full px-8 py-6 text-lg"
+                onClick={() =>
+                  brandData?.section1_cta_link &&
+                  window.open(brandData.section1_cta_link, "_blank")
+                }
+              >
+                {brandData?.section1_cta_text || "Order Now"}
+              </Button>
+            </div>
           </div>
-          <div className="hidden md:block w-full max-w-[500px]">
+          <div className="mt-12 md:mt-0 w-full max-w-[550px]">
             <img
               src={brandData?.section1_media_url || "/imgs/img-hero.png"}
-              alt=""
-              className="w-full object-cover"
+              alt="Hero image"
+              className="w-full h-auto object-cover rounded-2xl"
               onError={(e) => {
                 e.currentTarget.src =
-                  "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
+                  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1000&auto=format&fit=crop";
               }}
             />
           </div>
           <img
             src="/imgs/shapes.svg"
             alt=""
-            className="absolute top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none"
+            className="absolute top-0 left-0 w-full h-full object-cover z-[-1] pointer-events-none opacity-50"
           />
         </section>
 
-        <section
-          id="menu"
-          className="section-container text-center min-h-screen pt-16"
-        >
-          <h2 className="font-bold text-4xl mt-6">
-            {brandData?.section2_header || "Second Title Here"}
+        <section id="menu" className="section-container text-center py-20">
+          <h2 className="font-bold text-3xl md:text-4xl mb-6">
+            {brandData?.section2_header || "Our Popular Menu"}
           </h2>
-          <p className="text-gray-500 mt-6 font-semibold">
+          <p className="text-gray-500 mb-12 max-w-2xl mx-auto">
             {brandData?.section2_subheader ||
-              "Product Quality Is Our Priority, And Always Guarantees Halal And Safety Until It Is In Your Hands."}
+              "Choose from our wide variety of dishes, prepared with the freshest ingredients."}
           </p>
           <CategoryGrid
-            items={brandData?.section2_items?.map((item, index) => {
-              return {
+            items={
+              brandData?.section2_items?.map((item, index) => ({
                 id: index,
                 title: item.title,
                 description: item.description,
                 media_url: item.media_url,
                 favorite: false,
-              };
-            })}
-            fallbackImage="https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw"
+              })) || []
+            }
+            fallbackImage="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1000&auto=format&fit=crop"
           />
         </section>
 
-        <div className="section-container py-16 h-[60vh]">
+        <div className="section-container py-16">
           <div
-            className="flex relative overflow-hidden w-full h-full bg-cover bg-center rounded-xl justify-center items-center"
+            className="flex relative overflow-hidden w-full h-[400px] md:h-[500px] bg-cover bg-center rounded-3xl justify-center items-center shadow-xl"
             style={{
               backgroundImage: `url('${
-                brandData?.section3_media_url || "/imgs/splash-2.jpg"
+                brandData?.section3_media_url ||
+                "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000&auto=format&fit=crop"
               }')`,
             }}
           >
-            <div className="overlay absolute top-0 left-0 w-full h-full bg-black/70" />
-            <div className="z-10 text-center">
-              <h5 className="text-white font-bold text-3xl mb-4">
-                {brandData?.section3_title ||
-                  "Join our member and get discount up to 50%"}
-              </h5>
-              <p className="text-white mb-4">
+            <div className="overlay absolute top-0 left-0 w-full h-full bg-black/60" />
+            <div className="z-10 text-center px-6 max-w-2xl">
+              <h3 className="text-white font-bold text-3xl md:text-4xl mb-6 leading-tight">
+                {brandData?.section3_title || "Visit Our Location"}
+              </h3>
+              <p className="text-white/90 mb-8 text-lg">
                 {brandData?.section3_description ||
-                  "Get notified about the latest deals and exclusive offers."}
+                  "Find us in the heart of the city and enjoy our wonderful atmosphere."}
               </p>
               <Button
-                className="bg-white text-black hover:bg-gray-100"
+                className="bg-white text-black hover:bg-gray-100 rounded-full px-8 py-6 text-lg"
                 onClick={() =>
-                  window.open(brandData?.section3_cta_link, "_blank")
+                  brandData?.section3_cta_link &&
+                  window.open(brandData.section3_cta_link, "_blank")
                 }
               >
-                {brandData?.section3_cta_text || "Subscribe Now"}
+                {brandData?.section3_cta_text || "Get Directions"}
               </Button>
             </div>
           </div>
         </div>
 
         <footer
-          style={{ backgroundImage: "url('/imgs/footer-img.svg')" }}
-          className="md:px-30 px-15 text-gray-700 pt-12 border-t object-cover"
+          id="contact"
+          className="bg-gray-50 text-gray-700 pt-20 pb-10 border-t"
         >
-          <div className=" grid grid-cols-1 md:grid-cols-4 gap-8 py-10">
-            {/* Logo + Address + Social */}
-            <div>
-              <div className="text-lg font-bold mb-2">
-                {brandData?.name || "Logo"} 🍜
+          <div className="section-container grid grid-cols-1 md:grid-cols-4 gap-12">
+            {/* Logo + Social */}
+            <div className="col-span-1 md:col-span-1">
+              <div className="flex items-center gap-2 mb-6">
+                {brandData?.logo_url ? (
+                  <img
+                    src={brandData.logo_url}
+                    alt={brandData.name}
+                    className="h-10 w-auto"
+                  />
+                ) : (
+                  <span className="text-xl font-bold">{brandData?.name}</span>
+                )}
               </div>
-              <p className="text-sm mb-4">
-                {brandData?.owner?.email ||
-                  "Jalan Semangka Raya, Telaga Murni, Cikarang Barat, Kab. Bekasi"}
+              <p className="text-sm text-gray-600 mb-8 leading-relaxed">
+                {brandData?.description ||
+                  "Providing the best quality food for our customers."}
               </p>
               <div className="flex space-x-4">
-                <a
-                  href="#"
-                  aria-label="Instagram"
-                  className=" bg-white rounded-full p-2 group hover:bg-primary transition"
-                >
-                  <FaInstagram className="w-6 h-6 text-primary transition group-hover:text-white" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Facebook"
-                  className=" bg-white rounded-full p-2 group hover:bg-primary transition"
-                >
-                  <FaFacebookF className="w-6 h-6 text-primary transition group-hover:text-white" />
-                </a>
-                <a
-                  href="#"
-                  aria-label="Twitter"
-                  className=" bg-white rounded-full p-2 group hover:bg-primary transition"
-                >
-                  <FaTwitter className="w-6 h-6 text-primary transition group-hover:text-white" />
-                </a>
+                {brandData?.facebook_url && (
+                  <a
+                    href={brandData.facebook_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white shadow-sm rounded-full p-2.5 hover:bg-primary hover:text-white transition-all transform hover:-translate-y-1"
+                  >
+                    <FaFacebookF className="w-5 h-5" />
+                  </a>
+                )}
+                {brandData?.youtube_url && (
+                  <a
+                    href={brandData.youtube_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white shadow-sm rounded-full p-2.5 hover:bg-primary hover:text-white transition-all transform hover:-translate-y-1"
+                  >
+                    <FaInstagram className="w-5 h-5" />
+                  </a>
+                )}
+                {brandData?.whatsapp_url && (
+                  <a
+                    href={`https://wa.me/${brandData.whatsapp_url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white shadow-sm rounded-full p-2.5 hover:bg-primary hover:text-white transition-all transform hover:-translate-y-1"
+                  >
+                    <FaTwitter className="w-5 h-5" />
+                  </a>
+                )}
               </div>
             </div>
 
-            {/* Company Links */}
+            {/* Links */}
             <div>
-              <h4 className="font-semibold mb-3">Company</h4>
-              <ul className="space-y-2 text-sm">
+              <h4 className="font-bold text-gray-900 mb-6 uppercase text-xs tracking-widest">
+                Company
+              </h4>
+              <ul className="space-y-4 text-sm font-medium">
                 <li>
-                  <a href="#">About Us</a>
+                  <a
+                    href="#home"
+                    className="hover:text-primary transition-colors"
+                  >
+                    Home
+                  </a>
                 </li>
                 <li>
-                  <a href="#">Career</a>
+                  <a
+                    href="#menu"
+                    className="hover:text-primary transition-colors"
+                  >
+                    Menu
+                  </a>
                 </li>
                 <li>
-                  <a href="#">How It Work</a>
+                  <a
+                    href="#about"
+                    className="hover:text-primary transition-colors"
+                  >
+                    About Us
+                  </a>
                 </li>
               </ul>
             </div>
 
-            {/* Policy Links */}
             <div>
-              <h4 className="font-semibold mb-3">Policy</h4>
-              <ul className="space-y-2 text-sm">
+              <h4 className="font-bold text-gray-900 mb-6 uppercase text-xs tracking-widest">
+                Support
+              </h4>
+              <ul className="space-y-4 text-sm font-medium">
                 <li>
-                  <a href="#">FAQ</a>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Privacy Policy
+                  </a>
                 </li>
                 <li>
-                  <a href="#">Privacy</a>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    Terms of Service
+                  </a>
                 </li>
                 <li>
-                  <a href="#">Shipping</a>
+                  <a href="#" className="hover:text-primary transition-colors">
+                    FAQ
+                  </a>
                 </li>
               </ul>
             </div>
 
             {/* Contact */}
             <div>
-              <h4 className="font-semibold mb-3">Get In Touch</h4>
-              <ul className="space-y-2 text-sm">
-                <li>+62 896 7311 2766</li>
-                <li>{brandData?.owner?.email || "food@example.com"}</li>
+              <h4 className="font-bold text-gray-900 mb-6 uppercase text-xs tracking-widest">
+                Get In Touch
+              </h4>
+              <ul className="space-y-4 text-sm text-gray-600">
+                <li className="flex items-start gap-3">
+                  <span className="font-semibold text-gray-900 shrink-0">
+                    Address:
+                  </span>
+                  <span>
+                    {brandData?.address || "123 Main St, City, Country"}
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="font-semibold text-gray-900 shrink-0">
+                    Phone:
+                  </span>
+                  <span>{brandData?.phone || brandData?.whatsapp_url}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="font-semibold text-gray-900 shrink-0">
+                    Email:
+                  </span>
+                  <a
+                    href={`mailto:${brandData?.email}`}
+                    className="hover:text-primary transition-colors"
+                  >
+                    {brandData?.email || brandData?.owner?.email}
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
 
-          {/* Footer bottom */}
-          <div className="text-center  mt-10 w-full border-t-2 border-[#1D1D1D80] p-10">
-            © Powered By Droffers ALL RIGHT RESERVED.
+          <div className="section-container mt-16 pt-8 border-t text-center text-sm text-gray-500">
+            <p>
+              © {new Date().getFullYear()} {brandData?.name}. Powered By
+              Droffers. All Rights Reserved.
+            </p>
           </div>
         </footer>
       </main>

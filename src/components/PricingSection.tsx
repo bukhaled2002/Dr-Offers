@@ -104,7 +104,7 @@ export default function PricingPlans() {
 
   const handleNavigate = async (plan: Plan) => {
     if (!isAuthenticated) {
-      navigate("/login/?role=owner");
+      navigate("/auth/register?role=owner");
       return;
     }
 
@@ -119,18 +119,35 @@ export default function PricingPlans() {
       return;
     }
 
+    if (!user?.email) {
+      alert(t("checkout.missingEmail", "User email is required for payment."));
+      return;
+    }
+
     try {
       setLoadingPlanId(plan.id);
       const amount =
         billing === "monthly" ? plan.monthlyPrice : plan.annualPrice;
-      const planKey = `${plan.id}_${billing}`;
 
-      const response = await instance.post("/subscriptions/checkout", {
-        planKey,
-        amount,
+      if (amount === null || isNaN(amount)) {
+        throw new Error("Invalid price");
+      }
+
+      const response = await instance.post("/payment/initiate", {
+        orderId: `ORD-${Date.now()}-${user?.id}`,
+        amount: amount,
+        currency: "SAR",
+        customerName: user?.name || "Customer",
+        customerEmail: user?.email,
+        metadata: {
+          plan: plan.name.toLowerCase(),
+          duration: billing === "monthly" ? "30d" : "365d",
+          userId: user?.id,
+        },
       });
 
-      const { redirectUrl } = response.data;
+      const data = response.data?.data || response.data;
+      const { redirectUrl } = data;
 
       if (redirectUrl) {
         window.location.href = redirectUrl;
@@ -138,9 +155,9 @@ export default function PricingPlans() {
         throw new Error("No redirect URL received");
       }
     } catch (error) {
-      console.error("Checkout failed:", error);
+      console.error("Payment initiation failed:", error);
       alert(
-        t("checkout_failed", "Failed to initiate checkout. Please try again."),
+        t("checkout.error", "Payment initiation failed. Please try again."),
       );
     } finally {
       setLoadingPlanId(null);

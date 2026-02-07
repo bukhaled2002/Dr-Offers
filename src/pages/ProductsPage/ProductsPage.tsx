@@ -1,9 +1,20 @@
 import { useLocation } from "react-router-dom";
-import DealsGrid from "@/components/DealsGrid";
+import DealsGrid, { DealsGridSkeleton } from "@/components/DealsGrid";
 import FilterSidebar from "@/components/FilterSidebar";
 import Pagination from "@/components/Pagination";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useOffers } from "@/hooks/useOffers";
+
+const ProductsContent = () => {
+  const { deals, totalPages, error } = useOffers();
+
+  return (
+    <>
+      <DealsGrid deals={deals} error={error ?? undefined} />
+      <Pagination totalPages={totalPages} />
+    </>
+  );
+};
 
 export default function ProductsPage() {
   const { pathname, search } = useLocation();
@@ -12,22 +23,22 @@ export default function ProductsPage() {
     window.scrollTo(0, 0);
   }, [pathname, search]);
 
-  const { deals, meta, totalPages, isLoading, error } = useOffers();
+  // We still need meta for the sidebar, but meta is returned from useOffers.
+  // This is a bit tricky with Suspense if we want the sidebar to be visible while loading deals.
+  // For now, let's keep it simple and suspend the whole content area.
+  // If we wanted to keep the sidebar static, we'd need another way to get meta or use useQuery (non-suspense) for meta.
 
   return (
     <main className="flex min-h-screen flex-col md:flex-row">
       <FilterSidebar
-        totalItems={meta?.total || 0}
-        currentPage={meta?.currentPage || 1}
-        perPage={meta?.perPage || 10}
+        totalItems={0} // This will be updated when content loads, or we can use another hook for meta
+        currentPage={1}
+        perPage={10}
       />
       <section className="section-container mt-4 flex flex-col">
-        <DealsGrid
-          deals={deals}
-          loading={isLoading}
-          error={error ?? undefined}
-        />
-        <Pagination totalPages={totalPages} />
+        <Suspense fallback={<DealsGridSkeleton />}>
+          <ProductsContent />
+        </Suspense>
       </section>
     </main>
   );

@@ -7,8 +7,19 @@ import { useStats } from "@/hooks/useStats";
 import { useAuth } from "@/context/useAuth";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import instance from "@/api/axiosInstance";
+
+const ActiveDeals = () => {
+  const { deals, error } = useOffers({ myOffers: true, perPage: 50 });
+  const { t } = useTranslation();
+
+  if (error) {
+    return <div className="text-red-500">{t("dashboard.failedDeals")}</div>;
+  }
+
+  return <ProductsTable deals={deals} />;
+};
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -31,11 +42,6 @@ export default function DashboardPage() {
 
     checkTemplates();
   }, [brandId]);
-  const {
-    deals,
-    isLoading: isLoadingDeals,
-    error: isErrorDeals,
-  } = useOffers({ myOffers: true, perPage: 50 });
 
   const { analytics, clicks, views, analyticsError, analyticsLoading } =
     useStats(brandId);
@@ -74,13 +80,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Active Deals */}
-      {isLoadingDeals ? (
-        <div>{t("dashboard.loadingDeals")}</div>
-      ) : isErrorDeals ? (
-        <div className="text-red-500">{t("dashboard.failedDeals")}</div>
-      ) : (
-        <ProductsTable deals={deals} />
-      )}
+      <Suspense fallback={<div>{t("dashboard.loadingDeals")}</div>}>
+        <ActiveDeals />
+      </Suspense>
     </main>
   );
 }

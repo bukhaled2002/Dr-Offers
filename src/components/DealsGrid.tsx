@@ -10,8 +10,32 @@ import { SaudiRiyal } from "lucide-react";
 
 type DealsGridProps = {
   deals: Deal[];
-  loading?: boolean;
   error?: Error | undefined;
+};
+
+export const DealsGridSkeleton = () => {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {skeletonArray.map((_, index) => (
+        <Card
+          key={index}
+          className="relative rounded-xl overflow-hidden shadow-sm border flex flex-col p-0 max-w-[300px] mx-auto gap-0 animate-pulse w-full"
+        >
+          <div className="absolute top-0 right-0 w-14 h-12 bg-gray-200 rounded-bl-xl z-10" />
+          <div className="w-full h-52 bg-gray-100 flex items-center justify-center">
+            <div className="w-16 h-16 border-4 border-gray-200 border-t-gray-300 rounded-full animate-spin" />
+          </div>
+          <CardContent className="p-3 px-4 flex flex-col gap-2">
+            <div className="h-5 bg-gray-200 rounded w-3/4 mb-1" />
+            <div className="flex items-center gap-2">
+              <div className="h-6 bg-gray-200 rounded w-20" />
+              <div className="h-5 bg-gray-100 rounded w-16" />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
 };
 
 const skeletonArray = Array.from({ length: 5 });
@@ -85,7 +109,7 @@ const ImageWithLoading: React.FC<{
   );
 };
 
-const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
+const DealsGrid: React.FC<DealsGridProps> = ({ deals, error }) => {
   const { t } = useTranslation();
   const formatNumber = useNumberFormatter();
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
@@ -105,30 +129,6 @@ const DealsGrid: React.FC<DealsGridProps> = ({ deals, loading, error }) => {
     setIsModalOpen(false);
     setSelectedDeal(null);
   };
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        {skeletonArray.map((_, index) => (
-          <Card
-            key={index}
-            className="relative rounded-xl overflow-hidden shadow-sm border flex flex-col p-0 max-w-[300px] mx-auto gap-0 animate-pulse"
-          >
-            <div className="absolute top-0 right-0 w-14 h-12 bg-gray-300 rounded-bl-xl" />
-            <div className="w-full h-52 bg-gray-200" />
-            <CardContent className="p-3 px-4 flex flex-col gap-2">
-              <div className="h-4 bg-gray-300 rounded w-3/4" />
-              <div className="flex gap-2">
-                <div className="h-4 bg-gray-300 rounded w-20" />
-                <div className="h-4 bg-gray-200 rounded w-16" />
-              </div>
-              <div className="h-3 bg-gray-300 rounded w-full mt-2 border-t-2 pt-2" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
-  }
 
   if (error) {
     return (

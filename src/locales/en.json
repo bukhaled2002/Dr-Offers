@@ -541,5 +541,15 @@
     "payNow": "Pay Now",
     "processing": "Processing...",
     "error": "Payment initiation failed. Please try again."
-  }
+  },
+  "payment_success_title": "Payment Successful!",
+  "payment_success_desc": "Thank you for your subscription. Your account has been upgraded.",
+  "payment_id": "Payment ID",
+  "updating_account": "Updating your account...",
+  "go_to_dashboard": "Go to Dashboard",
+  "payment_error_title": "Payment Failed",
+  "payment_error_generic": "Something went wrong with your payment.",
+  "payment_error_desc": "Don't worry, no funds were captured if the transaction failed. Please try again.",
+  "try_again": "Try Again",
+  "contact_support": "Contact Support"
 }
