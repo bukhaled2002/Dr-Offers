@@ -29,10 +29,15 @@ export default function BrandPage() {
     enabled: !!brandSlug,
   });
 
+  const brandDataRaw = data?.data;
+  const brandData: BrandData | null = Array.isArray(brandDataRaw)
+    ? brandDataRaw[0]
+    : brandDataRaw;
+
   // 👁️ Track view once
   useEffect(() => {
     const sendView = async () => {
-      const brandId = data?.data?.id || brandSlug;
+      const brandId = brandData?.brand?.id || brandData?.id || brandSlug;
       if (!brandId || viewSentRef.current) return;
 
       try {
@@ -45,12 +50,12 @@ export default function BrandPage() {
     };
 
     sendView();
-  }, [data?.data?.id, brandSlug]);
+  }, [brandData?.brand?.id, brandData?.id, brandSlug]);
 
   // 🖱️ Track clicks (batched)
   useEffect(() => {
     const sendClicks = async () => {
-      const brandId = data?.data?.id || brandSlug;
+      const brandId = brandData?.brand?.id || brandData?.id || brandSlug;
       if (!brandId || pendingClicks.current === 0) return;
 
       const count = pendingClicks.current;
@@ -82,16 +87,14 @@ export default function BrandPage() {
       window.removeEventListener("beforeunload", sendClicks);
       sendClicks(); // flush on unmount
     };
-  }, [data?.data?.id]);
+  }, [brandData?.brand?.id, brandData?.id, brandSlug]);
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError || !data?.data) return <ErrorPage />;
+  if (isError || !brandData) return <ErrorPage />;
 
-  const brandData: BrandData = data.data;
-
-  const category = "food";
-
-  const Component = categoryComponentMap[category];
+  const category = brandData.brand?.category_type || "food";
+  const Component =
+    categoryComponentMap[category as keyof typeof categoryComponentMap];
 
   if (!Component) return <ErrorPage />;
 

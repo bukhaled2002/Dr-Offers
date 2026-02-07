@@ -1,6 +1,6 @@
 // hooks/useOffers.ts
 import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import instance from "@/api/axiosInstance";
 import type { DealsResponse } from "@/types/api";
 
@@ -21,8 +21,7 @@ export const useOffers = (options?: UseOffersOptions) => {
 
   // Endpoint changes based on options
   const endpoint = myOffers ? "/offers/my-offers" : "/offers";
-
-  const { data, isLoading, error } = useQuery<DealsResponse>({
+  const { data, error } = useSuspenseQuery<DealsResponse>({
     queryKey: [
       "products",
       { categories, brandIds, page, maxPrice, endpoint, perPage, minPrice },
@@ -48,7 +47,6 @@ export const useOffers = (options?: UseOffersOptions) => {
     deals: data?.data || [],
     meta,
     totalPages,
-    isLoading,
     error,
   };
 };

@@ -37,22 +37,34 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (!user?.email) {
+      alert(t("checkout.missingEmail", "User email is required for payment."));
+      return;
+    }
+
     try {
       setIsProcessing(true);
 
+      const parsedPrice = parseFloat(price);
+      if (isNaN(parsedPrice)) {
+        throw new Error("Invalid price");
+      }
+
       const response = await instance.post("/payment/initiate", {
-        orderId: `SUB-${Date.now()}-${user?.id}`,
-        amount: parseFloat(price),
+        orderId: `ORD-${Date.now()}-${user?.id}`,
+        amount: parsedPrice,
+        currency: "SAR",
         customerName: user?.name || "Customer",
         customerEmail: user?.email,
         metadata: {
-          plan: planName,
-          billing: billing,
+          plan: planName.toLowerCase(),
+          duration: billing === "monthly" ? "30d" : "365d",
           userId: user?.id,
         },
       });
 
-      const { redirectUrl } = response.data?.data || response.data;
+      const data = response.data?.data || response.data;
+      const { redirectUrl } = data;
 
       if (redirectUrl) {
         window.location.href = redirectUrl;

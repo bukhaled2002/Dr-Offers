@@ -44,19 +44,34 @@ function Navbar({ brandData }: { brandData?: BrandData }) {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between py-6">
-        <div className="text-xl font-bold">{brandData?.name || "Logo"}</div>
-        <ul className="flex gap-6">
+        <div className="logo h-10 w-auto flex items-center gap-2">
+          {brandData?.logo_url ? (
+            <img
+              src={brandData.logo_url}
+              alt={brandData.name}
+              className="h-full object-contain"
+            />
+          ) : (
+            <span className="text-xl font-bold uppercase tracking-tighter">
+              {brandData?.name}
+            </span>
+          )}
+        </div>
+        <ul className="hidden md:flex gap-8 font-semibold text-xs uppercase tracking-widest">
           {navItems.map((item) => (
             <li key={item.title}>
-              <a href={item.href} className="text-sm hover:underline">
+              <a
+                href={item.href}
+                className="hover:text-primary transition-colors"
+              >
                 {item.title}
               </a>
             </li>
           ))}
         </ul>
-        <div className="flex items-center gap-3">
-          <IoSearchOutline size={20} />
-          <Heart />
+        <div className="flex items-center gap-4">
+          <IoSearchOutline size={20} className="cursor-pointer" />
+          <Heart size={20} className="cursor-pointer" />
         </div>
       </div>
     </div>
@@ -71,203 +86,284 @@ export default function ElectronicsPage({ brandData }: ElectronicsPageProps) {
       {/* Hero Section */}
       <section
         id="home"
-        className="bg-white py-16 md:py-24 flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-6 section-container min-h-screen"
+        className="bg-[#F8F9FA] min-h-[calc(100vh-84px)] flex flex-col md:flex-row items-center justify-between"
       >
-        <div className="text-left max-w-xl self-start ">
-          <h1 className="text-5xl md:text-5xl mt-16 font-bold mb-4 leading-16">
-            {brandData?.section1_title || "Main Title to be"} <br /> Added Here
-          </h1>
-          <p className="mb-6 text-gray-600 mt-15">
-            {brandData?.section1_description ||
-              "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut elit tellus, luctus nec ullamcorper mattis."}
-          </p>
-          <Button
-            className="rounded-sm px-6 py-3"
-            onClick={() => window.open(brandData?.section1_cta_link, "_blank")}
-          >
-            {brandData?.section1_cta_text || "CTA1"}
-          </Button>
-        </div>
-        <div className="hidden md:block mr-20 h-full">
-          <img
-            src={brandData?.section1_media_url || "/imgs/watch-hero.png"}
-            alt="Hero product"
-            className="w-full h-auto object-contain"
-            onError={(e) => {
-              e.currentTarget.src =
-                "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
-            }}
-          />
+        <div className="section-container w-full flex flex-col md:flex-row items-center justify-between py-16 md:py-24">
+          <div className="text-left max-w-xl">
+            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-[1.1] uppercase tracking-tighter text-gray-900">
+              {brandData?.section1_title || "Cutting Edge Technology"}
+            </h1>
+            <p className="mb-10 text-gray-600 text-lg leading-relaxed max-w-lg">
+              {brandData?.section1_description ||
+                "Discover the latest in high-performance electronics. Innovation meets design in every single detail."}
+            </p>
+            <Button
+              className="rounded-none px-10 py-8 text-lg font-bold uppercase tracking-widest hover:scale-105 transition-transform"
+              onClick={() =>
+                brandData?.section1_cta_link &&
+                window.open(brandData.section1_cta_link, "_blank")
+              }
+            >
+              {brandData?.section1_cta_text || "Explore Now"}
+            </Button>
+          </div>
+          <div className="mt-16 md:mt-0 w-full max-w-2xl relative">
+            <div className="absolute -inset-4 bg-primary/5 rounded-full blur-3xl" />
+            <img
+              src={brandData?.section1_media_url || "/imgs/watch-hero.png"}
+              alt="Hero product"
+              className="w-full h-auto object-contain relative z-10 drop-shadow-2xl"
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop";
+              }}
+            />
+          </div>
         </div>
       </section>
 
       {/* Categories */}
-      <section
-        id="shop"
-        className="py-20 text-center bg-white px-4 max-w-6xl mx-auto"
-      >
-        <h2 className="text-3xl font-bold mb-3">
-          {brandData?.section2_header || "Browse The Categories"}
-        </h2>
-        <p className="text-gray-500 mb-10">
-          {brandData?.section2_subheader ||
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut elit tellus, luctus nec ullamcorper."}
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
-          {brandData?.section2_items?.map((item, index) => (
-            <div
-              key={index}
-              className="items-center relative h-[360px] rounded-lg overflow-hidden"
-            >
-              <img
-                src={item.media_url || `/imgs/electronics-${index + 1}.jpg`}
-                alt={item.title}
-                className="w-full object-cover absolute top-0 left-0 h-full z-0"
-                onError={(e) => {
-                  e.currentTarget.src =
-                    "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
-                }}
-              />
-              <div className="font-semibold mt-2 z-2 absolute bottom-0 left-0 bg-black/40 w-full h-15 flex items-center p-5">
-                <span className="text-white">{item.title}</span>
+      <section id="shop" className="py-24 bg-white">
+        <div className="section-container text-center">
+          <h2 className="text-4xl md:text-5xl font-black mb-6 uppercase tracking-tighter">
+            {brandData?.section2_header || "Featured Collections"}
+          </h2>
+          <p className="text-gray-500 mb-16 max-w-2xl mx-auto text-lg leading-relaxed">
+            {brandData?.section2_subheader ||
+              "Explore our wide range of premium gadgets designed for the modern lifestyle."}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {brandData?.section2_items?.map((item, index) => (
+              <div
+                key={index}
+                className="group relative h-[450px] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
+              >
+                <img
+                  src={item.media_url || `/imgs/electronics-${index + 1}.jpg`}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=1000&auto=format&fit=crop";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent group-hover:via-black/40 transition-all duration-500" />
+                <div className="absolute bottom-0 left-0 w-full p-8 text-left">
+                  <h3 className="text-white text-2xl font-bold mb-2 uppercase tracking-tight">
+                    {item.title}
+                  </h3>
+                  <p className="text-white/70 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 line-clamp-2">
+                    {item.description}
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="text-white border-white hover:bg-white hover:text-black rounded-none uppercase text-xs font-bold tracking-widest px-6 opacity-0 group-hover:opacity-100 transition-all duration-500"
+                  >
+                    View Product
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-        <Button className="mt-6 px-6 py-3 rounded-sm">See more</Button>
-      </section>
-
-      {/* Featured Slider */}
-      <section
-        id="menu"
-        className="px-6 text-center py-16 flex flex-col md:flex-row gap-6 max-w-7xl mx-auto"
-      >
-        <div className="flex-1 flex items-center justify-center px-6">
-          <div>
-            <h2 className="text-3xl font-bold">
-              {brandData?.section3_title || "Second title Here"}
-            </h2>
-            <p className="mt-5 text-gray-600">
-              {brandData?.section3_description ||
-                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae fugiat iure officiis in, nihil necessitatibus."}
-            </p>
-            <Button
-              className="w-28 mt-4"
-              onClick={() =>
-                window.open(brandData?.section3_cta_link, "_blank")
-              }
-            >
-              {brandData?.section3_cta_text || "CTA2"}
-            </Button>
+            ))}
           </div>
         </div>
-        <div className="hidden md:block mr-20 h-full">
-          <img
-            src={brandData?.section3_media_url || "/imgs/Headphone.png"}
-            alt="Hero product"
-            className="w-full h-auto object-contain"
-            onError={(e) => {
-              e.currentTarget.src =
-                "https://lh3.googleusercontent.com/proxy/R9dXqanxVP2kpX9iSZxr3LsxIAfQhpkR6GbJW0EENe9zMmPYJUiuslNRReZJIT5n1wmExGlEEgh2v4T7i2gxgU505LP5XxTZmjpSQnjDvoDbzCPy6WXaZg7NJwssL7KT1DZ88VpIYdUcZnNmmw";
-            }}
-          />
+      </section>
+
+      {/* Featured Section */}
+      <section id="about" className="bg-black py-24 text-white overflow-hidden">
+        <div className="section-container flex flex-col md:flex-row items-center gap-20">
+          <div className="flex-1 space-y-10">
+            <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-tight">
+              {brandData?.section3_title || "The Sound of Excellence"}
+            </h2>
+            <p className="text-gray-400 text-xl leading-relaxed font-light">
+              {brandData?.section3_description ||
+                "Immerse yourself in pure studio-quality sound. Every note, every beat, rendered with absolute precision."}
+            </p>
+            <Button
+              className="bg-white text-black hover:bg-gray-200 rounded-none px-12 py-8 text-lg font-black uppercase tracking-widest"
+              onClick={() =>
+                brandData?.section3_cta_link &&
+                window.open(brandData.section3_cta_link, "_blank")
+              }
+            >
+              {brandData?.section3_cta_text || "Get Yours Now"}
+            </Button>
+          </div>
+          <div className="flex-1 relative">
+            <div className="absolute inset-0 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+            <img
+              src={brandData?.section3_media_url || "/imgs/Headphone.png"}
+              alt="Featured product"
+              className="w-full h-auto object-contain relative z-10 hover:scale-105 transition-transform duration-700 drop-shadow-[0_0_50px_rgba(255,255,255,0.15)]"
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop";
+              }}
+            />
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-white text-black border-t px-6 pt-12 text-sm mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 max-w-7xl mx-auto">
-          {/* Contact Info */}
-          <div>
-            <h4 className="font-semibold text-base mb-3">Contact Us</h4>
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-start gap-2">
-                <MdLocationOn className="text-lg mt-1" />
-                <span>
-                  {brandData?.owner?.email ||
-                    "Naya Gaun, Pokhara-15, PKR 33700"}
+      <footer
+        id="contact"
+        className="bg-white text-gray-900 border-t pt-24 pb-12"
+      >
+        <div className="section-container grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+          {/* Brand Info */}
+          <div className="space-y-8">
+            <div className="logo h-10 w-auto">
+              {brandData?.logo_url ? (
+                <img
+                  src={brandData.logo_url}
+                  alt={brandData.name}
+                  className="h-full object-contain"
+                />
+              ) : (
+                <span className="text-2xl font-black uppercase tracking-tighter">
+                  {brandData?.name}
                 </span>
-              </li>
-              <li className="flex items-center gap-2">
-                <MdPhone className="text-lg" />
-                <span>+977 9806771233</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <MdEmail className="text-lg" />
-                <span>
-                  {brandData?.owner?.email || "bazaartgadget2234@gmail.com"}
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-semibold text-base mb-3">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#">Home</a>
-              </li>
-              <li>
-                <a href="#">About</a>
-              </li>
-              <li>
-                <a href="#">Product</a>
-              </li>
-              <li>
-                <a href="#">Contact</a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Social + Customer Service */}
-          <div>
-            <h4 className="font-semibold text-base mb-3">Social Handles</h4>
-            <div className="flex gap-4 mb-4">
-              <FaInstagram className="text-[#944B28] hover:text-black cursor-pointer" />
-              <FaTwitter className="text-[#944B28] hover:text-black cursor-pointer" />
-              <FaFacebookF className="text-[#944B28] hover:text-black cursor-pointer" />
+              )}
             </div>
-            <h4 className="font-semibold text-base mb-3">Customer Service</h4>
-            <ul className="space-y-2 text-sm">
+            <p className="text-gray-500 leading-relaxed">
+              {brandData?.description ||
+                "Pushing the boundaries of what's possible in consumer electronics. Built for the future, today."}
+            </p>
+            <div className="flex gap-6">
+              {brandData?.facebook_url && (
+                <a
+                  href={brandData.facebook_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-black transition-colors"
+                >
+                  <FaFacebookF size={20} />
+                </a>
+              )}
+              {brandData?.youtube_url && (
+                <a
+                  href={brandData.youtube_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-black transition-colors"
+                >
+                  <FaInstagram size={20} />
+                </a>
+              )}
+              {brandData?.whatsapp_url && (
+                <a
+                  href={`https://wa.me/${brandData.whatsapp_url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-black transition-colors"
+                >
+                  <FaTwitter size={20} />
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <h4 className="font-black uppercase tracking-widest text-xs mb-8 text-gray-400">
+              Navigation
+            </h4>
+            <ul className="space-y-4 font-bold text-sm">
               <li>
-                <a href="#">Terms of Use</a>
+                <a
+                  href="#home"
+                  className="hover:text-primary transition-colors"
+                >
+                  HOME
+                </a>
               </li>
               <li>
-                <a href="#">FAQ</a>
+                <a
+                  href="#shop"
+                  className="hover:text-primary transition-colors"
+                >
+                  SHOP
+                </a>
               </li>
               <li>
-                <a href="#">Report Issues</a>
+                <a
+                  href="#about"
+                  className="hover:text-primary transition-colors"
+                >
+                  ABOUT
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#contact"
+                  className="hover:text-primary transition-colors"
+                >
+                  CONTACT
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Customer Service */}
           <div>
-            <h4 className="font-semibold text-base mb-3">
-              Subscribe to our News Letter
+            <h4 className="font-black uppercase tracking-widest text-xs mb-8 text-gray-400">
+              Service
             </h4>
-            <p className="mb-3 text-sm">
-              Sign up to be the first to receive latest news about our products.
-            </p>
-            <form className="flex flex-col gap-2">
-              <input
-                type="email"
-                placeholder="Enter Your Email Address"
-                className="border border-gray-300 rounded px-3 py-2 outline-none text-sm"
-              />
-              <button
-                type="submit"
-                className="bg-[#944B28] text-white font-medium text-sm px-4 py-2 rounded inline-flex items-center justify-center w-fit"
-              >
-                Subscribe <span className="ml-2">→</span>
-              </button>
-            </form>
+            <ul className="space-y-4 font-bold text-sm">
+              <li>
+                <a href="#" className="hover:text-primary transition-colors">
+                  SHIPPING POLICY
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-primary transition-colors">
+                  WARRANTY TERMS
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-primary transition-colors">
+                  PRIVACY POLICY
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-black uppercase tracking-widest text-xs mb-8 text-gray-400">
+              Support
+            </h4>
+            <ul className="space-y-6 text-sm">
+              <li className="flex items-start gap-4">
+                <MdLocationOn className="text-xl text-primary shrink-0" />
+                <span className="text-gray-600 font-medium">
+                  {brandData?.address || "Innovation Hub, Silicon Valley"}
+                </span>
+              </li>
+              <li className="flex items-center gap-4">
+                <MdPhone className="text-xl text-primary shrink-0" />
+                <span className="text-gray-600 font-medium">
+                  {brandData?.phone || brandData?.whatsapp_url}
+                </span>
+              </li>
+              <li className="flex items-center gap-4">
+                <MdEmail className="text-xl text-primary shrink-0" />
+                <a
+                  href={`mailto:${brandData?.email}`}
+                  className="text-gray-600 font-medium hover:text-primary transition-colors"
+                >
+                  {brandData?.email || brandData?.owner?.email}
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div className="text-left border-t pt-6 pb-10 text-xs max-w-7xl mx-auto">
-          © Powered By Droffers ALL RIGHT RESERVED.
+        <div className="section-container border-t pt-10 text-center text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
+          <p>
+            © {new Date().getFullYear()} {brandData?.name}. Driven by Droffers.
+            Powered by Innovation.
+          </p>
         </div>
       </footer>
     </>

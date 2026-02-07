@@ -85,10 +85,18 @@ export type User = {
 };
 
 export interface BrandData {
-  type: string;
   id: number;
+  slug: string;
   name: string;
+  facebook_url?: string;
+  youtube_url?: string;
+  linkedin_url?: string;
+  whatsapp_url?: string;
+  logo_url?: string;
   description: string;
+  email?: string;
+  phone?: string;
+  address?: string;
   section1_title: string;
   section1_description: string;
   section1_cta_text: string;
@@ -106,6 +114,12 @@ export interface BrandData {
   section3_cta_text: string;
   section3_cta_link: string;
   section3_media_url: string;
+  brand: {
+    id: number;
+    brand_name: string;
+    slug: string;
+    category_type?: "food" | "electronics" | "fashion";
+  };
   owner: {
     id: number;
     name: string;
