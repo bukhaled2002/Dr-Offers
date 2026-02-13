@@ -20,86 +20,77 @@ interface Plan {
   isCustom?: boolean;
 }
 
-// Get translated plans
-const getPlans = (t: TFunction): Plan[] => [
-  {
-    id: "free",
-    name: "Free",
-    monthlyPrice: 0,
-    annualPrice: 0,
-    description: t("free_desc", "For your hobby projects"),
-    features: [
-      t("free_feature_1", "Free e-mail alerts"),
-      t("free_feature_2", "3-minute checks"),
-      t("free_feature_3", "Automatic data enrichment"),
-      t("free_feature_4", "10 monitors"),
-      t("free_feature_5", "Up to 3 seats"),
-    ],
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    monthlyPrice: 20,
-    annualPrice: 200,
-    description: t("pro_desc", "Great for small businesses"),
-    features: [
-      t("pro_feature_1", "Unlimited phone calls"),
-      t("pro_feature_2", "30 second checks"),
-      t("pro_feature_3", "Single-user account"),
-      t("pro_feature_4", "20 monitors"),
-      t("pro_feature_5", "Up to 6 seats"),
-    ],
-    popular: true,
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    monthlyPrice: 50,
-    annualPrice: 500,
-    description: t("enterprise_desc", "For multiple teams"),
-    features: [
-      t("enterprise_feature_1", "Everything in Pro"),
-      t("enterprise_feature_2", "Up to 5 team members"),
-      t("enterprise_feature_3", "100 monitors"),
-      t("enterprise_feature_4", "15 status pages"),
-      t("enterprise_feature_5", "200+ integrations"),
-    ],
-    isCustom: false,
-  },
-];
-
 export default function PricingPlans() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
+
+  // Plans data based on documentation requirements
+  const getPlans = (t: TFunction): Plan[] => [
+    {
+      id: "basic",
+      name: t("plan_basic", "Basic"),
+      monthlyPrice: 99,
+      annualPrice: 999,
+      description: t("basic_desc", "Essential features for small businesses"),
+      features: [
+        t("basic_feat_1", "10 Products"),
+        t("basic_feat_2", "5 Templates"),
+        t("basic_feat_3", "Email Support"),
+        t("basic_feat_4", "Standard Analytics"),
+      ],
+    },
+    {
+      id: "pro",
+      name: t("plan_pro", "Pro"),
+      monthlyPrice: 299,
+      annualPrice: 2999,
+      description: t("pro_desc", "Advanced tools for growing teams"),
+      features: [
+        t("pro_feat_1", "50 Products"),
+        t("pro_feat_2", "20 Templates"),
+        t("pro_feat_3", "Priority Support"),
+        t("pro_feat_4", "Advanced Analytics"),
+        t("pro_feat_5", "Custom Branding"),
+      ],
+      popular: true,
+    },
+    {
+      id: "enterprise",
+      name: t("plan_enterprise", "Enterprise"),
+      monthlyPrice: 999,
+      annualPrice: 9999,
+      description: t(
+        "enterprise_desc",
+        "Full power for large scale operations",
+      ),
+      features: [
+        t("ent_feat_1", "500 Products"),
+        t("ent_feat_2", "100 Templates"),
+        t("ent_feat_3", "24/7 Support"),
+        t("ent_feat_4", "Full Analytics Suite"),
+        t("ent_feat_5", "Dedicated Manager"),
+      ],
+    },
+  ];
+
   const plans = getPlans(t);
 
   const formatPrice = (plan: Plan) => {
-    if (plan.isCustom) return t("custom", "Custom");
     const price = billing === "monthly" ? plan.monthlyPrice : plan.annualPrice;
-    return `$${price}`;
+    return `SR ${price}`;
   };
 
-  const getPriceSubtext = (plan: Plan) => {
-    if (plan.isCustom)
-      return t("per_user_annually", "per user/month, billed annually");
-    if (plan.monthlyPrice === 0)
-      return t("per_user_annually", "per user/month, billed annually");
+  const getPriceSubtext = () => {
     return billing === "monthly"
-      ? t("per_user_month", "/user/month")
-      : t("per_user_annually", "/user/month, billed annually");
+      ? t("per_month", "/month")
+      : t("per_year", "/year");
   };
 
-  const getButtonText = (plan: Plan) => {
-    if (plan.isCustom)
-      return t("get_started_enterprise", "Get started with Enterprise");
-    if (plan.name === "Free")
-      return t("get_started_free", "Get started for free");
-    return t("get_started_plan", `Get started with ${plan.name}`, {
-      name: plan.name,
-    });
+  const getButtonText = () => {
+    return t("subscribe_now", "Subscribe Now");
   };
 
   const handleNavigate = async (plan: Plan) => {
@@ -113,12 +104,6 @@ export default function PricingPlans() {
       return;
     }
 
-    // If free plan, just navigate to dashboard or settings
-    if (plan.id === "free") {
-      navigate("/setting/dashboard");
-      return;
-    }
-
     if (!user?.email) {
       alert(t("checkout.missingEmail", "User email is required for payment."));
       return;
@@ -126,6 +111,7 @@ export default function PricingPlans() {
 
     try {
       setLoadingPlanId(plan.id);
+
       const amount =
         billing === "monthly" ? plan.monthlyPrice : plan.annualPrice;
 
@@ -133,32 +119,34 @@ export default function PricingPlans() {
         throw new Error("Invalid price");
       }
 
+      // Payload aligned with backend/docs/payment-system.md
       const response = await instance.post("/payment/initiate", {
-        orderId: `ORD-${Date.now()}-${user?.id}`,
+        orderId: `ORD-${Date.now()}-${String(user?.id).substring(0, 8)}`,
         amount: amount,
         currency: "SAR",
         customerName: user?.name || "Customer",
         customerEmail: user?.email,
         metadata: {
-          plan: plan.name.toLowerCase(),
+          plan: plan.id,
           duration: billing === "monthly" ? "30d" : "365d",
           userId: user?.id,
         },
       });
 
       const data = response.data?.data || response.data;
+      console.log(data);
       const { redirectUrl } = data;
-
       if (redirectUrl) {
+        // Redirect user to Al Rajhi Secure Payment Page
         window.location.href = redirectUrl;
       } else {
-        throw new Error("No redirect URL received");
+        throw new Error("No redirect URL received from gateway");
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Payment initiation failed:", error);
-      alert(
-        t("checkout.error", "Payment initiation failed. Please try again."),
-      );
+      const errorMsg =
+        error instanceof Error ? error.message : "Payment initiation failed";
+      alert(t("checkout.error", `Payment failed: ${errorMsg}`));
     } finally {
       setLoadingPlanId(null);
     }
@@ -233,7 +221,7 @@ export default function PricingPlans() {
                       plan.isCustom ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
-                    {getPriceSubtext(plan)}
+                    {getPriceSubtext()}
                   </p>
                 </div>
 
@@ -278,7 +266,7 @@ export default function PricingPlans() {
                         {t("processing", "Processing...")}
                       </>
                     ) : (
-                      getButtonText(plan)
+                      getButtonText()
                     )}
                   </Button>
                 </div>
