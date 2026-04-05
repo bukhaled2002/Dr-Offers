@@ -146,6 +146,41 @@ export default function FashionBrandPage({ brandData }: FashionBrandPageProps) {
           </div>
         </section>
 
+        {brandData?.video_url && (
+          <div className="bg-black py-24">
+            <div className="section-container">
+              <div className="relative group w-full overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.05)] border border-white/5">
+                <div className="aspect-video w-full h-full relative z-10 transition-transform duration-1000 group-hover:scale-[1.02]">
+                  <video
+                    src={brandData.video_url}
+                    className="w-full h-full object-cover grayscale-[0.5] hover:grayscale-0 transition-all duration-700"
+                    controls
+                    preload="metadata"
+                    playsInline
+                  />
+                </div>
+                {/* Minimalist fashion overlay */}
+                <div className="absolute top-8 left-8 z-20 pointer-events-none">
+                  <span className="text-[10px] text-white/40 uppercase tracking-[0.5em] font-light">
+                    Spring Summer / 26
+                  </span>
+                </div>
+              </div>
+              <div className="mt-12 flex flex-col md:flex-row justify-between items-end gap-8">
+                 <div className="max-w-xl">
+                   <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 lowercase tracking-tight">
+                     the collection: {brandData.name}
+                   </h2>
+                   <p className="text-white/50 text-lg italic font-serif">
+                     "Fashion is what you're offered four times a year by designers. And style is what you choose."
+                   </p>
+                 </div>
+                 <div className="hidden md:block w-32 h-px bg-white/20 mb-6" />
+              </div>
+            </div>
+          </div>
+        )}
+
         <section id="about" className="bg-[#F9F7F6] py-24">
           <div className="section-container flex flex-col md:flex-row items-center gap-16">
             <div className="flex-1 space-y-8 text-center md:text-left">

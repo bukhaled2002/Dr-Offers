@@ -183,12 +183,23 @@ const fieldGroups: FieldGroup[] = [
       },
     ],
   },
+  {
+    header: "template.video",
+    fields: [
+      {
+        name: "video_url",
+        label: "template.uploadVideo",
+        type: "video",
+      },
+    ],
+  },
 ];
 
 const sectionOrder = [
   "template.basicInfo",
   "template.socialMedia",
   "template.logo",
+  "template.video",
   "template.section1",
   "template.section2",
   "template.section3",
@@ -199,9 +210,8 @@ export default function TemplateEditor() {
   const { isLoadingUser, brands } = useAuth();
   const brandId = brands[0]?.id;
 
-  const { data: templates, isLoading: isLoadingTemplates } = useGetMyTemplates(
-    !!brandId
-  );
+  const { data: templates, isLoading: isLoadingTemplates } =
+    useGetMyTemplates(!!brandId);
   const existingTemplate = templates?.[0];
   const existingTemplateId = existingTemplate?.id ?? null;
 
@@ -246,6 +256,7 @@ export default function TemplateEditor() {
   });
 
   const onSubmit = (data: TemplateFormValues) => {
+    console.log(data);
     saveTemplate.mutate({
       existingTemplateId,
       data: { ...data, brand_id: brandId },
@@ -384,10 +395,10 @@ export default function TemplateEditor() {
                       trigger={trigger}
                       setValue={setValue}
                       value={
-                        field.type === "image"
+                        field.type === "image" || field.type === "video"
                           ? (() => {
                               const val = watch(
-                                field.name as keyof TemplateFormValues
+                                field.name as keyof TemplateFormValues,
                               );
                               return typeof val === "string" ||
                                 typeof val === "number"

@@ -4,6 +4,7 @@ export type FieldType =
   | "email"
   | "url"
   | "image"
+  | "video"
   | "select";
 export interface OfferResponse {
   data: { id: number; title: string; coupon: string; message: string };

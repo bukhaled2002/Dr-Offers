@@ -143,6 +143,31 @@ export default function FoodBrandPage({ brandData }: FoodBrandPageProps) {
           />
         </section>
 
+        {brandData?.video_url && (
+          <div className="section-container py-16">
+            <div className="relative group w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-800 shadow-primary/10">
+              <div className="aspect-video w-full h-full relative z-10 transition-transform duration-700 group-hover:scale-[1.01]">
+                <video
+                  src={brandData.video_url}
+                  className="w-full h-full object-cover"
+                  controls
+                  preload="metadata"
+                  playsInline
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-transparent to-primary/10 blur-3xl opacity-30 animate-pulse pointer-events-none" />
+            </div>
+            <div className="mt-8 text-center max-w-2xl mx-auto">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4 animate-bounce">
+                Featured Video
+              </span>
+              <h2 className="text-2xl font-bold text-slate-800">
+                A Closer Look at {brandData.name}
+              </h2>
+            </div>
+          </div>
+        )}
+
         <div className="section-container py-16">
           <div
             className="flex relative overflow-hidden w-full h-[400px] md:h-[500px] bg-cover bg-center rounded-3xl justify-center items-center shadow-xl"

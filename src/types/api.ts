@@ -114,6 +114,7 @@ export interface BrandData {
   section3_cta_text: string;
   section3_cta_link: string;
   section3_media_url: string;
+  video_url?: string;
   brand: {
     id: number;
     brand_name: string;

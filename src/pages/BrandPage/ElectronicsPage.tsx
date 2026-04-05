@@ -168,6 +168,50 @@ export default function ElectronicsPage({ brandData }: ElectronicsPageProps) {
         </div>
       </section>
 
+      {brandData?.video_url && (
+        <section className="py-24 bg-[#0A0A0A] overflow-hidden">
+          <div className="section-container">
+            <div className="relative group w-full bg-slate-900 rounded-3xl overflow-hidden shadow-[0_0_80px_rgba(var(--primary-rgb),0.2)] border border-white/5">
+              <div className="aspect-video w-full h-full relative z-10 transition-transform duration-1000 group-hover:scale-[1.03]">
+                <video
+                  src={brandData.video_url}
+                  className="w-full h-full object-cover shadow-inner"
+                  controls
+                  preload="metadata"
+                  playsInline
+                />
+              </div>
+              {/* Techy scanline and glow effects */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none z-20 opacity-20" />
+            </div>
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-2 items-center gap-10">
+              <div>
+                <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4">
+                  Innovation in Motion
+                </h2>
+                <div className="w-20 h-1 bg-primary mb-6" />
+                <p className="text-gray-400 text-lg font-light leading-relaxed">
+                  Experience the precision engineering and cutting-edge design that defines {brandData.name}. Our latest showcase highlights our commitment to excellence.
+                </p>
+              </div>
+              <div className="flex justify-start md:justify-end">
+                <div className="inline-flex flex-col items-end">
+                  <span className="text-[10px] text-primary font-black uppercase tracking-[0.4em] mb-2">
+                    Digital Showcase / v.01
+                  </span>
+                  <div className="w-48 h-12 border border-white/10 flex items-center px-4 gap-4">
+                    <div className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                    <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">
+                      Now Streaming Live
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Featured Section */}
       <section id="about" className="bg-black py-24 text-white overflow-hidden">
         <div className="section-container flex flex-col md:flex-row items-center gap-20">

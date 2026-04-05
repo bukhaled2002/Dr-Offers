@@ -46,6 +46,7 @@ export const templateSchema = z.object({
   section3_cta_text: z.string().min(1, "Section 3 CTA text is required"),
   section3_cta_link: z.string().url("Invalid URL"),
   section3_media_url: z.string().url("Invalid URL"),
+  video_url: z.string().url("Invalid URL").optional(),
 });
 
 export type TemplateFormValues = z.infer<typeof templateSchema>;

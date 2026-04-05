@@ -213,7 +213,16 @@
     "removeItem": "Remove Item",
     "addItem": "Add Item",
     "updateTemplate": "Update Template",
-    "createTemplate": "Create Template"
+    "createTemplate": "Create Template",
+    "video": "Video Section",
+    "uploadVideo": "Upload Video"
+  },
+  "fileUpload": {
+    "clickToChange": "Click to change file",
+    "uploading": "Uploading...",
+    "clickToUpload": "Click to upload file",
+    "complete": "complete",
+    "viewFull": "View Full"
   },
   "brand": {
     "basicInfo": "Basic Info",
