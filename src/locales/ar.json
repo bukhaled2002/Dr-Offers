@@ -221,7 +221,16 @@
     "removeItem": "إزالة العنصر",
     "addItem": "إضافة عنصر",
     "updateTemplate": "تحديث القالب",
-    "createTemplate": "إنشاء قالب"
+    "createTemplate": "إنشاء قالب",
+    "video": "قسم الفيديو",
+    "uploadVideo": "رفع فيديو"
+  },
+  "fileUpload": {
+    "clickToChange": "انقر لتغيير الملف",
+    "uploading": "جاري الرفع...",
+    "clickToUpload": "انقر لرفع ملف",
+    "complete": "تم بنجاح",
+    "viewFull": "عرض كامل"
   },
   "brand": {
     "basicInfo": "المعلومات الأساسية",

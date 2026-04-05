@@ -1,4 +1,4 @@
-import ImageUpload from "@/components/ImageUpload";
+import { FileUploadWithProgress } from "@/components/FileUploadWithProgress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -52,12 +52,16 @@ export function FormField<T extends Record<string, any>>({
     <div className={cn("space-y-2", className)}>
       <Label className="text-sm font-medium text-gray-700">{label}</Label>
 
-      {type === "image" ? (
-        <ImageUpload
-          name={name}
-          trigger={trigger}
-          setValue={setValue}
-          image_url={value as string}
+      {type === "image" || type === "video" ? (
+        <FileUploadWithProgress
+          type={type}
+          value={value as string}
+          onChange={(url) => {
+            setValue(name, url as Parameters<typeof setValue>[1], {
+              shouldValidate: true,
+            });
+            trigger(name);
+          }}
         />
       ) : type === "select" ? (
         <Select
