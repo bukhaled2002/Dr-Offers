@@ -161,7 +161,8 @@
     "previewAlt": "Image preview",
     "cancel": "Cancel",
     "save": "Save",
-    "uploading": "Uploading..."
+    "uploading": "Uploading...",
+    "uploadFailed": "Upload failed. Please try again."
   },
   "loading": "Loading...",
   "template": {

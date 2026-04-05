@@ -28,6 +28,7 @@ export default function ImageUpload<TFormValues extends FieldValues>({
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [tempPreview, setTempPreview] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -43,6 +44,7 @@ export default function ImageUpload<TFormValues extends FieldValues>({
   const onSave = async () => {
     if (!tempPreview) return;
     setUploading(true);
+    setUploadError(null);
     try {
       const file = inputRef.current?.files?.[0];
       if (!file) return;
@@ -55,6 +57,7 @@ export default function ImageUpload<TFormValues extends FieldValues>({
       setTempPreview(null);
     } catch (err) {
       console.error("Upload failed:", err);
+      setUploadError(t("imageUpload.uploadFailed"));
     } finally {
       setUploading(false);
     }
@@ -63,6 +66,7 @@ export default function ImageUpload<TFormValues extends FieldValues>({
   const onCancel = () => {
     setDialogOpen(false);
     setTempPreview(null);
+    setUploadError(null);
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -112,6 +116,9 @@ export default function ImageUpload<TFormValues extends FieldValues>({
                 alt={t("imageUpload.previewAlt")}
                 className="mb-4 max-h-60 w-full object-contain rounded"
               />
+            )}
+            {uploadError && (
+              <p className="text-red-600 text-sm mb-3">{uploadError}</p>
             )}
             <div className="flex justify-end gap-3">
               <button

@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    if (!token) {
+    if (!token && localStorage.getItem("refreshToken")) {
       refreshToken();
     }
   }, [token, refreshToken]);
@@ -151,12 +151,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     refreshUser();
   }, [refreshUser]);
-
-  // 👇 Keep i18n synced with language state
-  useEffect(() => {
-    i18n.changeLanguage(language);
-    localStorage.setItem("language", language);
-  }, [language]);
 
   const setLanguage = (lang: string) => {
     setLanguageState(lang);
