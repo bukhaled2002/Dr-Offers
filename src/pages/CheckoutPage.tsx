@@ -54,8 +54,6 @@ export default function CheckoutPage() {
         orderId: `ORD-${Date.now()}-${user?.id}`,
         amount: parsedPrice,
         currency: "SAR",
-        customerName: user?.name || "Customer",
-        customerEmail: user?.email,
         metadata: {
           plan: planName.toLowerCase(),
           duration: billing === "monthly" ? "30d" : "365d",

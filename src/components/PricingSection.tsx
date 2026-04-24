@@ -124,8 +124,6 @@ export default function PricingPlans() {
         orderId: `ORD-${Date.now()}-${String(user?.id).substring(0, 8)}`,
         amount: amount,
         currency: "SAR",
-        customerName: user?.name || "Customer",
-        customerEmail: user?.email,
         metadata: {
           plan: plan.id,
           duration: billing === "monthly" ? "30d" : "365d",
