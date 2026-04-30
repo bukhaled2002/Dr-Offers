@@ -8,6 +8,7 @@ import type { TFunction } from "i18next";
 import { useAuth } from "@/context/useAuth";
 import instance from "@/api/axiosInstance";
 import { Loader2 } from "lucide-react";
+import { Icon } from "@iconify/react";
 
 interface Plan {
   id: string;
@@ -21,7 +22,7 @@ interface Plan {
 }
 
 export default function PricingPlans() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
@@ -80,7 +81,18 @@ export default function PricingPlans() {
 
   const formatPrice = (plan: Plan) => {
     const price = billing === "monthly" ? plan.monthlyPrice : plan.annualPrice;
-    return `SR ${price}`;
+    if (price === null) return null;
+
+    const formattedPrice = new Intl.NumberFormat(
+      i18n.language === "ar" ? "ar-SA-u-nu-arab" : "en-US",
+    ).format(price);
+
+    return (
+      <span className="flex items-center gap-1">
+        <span>{formattedPrice}</span>
+        <Icon icon="lucide:saudi-riyal" className="w-10 h-10" />
+      </span>
+    );
   };
 
   const getPriceSubtext = () => {
@@ -144,7 +156,12 @@ export default function PricingPlans() {
       console.error("Payment initiation failed:", error);
       const errorMsg =
         error instanceof Error ? error.message : "Payment initiation failed";
-      alert(t("checkout.error", `Payment failed: ${errorMsg}`));
+      alert(
+        t("checkout.error", {
+          error: errorMsg,
+          defaultValue: `Payment failed: ${errorMsg}`,
+        }),
+      );
     } finally {
       setLoadingPlanId(null);
     }
@@ -204,8 +221,8 @@ export default function PricingPlans() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <div className="flex items-center gap-1 mb-2">
-                    <span className="text-4xl font-bold flex gap-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-4xl font-bold">
                       {formatPrice(plan)}
                     </span>
                     {plan.popular && (

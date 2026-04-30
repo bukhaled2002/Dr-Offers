@@ -43,7 +43,8 @@ export default function PrivacyDialogHtml() {
             بدخولك أو استخدامك موقع D.offers، فإنك توافق على البنود الموضحة
             أدناه المتعلقة بجمع واستخدام البيانات الشخصية، وذلك بما يتماشى مع
             الأنظمة المطبقة في المملكة العربية السعودية، وعلى رأسها نظام حماية
-            البيانات الشخصية الصادر عن هيئة البيانات والذكاء الاصطناعي (سادا).
+            البيانات الشخصية الصادر عن الهيئة السعودية للبيانات والذكاء
+            الاصطناعي (سدايا).
           </p>
 
           <section>
@@ -196,7 +197,7 @@ export default function PrivacyDialogHtml() {
             </p>
             <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
               <li>
-                <strong>البريد الإلكتروني:</strong> abofahd58m@gmail.com
+                <strong>البريد الإلكتروني:</strong> info@droffers.com
               </li>
               <li>
                 <strong>رقم الهاتف: </strong>

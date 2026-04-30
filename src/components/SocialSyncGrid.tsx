@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Icon } from "@iconify/react";
 
 const services = [
   {
@@ -17,7 +18,7 @@ const services = [
     description: "Instagram Stories",
   },
   {
-    icon: "/icons/twitter.svg",
+    icon: "line-md:twitter-x",
     title: "Sync",
     description: "Twitter Feeds",
   },
@@ -32,11 +33,15 @@ export function SocialSyncGrid() {
           className="flex items-center justify-center text-center py-6 shadow-md"
         >
           <CardContent className="flex flex-col items-center gap-2">
-            <img
-              src={service.icon}
-              alt={service.description}
-              className="w-12 h-12"
-            />
+            {service.icon.startsWith("/") ? (
+              <img
+                src={service.icon}
+                alt={service.description}
+                className="w-12 h-12"
+              />
+            ) : (
+              <Icon icon={service.icon} className="w-12 h-12" />
+            )}
             <p className="font-semibold text-xl">{service.title}</p>
             <p className="text-muted-foreground">{service.description}</p>
           </CardContent>
