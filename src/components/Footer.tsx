@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 // import { Facebook, Twitter, Instagram, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import PrivacyDialogHtml from "./PrivacyDialogHtml";
+import { Icon } from "@iconify/react";
 
 const Footer: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -26,6 +27,11 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Company Info */}
           <div>
+            <div className="mb-6">
+              <Link to="/">
+                <img src="/logo.png" alt="Logo" className="h-12 w-12" />
+              </Link>
+            </div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
               {t("company_info")}
             </h3>
@@ -106,52 +112,36 @@ const Footer: React.FC = () => {
             </ul>
           </div> */}
 
-          {/* Customer Care */}
+          {/* Contact Section */}
           <div>
             <h3 className="text-gray-800 font-semibold text-sm mb-4 tracking-wide">
-              {t("customer_care")}
+              {t("call_us")}
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               <li>
-                <Link
-                  to="/contact"
-                  className="text-gray-600 hover:text-gray-800 text-sm"
+                <a
+                  href="mailto:info@droffers.com"
+                  className="text-gray-600 hover:text-gray-800 text-sm flex items-center gap-3 group"
                 >
-                  {t("contact_us")}
-                </Link>
+                  <Icon 
+                    icon="logos:google-gmail" 
+                    className="w-5 h-5 grayscale group-hover:grayscale-0 transition-all" 
+                  />
+                  <span>info@droffers.com</span>
+                </a>
               </li>
               <li>
                 <a
-                  href="tel:+966554469058"
-                  className="text-gray-600 hover:text-gray-800 text-sm"
+                  href="#"
+                  className="text-gray-600 hover:text-gray-800 text-sm flex items-center gap-3 group"
                 >
-                  {t("call_us")}
+                  <Icon 
+                    icon="logos:instagram-icon" 
+                    className="w-5 h-5 grayscale group-hover:grayscale-0 transition-all" 
+                  />
+                  <span>Instagram</span>
                 </a>
               </li>
-              {/* <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 text-sm"
-                >
-                  {t("payment")}
-                </a>
-              </li> */}
-              {/* <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 text-sm"
-                >
-                  {t("bonus_point")}
-                </a>
-              </li> */}
-              {/* <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 text-sm"
-                >
-                  {t("notices")}
-                </a>
-              </li> */}
             </ul>
           </div>
 
